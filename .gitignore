@@ -1,5 +1,6 @@
 node_modules
 dist
+dist-*
 docs/.vitepress/dist
 docs/.vitepress/cache
 .DS_Store
@@ -7,3 +8,6 @@ docs/.vitepress/cache
 *.log
 .vs/
 .vscode/
+
+# Temporary files
+**/*.timestamp-*.mjs
