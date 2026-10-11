@@ -8,8 +8,6 @@ stickypost: false
 cover: https://img.remit.ee/i/zI8bP9bB5wCu
 ---
 
-# EggyUI Finale Mini 正式发布
-
 经过一段时间的开发与测试，**EggyUI Finale Mini 已正式发布。** 它是 EggyUI 的第二个独立安装包版本，也是 EggyUI 的最后一个版本。从这一刻起，EggyUI 的故事正式结束，后续开发将由 PidanUI 接替。
 
 以下说明该版本的定位、特性与发布意义。
@@ -20,7 +18,17 @@ EggyUI Finale Mini 是一款以《蛋仔派对》为主题的 Windows 桌面美�
 
 它的定位是“最终版”，意味着 EggyUI 这个名称下的开发工作到此为止。此后，EggyUI 将被 PidanUI 取代，新的开发内容以 PidanUI 的名义发布。
 
-## 二、它是第二个独立安装包版本
+## 二、它为什么叫 Finale
+
+“EggyUI Finale”这个版本号，最早由项目创始人 BSOD-MEMZ 于 2024 年末提出。当时，他计划将 Finale 作为 EggyUI 的最后一个版本，为项目画上一个句号。
+
+但由于 BSOD-MEMZ 当时认为项目还要继续做下去，后续还要发布新版本，新版本叫 Finale 未免给人一种项目已经终结的印象，这个版本号一直都没有被正式启用。而后来，项目经历了团队变动、方向分歧、分裂与重组等一系列波折，这些波折给项目的开发造成了不小的压力。在 BSOD-MEMZ 于 2025 年 7 月退出项目组后，项目的开发更是陷入停滞状态。
+
+直到 2026 年，随着 EggyUI 的故事即将正式结束，项目组决定重新启用“EggyUI Finale”这个版本号，用它作为 EggyUI 的收尾版本。由于这个版本是精简版，最终定名为 **EggyUI Finale Mini**。
+
+也就是说，EggyUI Finale Mini 并不是一个临时起意的新版本，而是一个早在 2025 年就已经被提出、却因为项目开发继续推进而迟迟未能落地的计划。它的发布，意味着这个计划终于被执行，也意味着 EggyUI 的版本迭代正式画上句号。
+
+## 三、它是第二个独立安装包版本
 
 EggyUI Finale Mini 是 EggyUI 历史上第二个以独立安装包形式发布的版本。第一个是 2024 年 8 月发布的 EggyUI 2.0。
 
@@ -28,7 +36,7 @@ EggyUI 2.0 是早期尝试，但它因安装流程复杂、组件功能简陋而
 
 EggyUI Finale Mini 在 2.0 的基础上做了大量改进。它吸取了此前多个版本的经验与教训，在安装流程、组件质量、用户体验等方面都做了重新设计。
 
-## 三、它有哪些特性
+## 四、它有哪些特性
 
 EggyUI Finale Mini 的核心特性包括：
 
@@ -41,7 +49,7 @@ EggyUI Finale Mini 的核心特性包括：
 
 相较于 EggyUI 2.0，Finale Mini 在组件质量、安装流程、安全性、用户体验等方面都有明显提升。
 
-## 四、它为什么是最后一个版本
+## 五、它为什么是最后一个版本
 
 EggyUI Finale Mini 是 EggyUI 的最后一个版本。这一决定并非临时起意，而是项目组在经历长期发展、分裂、重组之后的明确选择。
 
@@ -51,7 +59,7 @@ EggyUI 自 2024 年 7 月启动以来，经历了多个版本的迭代，也经�
 
 因此，项目组决定以 EggyUI Finale Mini 作为 EggyUI 的收尾版本，为这个名称画上句号。此后，所有后续开发内容以 PidanUI 的名义发布。
 
-## 五、EggyUI 的故事正式结束
+## 六、EggyUI 的故事正式结束
 
 EggyUI Finale Mini 的发布，标志着 EggyUI 的故事正式结束。
 
@@ -63,7 +71,7 @@ EggyUI Finale Mini 的发布，标志着 EggyUI 的故事正式结束。
 
 对于 EggyUI 这个名称来说，它完成了自己的使命。它从一个爱好者的灵感出发，成长为一个小有影响力的美化项目，经历过辉煌，也经历过低谷，最终以 Finale Mini 作为收尾，为自己的历史画上句号。
 
-## 六、如何获取
+## 七、如何获取
 
 EggyUI Finale Mini 的安装包可通过以下渠道获取：
 
@@ -71,11 +79,11 @@ EggyUI Finale Mini 的安装包可通过以下渠道获取：
 
 安装前请确认：
 
-- 系统为 Windows 11，内部版本号在 22000 ~ 28000 之间。
+- 系统为 Windows 11，版本号在 21H2 ~ 26H1 之间。
 - 系统盘盘符不是 X 盘（X 盘通常为 Windows PE 或临时恢复系统）。
 - 已备份重要文件（尽管本版本不修改系统核心文件，但安装前备份仍是好习惯）。
 
-## 七、总结
+## 八、总结
 
 EggyUI Finale Mini 是 EggyUI 的第二个独立安装包版本，也是最后一个版本。它拥有相对完整、不修改系统文件的美化特性，全面移除了易语言组件，并首次采用了 MD5 校验等技术。它相较于 EggyUI 2.0 完善了许多，是 EggyUI 项目组在收尾阶段交出的一份答卷。
 
@@ -83,4 +91,4 @@ EggyUI Finale Mini 是 EggyUI 的第二个独立安装包版本，也是最后�
 
 EggyUI 的故事到此结束，感谢一路同行的每一位用户与开发者。PidanUI 将带着这份积累，继续往前走。
 
-<div align="right">PidanUI 项目组<br>2026 年 10 月 9 日</div>
+<div align="center">PidanUI 项目组<br>2026 年 10 月 9 日</div>

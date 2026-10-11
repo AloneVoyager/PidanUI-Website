@@ -1,13 +1,27 @@
 ﻿<script setup lang="ts">
-import { computed } from 'vue';
+import { computed, type CSSProperties } from 'vue';
 import { withBase } from 'vitepress';
 import { SOCIAL_LINKS } from '@/config';
 import { latestPosts } from '@/composables/usePosts';
-import { activeMobileDrawer, toggleMobileDrawer } from '@/composables/useMobileDrawer';
+import {
+  activeMobileDrawer,
+  drawerOffset,
+  drawerProgress,
+  isDrawerDragging,
+  toggleMobileDrawer,
+} from '@/composables/useMobileDrawer';
 
 // 右侧小部件栏：最新动态 + 关注我们 + 项目状态（搜索框已移至新闻页顶部）
 const posts = latestPosts(3);
 const drawerOpen = computed(() => activeMobileDrawer.value === 'right');
+const drawerStyle = computed(
+  () =>
+    ({
+      '--drawer-progress': String(drawerProgress.value),
+      '--drawer-offset': `${drawerOffset.value}px`,
+      '--drawer-shadow-alpha': String(drawerProgress.value * 0.18),
+    }) as CSSProperties,
+);
 </script>
 
 <template>
@@ -28,7 +42,13 @@ const drawerOpen = computed(() => activeMobileDrawer.value === 'right');
     </svg>
   </button>
 
-  <aside id="sidebar-right" class="sidebar-right" :class="{ open: drawerOpen }" aria-label="侧边栏">
+  <aside
+    id="sidebar-right"
+    class="sidebar-right"
+    :class="{ open: drawerOpen, 'is-dragging': isDrawerDragging && drawerOpen }"
+    :style="drawerStyle"
+    aria-label="侧边栏"
+  >
     <!-- 最新动态 -->
     <section class="widget">
       <h2 class="widget-title">最新动态</h2>

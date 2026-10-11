@@ -20,7 +20,8 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition: transform 0.3s ease;
+  box-shadow: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   .brand {
     display: flex;
@@ -93,6 +94,7 @@
   background: $sidebar-bg;
   border-left: 1px solid $line;
   overflow-y: auto;
+  box-shadow: none;
   @include thin-scrollbar;
 
   .widget {
@@ -211,26 +213,42 @@
 }
 
 .sidebar-overlay {
-  display: none;
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: rgba(0, 0, 0, 0.4);
+  visibility: hidden;
+  opacity: 0;
+  background: rgba(0, 0, 0, var(--overlay-alpha, 0));
+  backdrop-filter: blur(var(--overlay-blur, 0px));
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    backdrop-filter 0.3s ease,
+    visibility 0s linear 0.3s;
+
+  &.open {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition:
+      opacity 0.3s ease,
+      background-color 0.3s ease,
+      backdrop-filter 0.3s ease,
+      visibility 0s;
+  }
 }
 
 // ---- 响应式：≤960px 左右侧栏分别变为抽屉 ----
 @include respond-below($bp-md) {
   .sidebar-left {
     transform: translateX(-100%);
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, var(--drawer-shadow-alpha, 0));
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &.open {
       transform: translateX(0);
     }
-  }
-
-  .sidebar-overlay.open {
-    display: block;
   }
 
   .menu-toggle {
@@ -242,13 +260,34 @@
     width: min($sidebar-right-w, calc(100vw - 48px));
     visibility: hidden;
     transform: translateX(100%);
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.18);
-    transition: transform 0.3s ease, visibility 0s linear 0.3s;
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, var(--drawer-shadow-alpha, 0));
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s linear 0.3s;
+    touch-action: pan-y;
 
     &.open {
       visibility: visible;
       transform: translateX(0);
-      transition: transform 0.3s ease, visibility 0s;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s;
     }
+  }
+
+  .sidebar-left.is-dragging,
+  .sidebar-right.is-dragging {
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, var(--drawer-shadow-alpha, 0));
+    transition: none;
+    user-select: none;
+  }
+
+  .sidebar-left.is-dragging {
+    transform: translateX(calc(var(--drawer-offset, 0px) - 100%));
+  }
+
+  .sidebar-right.is-dragging {
+    visibility: visible;
+    transform: translateX(calc(100% - var(--drawer-offset, 0px)));
+  }
+
+  .site-main {
+    touch-action: pan-y;
   }
 }
