@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, watch, type CSSProperties } from 'vue';
 import { useRoute, useData, withBase } from 'vitepress';
 import { SITE } from '@/config';
 import {
   activeMobileDrawer,
   closeMobileDrawer,
+  drawerOffset,
+  drawerProgress,
+  installMobileDrawerGestures,
+  isDrawerDragging,
   toggleMobileDrawer,
 } from '@/composables/useMobileDrawer';
 import ThemeToggle from './ThemeToggle.vue';
@@ -14,7 +18,18 @@ const route = useRoute();
 const { page } = useData();
 
 const navOpen = computed(() => activeMobileDrawer.value === 'left');
+const drawerStyle = computed(
+  () =>
+    ({
+      '--drawer-progress': String(drawerProgress.value),
+      '--drawer-offset': `${drawerOffset.value}px`,
+      '--drawer-shadow-alpha': String(drawerProgress.value * 0.18),
+      '--overlay-alpha': String(drawerProgress.value * 0.3),
+      '--overlay-blur': `${drawerProgress.value * 4}px`,
+    }) as CSSProperties,
+);
 let mobileBreakpoint: MediaQueryList | undefined;
+let stopDrawerGestures: (() => void) | undefined;
 
 const NAV_ITEMS = [
   { key: 'home', label: '首页', href: '/' },
@@ -69,6 +84,7 @@ watch(
 
 onMounted(() => {
   document.addEventListener('keydown', onKeydown);
+  stopDrawerGestures = installMobileDrawerGestures();
   mobileBreakpoint = window.matchMedia('(max-width: 960px)');
   mobileBreakpoint.addEventListener('change', onBreakpointChange);
 });
@@ -76,6 +92,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener('keydown', onKeydown);
   mobileBreakpoint?.removeEventListener('change', onBreakpointChange);
+  stopDrawerGestures?.();
   closeMenu();
 });
 </script>
@@ -100,12 +117,18 @@ onBeforeUnmount(() => {
   <div
     class="sidebar-overlay"
     :class="{ open: activeMobileDrawer !== null }"
+    :style="drawerStyle"
     aria-hidden="true"
     @click="closeMenu"
   />
 
   <!-- 左侧导航 -->
-  <aside class="sidebar-left" :class="{ open: navOpen }" aria-label="主导航">
+  <aside
+    class="sidebar-left"
+    :class="{ open: navOpen, 'is-dragging': isDrawerDragging && navOpen }"
+    :style="drawerStyle"
+    aria-label="主导航"
+  >
     <a class="brand" :href="withBase('/')" :aria-label="SITE.brand">
       <img class="brand-logo" :src="withBase('/images/logo.webp')" :alt="SITE.brand" width="34" height="34" />
       <span class="brand-text">{{ SITE.brand }}</span>
