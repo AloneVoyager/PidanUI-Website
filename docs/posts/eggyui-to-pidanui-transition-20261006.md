@@ -4,7 +4,7 @@ date: 2026-10-06 16:42:00
 categories: [公告]
 tags: [公告, 项目]
 description: 说明 EggyUI 将逐步由 PidanUI 取代的原因与具体安排，帮助用户理解这一调整的背景与目的。
-stickypost: true
+stickypost: false
 cover: https://img.remit.ee/i/68SjqigbuR8x
 ---
 
