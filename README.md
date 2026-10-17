@@ -35,13 +35,13 @@ PidanUI 项目的官方网站，使用 VitePress + TypeScript + SCSS 构建，�
 4. 执行 `pnpm dev`（或 `pnpm run dev`）命令来启动开发服务器（开发服务器网址一般是 `http://localhost:5173`），执行 `pnpm build`（或 `pnpm run build`）命令来生成静态产物
 5. 在 `docs/dist` 下找到静态网页的构建产物。
 
-## 字体
+## 字体与图标
 
-本网站使用的字体为 MiSans 和 Cascadia Code 分包字体，字体通过 CDN 加载，仓库不保留字体文件。
+本网站使用的字体为 MiSans 和 Cascadia Code 分包字体，图标来自 Font Awesome，字体和图标通过 CDN 加载，仓库不保留字体和图标文件。
 
 ## 关于 PidanUI
 
-PidanUI 是一款专为 Windows 系统打造的桌面美化项目，设计灵感来源于网易游戏《蛋仔派对》。项目延续了 EggyUI 在视觉风格上的探索，同时吸取了过往项目在治理、技术与分发方式上的经验教训，重新调整了开发路线与组织方式。
+PidanUI 是一款专为 Windows & Liunx 系统打造的桌面美化项目，设计灵感来源于网易游戏《蛋仔派对》。项目延续了 EggyUI 在视觉风格上的探索，同时吸取了过往项目在治理、技术与分发方式上的经验教训，重新调整了开发路线与组织方式。
 
 PidanUI 并非 EggyUI 的官方分支，而是一个在 EggyUI 项目经历分裂与重组后，由原核心开发者与社区成员共同创建的新项目。它的目标不是复刻 EggyUI 的历史，而是在继承其技术积累与美学方向的基础上，走一条更稳定、更可持续的路。
 

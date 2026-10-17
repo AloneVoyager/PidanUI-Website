@@ -5,10 +5,7 @@ import { openSearchDialog } from '@/composables/useSearch';
 
 <template>
   <button class="search-launcher" type="button" aria-haspopup="dialog" @click="openSearchDialog($event.currentTarget as HTMLElement)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
+    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
     <span>搜索新闻标题与正文...</span>
   </button>
   <a class="search-launcher-fallback" :href="withBase('/search/')">打开搜索页</a>
@@ -34,10 +31,9 @@ import { openSearchDialog } from '@/composables/useSearch';
   cursor: pointer;
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
 
-  svg {
-    flex: 0 0 18px;
-    width: 18px;
-    height: 18px;
+  i {
+    flex: 0 0 auto;
+    font-size: 15px;
   }
 
   &:hover,

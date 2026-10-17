@@ -28,14 +28,14 @@ const FEATURES = [
     <section class="hero">
       <h1 class="hero-title">Pidan<em>UI</em></h1>
       <p class="hero-desc">
-        一个由蛋仔爱好者发起的 Windows 桌面美化项目，专注于实现《蛋仔派对》风格的桌面视觉体验。
+        一个由蛋仔爱好者发起的 Windows & Liunx 桌面美化项目，专注于实现《蛋仔派对》风格的桌面视觉体验。
       </p>
 
       <!-- 重要说明（警告条） -->
       <div class="hero-warning" role="note">
-        <h3><span class="warn-icon">!</span> 温馨提示</h3>
+        <h3><span class="warn-icon" aria-hidden="true"><i class="fa-solid fa-exclamation"></i></span> 温馨提示</h3>
         <p>
-          PidanUI 是一个普通的 Windows 桌面美化包，不适用于手机系统或其他操作系统。本项目为《蛋仔派对》粉丝二次创作作品，严格禁止任何商业用途。
+          PidanUI 是一个普通的 Windows & Liunx 桌面美化包，不适用于手机系统或其他操作系统。本项目为《蛋仔派对》粉丝二次创作作品，严格禁止任何商业用途。
         </p>
       </div>
     </section>
@@ -44,20 +44,13 @@ const FEATURES = [
     <section class="download-callout" aria-label="立即下载">
       <div class="download-copy">
         <span class="callout-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
+          <i class="fa-solid fa-download"></i>
         </span>
         <h2>立即 <span class="highlight">下载</span></h2>
         <p>获取最新版本 · Windows 7/10/11 · 完全免费</p>
         <a class="arrow-hint" :href="withBase('/download.html')">
           前往下载
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
         </a>
       </div>
       <div class="download-visual" aria-hidden="true">
@@ -146,12 +139,15 @@ const FEATURES = [
     justify-content: center;
     width: 18px;
     height: 18px;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 10px;
     line-height: 1;
     color: #fff;
     background: $brand;
     border-radius: 50%;
+
+    i {
+      font-size: inherit;
+    }
   }
 
   p {
@@ -185,9 +181,8 @@ const FEATURES = [
     margin-bottom: 10px;
     color: $brand-deep;
 
-    svg {
-      width: 38px;
-      height: 38px;
+    i {
+      font-size: 32px;
     }
   }
 
@@ -227,16 +222,15 @@ const FEATURES = [
   border-radius: 30px;
   transition: background 0.2s ease, transform 0.2s ease;
 
-  svg {
-    width: 15px;
-    height: 15px;
+  i {
+    font-size: 16px;
     transition: transform 0.25s ease;
   }
 
   &:hover {
     background: rgba(255, 159, 26, 0.16);
 
-    svg {
+    i {
       transform: translateX(3px);
     }
   }

@@ -120,6 +120,13 @@ svg {
   flex-shrink: 0;
 }
 
+// Font Awesome 图标（CDN 引入，见 config.mts）：正文内联时与文字基线对齐
+.fa-solid,
+.fa-regular,
+.fa-brands {
+  vertical-align: -0.125em;
+}
+
 // 细滚动条
 * {
   @include thin-scrollbar;

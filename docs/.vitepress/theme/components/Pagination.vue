@@ -21,9 +21,15 @@ const nextHref = computed(() => `${props.pagePrefix}${props.current + 1}`);
 
 <template>
   <nav v-if="totalPages > 1" class="pagination" role="navigation">
-    <a v-if="current > 1" class="page-btn" :href="withBase(prevHref)">← 上一页</a>
+    <a v-if="current > 1" class="page-btn" :href="withBase(prevHref)">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      上一页
+    </a>
     <span class="page-info">{{ current }} / {{ totalPages }}</span>
-    <a v-if="current < totalPages" class="page-btn" :href="withBase(nextHref)">下一页 →</a>
+    <a v-if="current < totalPages" class="page-btn" :href="withBase(nextHref)">
+      下一页
+      <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+    </a>
   </nav>
 </template>
 
@@ -38,7 +44,9 @@ const nextHref = computed(() => `${props.pagePrefix}${props.current + 1}`);
   margin-top: 28px;
 
   .page-btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     padding: 6px 18px;
     font-size: 13px;
     color: $brand-deep;

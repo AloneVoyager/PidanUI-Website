@@ -85,9 +85,10 @@ export default defineConfig({
       },
     ],
     ['link', { rel: 'icon', type: 'image/x-icon', href: `${BASE}images/favicon.ico` }],
-    // 全站字体（CDN）：
+    // 全站字体与图标（CDN）：
     //   - MiSans：正文与界面中文/西文字体
     //   - Cascadia Code：代码块等宽英文字体
+    //   - Font Awesome 7：全站图标（模板中统一使用 fa-solid / fa-regular / fa-brands）
     ['link', { rel: 'preconnect', href: 'https://cdn.jsdelivr.net', crossorigin: '' }],
     [
       'link',
@@ -101,6 +102,13 @@ export default defineConfig({
       {
         rel: 'stylesheet',
         href: 'https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.2.3/index.min.css',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'stylesheet',
+        href: 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css',
       },
     ],
     // Atom feed 自动发现：浏览器 / RSS 阅读器可通过这个 link 自动订阅

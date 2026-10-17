@@ -44,7 +44,10 @@ const nextPost = computed(() =>
 <template>
   <article class="post-view">
     <nav class="post-back" aria-label="返回新闻列表">
-      <a class="back-link" :href="withBase('/posts/')">← 返回新闻</a>
+      <a class="back-link" :href="withBase('/posts/')">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        返回新闻
+      </a>
     </nav>
 
     <header class="post-header">
@@ -71,9 +74,15 @@ const nextPost = computed(() =>
 
     <footer class="post-footer">
       <nav class="post-nav" aria-label="上一篇 / 下一篇">
-        <a v-if="prevPost" class="prev" :href="withBase(prevPost.url)">← {{ prevPost.title }}</a>
+        <a v-if="prevPost" class="prev" :href="withBase(prevPost.url)">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+          {{ prevPost.title }}
+        </a>
         <span v-else></span>
-        <a v-if="nextPost" class="next" :href="withBase(nextPost.url)">{{ nextPost.title }} →</a>
+        <a v-if="nextPost" class="next" :href="withBase(nextPost.url)">
+          {{ nextPost.title }}
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </a>
       </nav>
 
       <aside class="post-comments-wrap" aria-label="评论区">

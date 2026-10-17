@@ -32,10 +32,10 @@ let mobileBreakpoint: MediaQueryList | undefined;
 let stopDrawerGestures: (() => void) | undefined;
 
 const NAV_ITEMS = [
-  { key: 'home', label: '首页', href: '/' },
-  { key: 'download', label: '下载', href: '/download.html' },
-  { key: 'news', label: '新闻', href: '/posts/' },
-  { key: 'about', label: '关于', href: '/about.html' },
+  { key: 'home', label: '首页', href: '/', icon: 'fa-solid fa-house' },
+  { key: 'download', label: '下载', href: '/download.html', icon: 'fa-solid fa-download' },
+  { key: 'news', label: '新闻', href: '/posts/', icon: 'fa-solid fa-newspaper' },
+  { key: 'about', label: '关于', href: '/about.html', icon: 'fa-solid fa-circle-info' },
 ] as const;
 
 type NavKey = (typeof NAV_ITEMS)[number]['key'];
@@ -106,11 +106,7 @@ onBeforeUnmount(() => {
     :aria-expanded="navOpen"
     @click="toggleMenu"
   >
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-      <line x1="3" y1="6" x2="21" y2="6" />
-      <line x1="3" y1="12" x2="21" y2="12" />
-      <line x1="3" y1="18" x2="21" y2="18" />
-    </svg>
+    <i class="fa-solid fa-bars" aria-hidden="true"></i>
   </button>
 
   <!-- 遮罩 -->
@@ -144,26 +140,7 @@ onBeforeUnmount(() => {
         :aria-current="activeKey === item.key ? 'page' : undefined"
       >
         <span class="nav-icon" aria-hidden="true">
-          <svg v-if="item.key === 'home'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-          </svg>
-          <svg v-else-if="item.key === 'download'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          <svg v-else-if="item.key === 'news'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0V9" />
-            <line x1="10" y1="7" x2="18" y2="7" />
-            <line x1="10" y1="11" x2="18" y2="11" />
-            <line x1="10" y1="15" x2="14" y2="15" />
-          </svg>
-          <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="16" x2="12" y2="12" />
-            <line x1="12" y1="8" x2="12.01" y2="8" />
-          </svg>
+          <i :class="item.icon"></i>
         </span>
         <span class="nav-label">{{ item.label }}</span>
       </a>
