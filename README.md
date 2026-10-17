@@ -1,39 +1,49 @@
 # PidanUI-Website
 
 ![Last Commit](https://img.shields.io/github/last-commit/PidanEggyTeam/PidanUI-Website?label=Last%20Commit)
-![VitePress](https://img.shields.io/badge/VitePress-1.x-646cff)
-![Vue3](https://img.shields.io/badge/Vue-3.x-42b883)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6)
-![SCSS](https://img.shields.io/badge/SCSS-Styles-c6538c)
+![VitePress](https://img.shields.io/badge/VitePress-1.6.4-5C73E7?logo=VitePress&logoColor=white)
+![Vue](https://img.shields.io/badge/Vue-3.5.43-4FC08D?logo=Vue.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-3178C6?logo=TypeScript&logoColor=white)
+![SCSS](https://img.shields.io/badge/SCSS-Styles-CC6699?logo=Sass&logoColor=white)
 ![License](https://img.shields.io/badge/License-AGPL--3.0-orange)
 
-## 项目简介
+PidanUI 项目的官方网站，使用 VitePress + TypeScript + SCSS 构建，静态生成（SSG）后部署到 GitHub Pages。
 
-PidanUI-Website 是 PidanUI 项目的官方网站仓库，负责承载 PidanUI 的对外展示、信息发布、文档导航与资源入口等功能。网站基于 VitePress 构建，是一个纯前端、无后端的静态站点，部署于 GitHub Pages。
+## 网站结构
 
-作为 PidanUI 项目的官方门户，本网站用于向用户介绍 PidanUI 的项目定位、技术路线、版本动态与下载渠道，是用户了解 PidanUI 的主要入口。
+- **首页**：项目介绍、特性展示、下载入口。
+- **下载**：`/download.html`，一个版本列表，提供 PidanUI 多个版本的下载链接。
+- **新闻**：`/posts/`，使用 VitePress 博客特性的区域，用于展示 PidanUI 的项目公告等文章，实现了完整的博客功能和 Markdown 样式支持。
+- **关于**：`/about.html`，展示 PidanUI 项目的简介及项目背后的故事。
+- **蛋仔专属性格测试**：`/personality-test.html`，蛋仔专属性格测试小游戏，关于页的小彩蛋。
+
+## 技术栈
+
+- [VitePress](https://vitepress.dev/zh/)（SSG 静态生成 + 博客功能）
+- [TypeScript](https://www.typescriptlang.org/)
+- [SCSS](https://www.sass.hk/docs/index.html)
+
+## 数据文件
+
+- `docs/.vitepress/theme/data/download.json` —— PidanUI 版本清单，用于下载页的版本列表展示，网站在构建时会导入此 JSON（SSG 数据随构建固化）。
+
+## 构建步骤
+
+1. [下载并安装 Node.js](https://nodejs.org/zh-cn)
+2. 安装 `pnpm`：在终端执行 `npm install -g pnpm` 命令来安装 `pnpm`（可以执行 `pnpm --version` 来验证安装是否完成，安装后建议重启终端）
+3. 在项目文件夹下打开终端，执行 `pnpm install` 命令安装依赖
+4. 执行 `pnpm dev`（或 `pnpm run dev`）命令来启动开发服务器（开发服务器网址一般是 `http://localhost:5173`），执行 `pnpm build`（或 `pnpm run build`）命令来生成静态产物
+5. 在 `docs/dist` 
+
+## 字体
+
+本网站使用的字体为 MiSans 和 Cascadia Code 分包字体，字体通过 CDN 加载，仓库不保留字体文件。
 
 ## 关于 PidanUI
 
 PidanUI 是一款专为 Windows 系统打造的桌面美化项目，设计灵感来源于网易游戏《蛋仔派对》。项目延续了 EggyUI 在视觉风格上的探索，同时吸取了过往项目在治理、技术与分发方式上的经验教训，重新调整了开发路线与组织方式。
 
 PidanUI 并非 EggyUI 的官方分支，而是一个在 EggyUI 项目经历分裂与重组后，由原核心开发者与社区成员共同创建的新项目。它的目标不是复刻 EggyUI 的历史，而是在继承其技术积累与美学方向的基础上，走一条更稳定、更可持续的路。
-
-PidanUI 的核心特点包括：
-
-- **不修改系统核心文件**：所有美化内容通过主题包、壁纸、Rainmeter 小组件等安全方式部署，不替换系统核心文件，安装与卸载不会影响系统稳定性。
-- **辅助组件使用 .NET 10**：抛弃了早期 EggyUI 使用的易语言组件，采用 .NET 10 重构辅助程序，解决高 DPI 缩放适配与杀毒软件误报问题。
-- **精简美化方案**：聚焦主题、小组件等基础美化特性，移除冗余、持久化的美化方式，让系统体验更接近原版 Windows。
-- **清晰的定位**：PidanUI 是一个非盈利粉丝项目，不用于商业用途，不冒充官方，不与任何商业实体合作。
-
-## 技术栈
-
-本网站使用以下技术栈构建：
-
-- **静态站点框架**：VitePress
-- **前端框架**：Vue 3
-- **开发语言**：TypeScript
-- **样式方案**：SCSS
 
 ## 部署方式
 

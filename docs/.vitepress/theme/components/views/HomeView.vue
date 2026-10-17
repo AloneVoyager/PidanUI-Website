@@ -5,11 +5,6 @@ import { withBase } from 'vitepress';
 // 结构参考 EggyUIWeb-Vue3，但去除容器卡片外观，与 VitePress 暖黄渐变背景融为一体
 const FEATURES = [
   {
-    tag: '安全美化',
-    title: '不修改系统文件',
-    desc: '所有美化内容通过主题包、壁纸、小组件等安全方式部署，不替换系统核心文件。',
-  },
-  {
     tag: '现代技术栈',
     title: '.NET 10 辅助组件',
     desc: '辅助组件采用 .NET 10 重构，避免杀毒软件误报，提升稳定性与兼容性。',

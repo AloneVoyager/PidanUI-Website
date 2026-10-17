@@ -85,6 +85,24 @@ export default defineConfig({
       },
     ],
     ['link', { rel: 'icon', type: 'image/x-icon', href: `${BASE}images/favicon.ico` }],
+    // 全站字体（CDN）：
+    //   - MiSans：正文与界面中文/西文字体
+    //   - Cascadia Code：代码块等宽英文字体
+    ['link', { rel: 'preconnect', href: 'https://cdn.jsdelivr.net', crossorigin: '' }],
+    [
+      'link',
+      {
+        rel: 'stylesheet',
+        href: 'https://cdn.jsdelivr.net/npm/misans-webfont@4.3.1/misans-style.min.css',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'stylesheet',
+        href: 'https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.2.3/index.min.css',
+      },
+    ],
     // Atom feed 自动发现：浏览器 / RSS 阅读器可通过这个 link 自动订阅
     [
       'link',

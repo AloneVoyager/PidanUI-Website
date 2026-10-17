@@ -7,11 +7,14 @@
 // ============================================================
 
 // ---- 字体 ----
-$font-ui: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui,
+// 全站主字体：MiSans（CDN 引入，见 config.mts 的 head）。
+// misans-webfont 的常规字重族名为 MiSans（400/700），Normal 族为其补充别名。
+$font-ui: 'MiSans', 'MiSans Normal', 'PingFang SC', 'Microsoft YaHei', system-ui,
   -apple-system, 'Segoe UI', Roboto, sans-serif;
-// 等宽字体栈：末尾补中文无衬线 fallback，避免代码块内中文回退到系统宋体（SimSun）
-$font-mono: 'Cascadia Code', 'Consolas', 'Menlo', 'Microsoft YaHei UI', 'PingFang SC',
-  'HarmonyOS Sans SC', 'Microsoft YaHei', monospace;
+// 等宽字体栈：英文用 Cascadia Code（CDN 引入），
+// 末尾补中文字体 fallback，避免代码块内中文回退到系统宋体（SimSun）
+$font-mono: 'Cascadia Code', 'Consolas', 'Menlo', 'MiSans', 'Microsoft YaHei UI',
+  'PingFang SC', monospace;
 
 // ---- 主题色（引用 CSS 变量，随深色模式切换）----
 $brand: var(--brand);
