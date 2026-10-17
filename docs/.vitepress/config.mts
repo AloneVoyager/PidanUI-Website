@@ -8,6 +8,7 @@ import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
 import taskLists from 'markdown-it-task-lists';
 import { createContentLoader, defineConfig, type HeadConfig } from 'vitepress';
+import { archiveYears } from './build/posts';
 import { SITE } from './theme/config';
 
 // ============================================================
@@ -85,9 +86,10 @@ export default defineConfig({
       },
     ],
     ['link', { rel: 'icon', type: 'image/x-icon', href: `${BASE}images/favicon.ico` }],
-    // 全站字体（CDN）：
+    // 全站字体与图标（CDN）：
     //   - MiSans：正文与界面中文/西文字体
     //   - Cascadia Code：代码块等宽英文字体
+    //   - Font Awesome 7：全站图标（模板中统一使用 fa-solid / fa-regular / fa-brands）
     ['link', { rel: 'preconnect', href: 'https://cdn.jsdelivr.net', crossorigin: '' }],
     [
       'link',
@@ -101,6 +103,13 @@ export default defineConfig({
       {
         rel: 'stylesheet',
         href: 'https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.2.3/index.min.css',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'stylesheet',
+        href: 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css',
       },
     ],
     // Atom feed 自动发现：浏览器 / RSS 阅读器可通过这个 link 自动订阅
@@ -161,12 +170,21 @@ export default defineConfig({
     const params = (pageData as { params?: Record<string, string> }).params;
     if (!params) return;
     const layout = pageData.frontmatter?.layout;
+    const pageNo = Number(params.page);
+    // 归档按年分页：第 N 页即第 N 个年份，标题直接用年份
+    if (layout === 'archive' && pageNo > 1) {
+      const year = archiveYears()[pageNo - 1];
+      if (year) {
+        pageData.title = `归档 · ${year} 年`;
+        return;
+      }
+    }
     if (layout === 'category' && params.category) {
       pageData.title = `分类：${params.category}`;
     } else if (layout === 'tag' && params.tag) {
       pageData.title = `标签：${params.tag}`;
     }
-    if (params.page && Number(params.page) > 1) {
+    if (pageNo > 1) {
       pageData.title = `${pageData.title ?? SITE_TITLE} · 第 ${params.page} 页`;
     }
   },
@@ -197,7 +215,7 @@ export default defineConfig({
     const publishedISO =
       published && !Number.isNaN(published.getTime()) ? published.toISOString() : undefined;
     const cover =
-      absoluteAssetUrl(frontmatter.cover) ?? absoluteAssetUrl('/images/default_cover.png');
+      absoluteAssetUrl(frontmatter.cover) ?? absoluteAssetUrl('/images/default_cover.webp');
 
     if (publishedISO) {
       head.push(['meta', { property: 'article:published_time', content: publishedISO }]);
@@ -225,7 +243,7 @@ export default defineConfig({
         '@type': 'Organization',
         name: SITE.brand,
         url: SITE.mainUrl,
-        logo: { '@type': 'ImageObject', url: absoluteAssetUrl('/images/logo.png') },
+        logo: { '@type': 'ImageObject', url: absoluteAssetUrl('/images/logo.webp') },
       },
       ...(publishedISO ? { datePublished: publishedISO, dateModified: publishedISO } : {}),
       ...(cover ? { image: [cover] } : {}),
@@ -312,7 +330,7 @@ export default defineConfig({
       `  <id>${xmlEscape(SITE.newsUrl)}</id>`,
       `  <updated>${updated}</updated>`,
       `  <author><name>${xmlEscape(SITE.author)}</name></author>`,
-      `  <icon>${xmlEscape(absolute('/images/logo.png'))}</icon>`,
+      `  <icon>${xmlEscape(absolute('/images/logo.webp'))}</icon>`,
       items,
       '</feed>',
       '',

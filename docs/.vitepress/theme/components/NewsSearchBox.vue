@@ -45,10 +45,7 @@ onMounted(() => {
     </p>
     <template v-if="mounted">
       <span class="news-search-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8" />
-          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
+        <i class="fa-solid fa-magnifying-glass"></i>
       </span>
         <input
         ref="inputEl"
@@ -97,9 +94,8 @@ onMounted(() => {
     pointer-events: none;
     transform: translateY(-50%);
 
-    svg {
-      width: 18px;
-      height: 18px;
+    i {
+      font-size: 15px;
     }
   }
 

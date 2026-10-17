@@ -29,7 +29,7 @@ const FEATURES = [
 ] as const;
 
 const COMPOSITION = [
-  { name: '主题包', desc: '蛋仔风格的 Windows 主题，支持 Windows 7 ~ Windows 11。' },
+  { name: '主题包', desc: '蛋仔风格的 Windows & Linux 主题，支持 Windows 7 ~ Windows 11 和 Linux。' },
   { name: 'Rainmeter 小组件', desc: '配套的桌面小组件，支持 Windows 10 1607 ~ Windows 11。' },
   { name: '辅助组件', desc: '基于 .NET 10 和 Python 开发的辅助程序，用于主题部署与组件管理。' },
 ] as const;
@@ -42,7 +42,7 @@ const DISTRIBUTION = [
 const COPYRIGHT = [
   '本项目为《蛋仔派对》粉丝二次创作，非官方出品，禁止用于商业用途。',
   '所有视觉素材均来自合规渠道或团队重绘，未使用游戏拆包 / 解包资源。',
-  '《蛋仔派对》是网易游戏的注册商标，Windows 是微软公司的注册商标。',
+  '《蛋仔派对》是网易游戏的注册商标，Windows 是微软公司的注册商标，Liunx 是一个开源操作系统的统称。',
   '本项目与网易、微软无任何隶属或赞助关系。',
 ] as const;
 </script>

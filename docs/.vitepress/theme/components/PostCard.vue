@@ -8,7 +8,7 @@ const props = defineProps<{ post: Post }>();
 // 封面：外链原样输出，站内相对路径补 base
 const coverSrc = computed(() => {
   const cover = props.post.cover;
-  if (!cover) return withBase('/images/default_cover.png');
+  if (!cover) return withBase('/images/default_cover.webp');
   if (/^(?:https?:|data:)/i.test(cover)) return cover;
   return withBase(cover.startsWith('/') ? cover : `/${cover}`);
 });
@@ -21,24 +21,13 @@ const coverSrc = computed(() => {
       <img :src="coverSrc" :alt="post.title" loading="lazy" />
     </div>
     <div class="card-body">
-      <div class="card-text">
-        <span class="card-title">{{ post.title }}</span>
+      <span class="card-title">{{ post.title }}</span>
+      <div class="card-meta">
         <time class="card-date">{{ post.date }}</time>
+        <span v-if="post.categories.length" class="card-cat">{{ post.categories[0] }}</span>
       </div>
-      <svg
-        class="card-arrow"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M5 12h14" />
-        <path d="M12 5l7 7-7 7" />
-      </svg>
     </div>
+    <i class="fa-solid fa-arrow-right card-arrow" aria-hidden="true"></i>
   </a>
 </template>
 
@@ -46,13 +35,19 @@ const coverSrc = computed(() => {
 @use 'variables' as *;
 @use 'mixins' as *;
 
+// ============================================================
+// 文章卡片（紧凑横排）
+//   新闻 / 分类 / 标签 / 搜索页 / 搜索对话框共用：横向缩略图 + 标题 + 元信息，
+//   在同等高度内可容纳更多条目。
+// ============================================================
 .post-card {
   display: flex;
-  flex-direction: column;
+  align-items: stretch;
+  min-height: 92px;
   overflow: hidden;
   background: $card;
   border: 1px solid $line;
-  border-radius: $radius-l;
+  border-radius: $radius-m;
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 
   &:hover {
@@ -61,13 +56,14 @@ const coverSrc = computed(() => {
 
     .card-arrow {
       color: $brand-deep;
-      transform: translateX(4px);
+      transform: translateX(3px);
     }
   }
 
   .card-cover {
     position: relative;
-    aspect-ratio: 16 / 9;
+    flex: 0 0 128px;
+    align-self: stretch;
     overflow: hidden;
     background: $bg;
 
@@ -85,11 +81,11 @@ const coverSrc = computed(() => {
 
   .pin-badge {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 6px;
+    left: 6px;
     z-index: 1;
-    padding: 2px 10px;
-    font-size: 12px;
+    padding: 1px 8px;
+    font-size: 11px;
     font-weight: 600;
     color: #fff;
     background: $brand-deep;
@@ -98,39 +94,64 @@ const coverSrc = computed(() => {
 
   .card-body {
     display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 16px 18px;
-  }
-
-  .card-text {
-    display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
+    justify-content: center;
     gap: 6px;
     min-width: 0;
+    padding: 12px 0 12px 14px;
   }
 
   .card-title {
-    font-size: 15.5px;
+    font-size: 14.5px;
     font-weight: 600;
-    line-height: 1.5;
+    line-height: 1.45;
     color: $ink;
     @include clamp-lines(2);
   }
 
-  .card-date {
-    font-size: 13px;
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
     color: $ink-3;
   }
 
+  .card-cat {
+    padding: 0 8px;
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: $brand-deep;
+    background: $brand-soft;
+    border-radius: $radius-full;
+  }
+
   .card-arrow {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
+    flex: 0 0 auto;
+    align-self: center;
+    margin: 0 14px 0 10px;
+    font-size: 14px;
     color: $ink-3;
     transition: color 0.25s ease, transform 0.25s ease;
+  }
+}
+
+@include respond-below($bp-2xs) {
+  .post-card {
+    min-height: 84px;
+
+    .card-cover {
+      flex-basis: 96px;
+    }
+
+    .card-title {
+      font-size: 14px;
+    }
+
+    .card-arrow {
+      margin-right: 10px;
+    }
   }
 }
 </style>

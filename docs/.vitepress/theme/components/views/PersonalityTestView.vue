@@ -56,7 +56,10 @@
         <button class="btn btn--ghost" type="button" @click="restart">重新测试</button>
       </section>
 
-      <a class="back-link" :href="withBase('/about.html')">← 返回关于页</a>
+      <a class="back-link" :href="withBase('/about.html')">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        返回关于页
+      </a>
     </div>
   </div>
 </template>
@@ -313,6 +316,9 @@ const {
 }
 
 .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 14px;
   color: $brand-deep;
 

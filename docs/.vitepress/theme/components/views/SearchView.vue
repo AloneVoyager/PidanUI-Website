@@ -21,7 +21,7 @@ import NewsSearchBox from '../NewsSearchBox.vue';
 // 搜索页：搜索框在上，标题在下
 // ============================================================
 .search-view {
-  max-width: 1000px;
+  max-width: $max-w;
   margin: 0 auto;
 }
 
