@@ -8,6 +8,7 @@ import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
 import taskLists from 'markdown-it-task-lists';
 import { createContentLoader, defineConfig, type HeadConfig } from 'vitepress';
+import { archiveYears } from './build/posts';
 import { SITE } from './theme/config';
 
 // ============================================================
@@ -169,12 +170,21 @@ export default defineConfig({
     const params = (pageData as { params?: Record<string, string> }).params;
     if (!params) return;
     const layout = pageData.frontmatter?.layout;
+    const pageNo = Number(params.page);
+    // 归档按年分页：第 N 页即第 N 个年份，标题直接用年份
+    if (layout === 'archive' && pageNo > 1) {
+      const year = archiveYears()[pageNo - 1];
+      if (year) {
+        pageData.title = `归档 · ${year} 年`;
+        return;
+      }
+    }
     if (layout === 'category' && params.category) {
       pageData.title = `分类：${params.category}`;
     } else if (layout === 'tag' && params.tag) {
       pageData.title = `标签：${params.tag}`;
     }
-    if (params.page && Number(params.page) > 1) {
+    if (pageNo > 1) {
       pageData.title = `${pageData.title ?? SITE_TITLE} · 第 ${params.page} 页`;
     }
   },

@@ -64,6 +64,40 @@ export function totalPagesOf(count: number): number {
   return Math.max(1, Math.ceil(count / PAGE_SIZE));
 }
 
+/** 从 frontmatter.date 取年份（gray-matter 会把 YAML 日期解析为 Date） */
+function yearOf(value: unknown): string {
+  const date = value instanceof Date ? value : new Date(value as string | number);
+  if (Number.isNaN(date.getTime())) return '';
+  return String(date.getUTCFullYear());
+}
+
+/** 有文章的不同年份（倒序），归档按「一年一页」分页 */
+let archiveYearsCache: string[] | null = null;
+
+export function archiveYears(): string[] {
+  if (archiveYearsCache) return archiveYearsCache;
+  const years = new Set<string>();
+  for (const file of markdownFiles()) {
+    const { data } = matter(fs.readFileSync(file, 'utf-8'));
+    const year = yearOf(data.date);
+    if (year) years.add(year);
+  }
+  archiveYearsCache = [...years].sort((a, b) => b.localeCompare(a));
+  return archiveYearsCache;
+}
+
+/** 归档页数（一年一页，至少 1 页） */
+export function countYears(): number {
+  return Math.max(1, archiveYears().length);
+}
+
+/** 归档第 2..N 年的路由参数（每年一页，第 1 页由静态 index.md 承担） */
+export function yearPaginationParams(years: number): { params: Record<string, string> }[] {
+  return Array.from({ length: Math.max(0, years - 1) }, (_, index) => ({
+    params: { page: String(index + 2) },
+  }));
+}
+
 /** 第 2..N 页的路由参数（第 1 页由静态 index.md 承担） */
 export function paginationParams(count: number): { params: Record<string, string> }[] {
   const total = totalPagesOf(count);

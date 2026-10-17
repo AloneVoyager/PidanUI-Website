@@ -24,10 +24,12 @@ withDefaults(
 @use 'variables' as *;
 @use 'mixins' as *;
 
+// 紧凑卡片网格：新闻 / 分类 / 标签 / 搜索共用
+// auto-fill 让窄屏自然降为单列，宽屏（搜索对话框）自动增加列数
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
 }
 
 .empty-state {

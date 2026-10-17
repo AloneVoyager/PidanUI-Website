@@ -34,7 +34,7 @@ export function toBasePost(page: LoaderPage): Post {
     stickypost: frontmatter.stickypost === true,
     categories: toArray(frontmatter.categories),
     tags: toArray(frontmatter.tags),
-    cover: frontmatter.cover || '/images/default_cover.png',
+    cover: frontmatter.cover || '/images/default_cover.webp',
     description: frontmatter.description ?? '',
   };
 }
