@@ -2,6 +2,8 @@
 import { computed, onMounted } from 'vue';
 import { useData } from 'vitepress';
 import { setupScrollReveal } from './composables/useScrollReveal';
+import { usePageProgress } from './composables/usePageProgress';
+import PageProgress from './components/PageProgress.vue';
 import SiteSidebar from './components/SiteSidebar.vue';
 import SiteRightBar from './components/SiteRightBar.vue';
 import SearchDialog from './components/SearchDialog.vue';
@@ -21,6 +23,8 @@ import NotFoundView from './components/views/NotFoundView.vue';
 
 // 与 VitePress 自定义主题约定一致：按 frontmatter.layout 切换页面外壳
 const { page, frontmatter, params } = useData();
+
+const { progress, active: progressActive, done: progressDone, completeRendering } = usePageProgress();
 
 const layout = computed(() => (frontmatter.value.layout as string) || 'post');
 // 静态页面没有动态路由参数，params 可能为 undefined
@@ -50,6 +54,12 @@ function afterPageEnter(): void {
   setupScrollReveal();
 }
 
+/** 入场动画结束后，进度条再等待字体与新页面图片等真实资源就绪 */
+function onPageEntered(): void {
+  afterPageEnter();
+  completeRendering();
+}
+
 onMounted(() => {
   beforePageEnter();
   afterPageEnter();
@@ -57,6 +67,8 @@ onMounted(() => {
 </script>
 
 <template>
+  <PageProgress :progress="progress" :active="progressActive" :done="progressDone" />
+
   <SiteSidebar />
 
   <!-- 主内容地标：浏览器阅读模式据此定位正文，忽略侧栏等噪声 -->
@@ -68,7 +80,7 @@ onMounted(() => {
       mode="out-in"
       appear
       @before-enter="beforePageEnter"
-      @after-enter="afterPageEnter"
+      @after-enter="onPageEntered"
     >
       <NotFoundView v-if="page.isNotFound" key="not-found" />
       <HomeView v-else-if="layout === 'home'" key="home" />

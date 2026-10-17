@@ -2,7 +2,7 @@
 
 ![Last Commit](https://img.shields.io/github/last-commit/PidanEggyTeam/PidanUI-Website?label=Last%20Commit)
 ![VitePress](https://img.shields.io/badge/VitePress-1.6.4-5C73E7?logo=VitePress&logoColor=white)
-![Vue](https://img.shields.io/badge/Vue-3.5.43-4FC08D?logo=Vue.js&logoColor=white)
+![Vue](https://img.shields.io/badge/Vue-3.5.44-4FC08D?logo=Vue.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-3178C6?logo=TypeScript&logoColor=white)
 ![SCSS](https://img.shields.io/badge/SCSS-Styles-CC6699?logo=Sass&logoColor=white)
 ![License](https://img.shields.io/badge/License-AGPL--3.0-orange)
