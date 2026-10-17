@@ -33,9 +33,9 @@ let stopDrawerGestures: (() => void) | undefined;
 
 const NAV_ITEMS = [
   { key: 'home', label: '首页', href: '/', icon: 'fa-solid fa-house' },
-  { key: 'download', label: '下载', href: '/download.html', icon: 'fa-solid fa-download' },
+  { key: 'download', label: '下载', href: '/download', icon: 'fa-solid fa-download' },
   { key: 'news', label: '新闻', href: '/posts/', icon: 'fa-solid fa-newspaper' },
-  { key: 'about', label: '关于', href: '/about.html', icon: 'fa-solid fa-circle-info' },
+  { key: 'about', label: '关于', href: '/about', icon: 'fa-solid fa-circle-info' },
 ] as const;
 
 type NavKey = (typeof NAV_ITEMS)[number]['key'];

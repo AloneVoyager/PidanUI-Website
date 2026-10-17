@@ -246,12 +246,18 @@
 // ---- 响应式：≤960px 左右侧栏分别变为抽屉 ----
 @include respond-below($bp-md) {
   .sidebar-left {
+    visibility: hidden;
     transform: translateX(-100%);
     box-shadow: 0 0 40px 0 rgba(0, 0, 0, var(--drawer-shadow-alpha, 0));
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s linear 0.3s;
+    // 与右侧抽屉一致：允许纵向滚动，横向拖动交给手势逻辑，
+    // 否则浏览器会接管横向手势并触发 pointercancel，表现为拖动回弹
+    touch-action: pan-y;
 
     &.open {
+      visibility: visible;
       transform: translateX(0);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s;
     }
   }
 
@@ -283,6 +289,7 @@
   }
 
   .sidebar-left.is-dragging {
+    visibility: visible;
     transform: translateX(calc(var(--drawer-offset, 0px) - 100%));
   }
 

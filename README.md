@@ -12,10 +12,10 @@ PidanUI 项目的官方网站，使用 VitePress + TypeScript + SCSS 构建，�
 ## 网站结构
 
 - **首页**：项目介绍、特性展示、下载入口。
-- **下载**：`/download.html`，一个版本列表，提供 PidanUI 多个版本的下载链接。
+- **下载**：`/download`，一个版本列表，提供 PidanUI 多个版本的下载链接。
 - **新闻**：`/posts/`，使用 VitePress 博客特性的区域，用于展示 PidanUI 的项目公告等文章，实现了完整的博客功能和 Markdown 样式支持。
-- **关于**：`/about.html`，展示 PidanUI 项目的简介及项目背后的故事。
-- **蛋仔专属性格测试**：`/personality-test.html`，蛋仔专属性格测试小游戏，关于页的小彩蛋。
+- **关于**：`/about`，展示 PidanUI 项目的简介及项目背后的故事。
+- **蛋仔专属性格测试**：`/personality-test`，蛋仔专属性格测试小游戏，关于页的小彩蛋。
 
 ## 技术栈
 

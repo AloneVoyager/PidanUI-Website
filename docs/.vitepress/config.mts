@@ -33,9 +33,9 @@ function xmlEscape(value: unknown): string {
     .replace(/'/g, '&apos;');
 }
 
-/** 由页面相对路径推导线上绝对地址（VitePress 默认 cleanUrls=false，非 index 页以 .html 结尾） */
+/** 由页面相对路径推导线上绝对地址（cleanUrls=true，非 index 页不带扩展名） */
 function absolutePageUrl(relativePath: string): string {
-  const route = relativePath.replace(/index\.md$/, '').replace(/\.md$/, '.html');
+  const route = relativePath.replace(/index\.md$/, '').replace(/\.md$/, '');
   return new URL(route, `${SITE.newsUrl}/`).href;
 }
 
@@ -54,8 +54,8 @@ export default defineConfig({
   // 将新闻列表页（docs/news/ 源目录）映射到 /posts/ URL 路径。
   // 这样：
   //   docs/news/index.md        → /posts/
-  //   docs/news/page/[page].md  → /posts/page/[page].html
-  // 正文文章 docs/posts/*.md 的 URL 仍为 /posts/<slug>.html，
+  //   docs/news/page/[page].md  → /posts/page/[page]
+  // 正文文章 docs/posts/*.md 的 URL 仍为 /posts/<slug>，
   // 两者因形式不同（目录 vs. 具体文件）不会互相冲突。
   rewrites: {
     // 静态首页：news/index.md 的源路径映射到 posts/index.md
@@ -124,7 +124,9 @@ export default defineConfig({
     ],
   ],
   base: BASE,
-  cleanUrls: false,
+  // 使用无扩展名路径（/about、/posts/xxx）：构建产物仍是 .html 文件，
+  // 但站内链接与 canonical 地址都不再带 .html 后缀，更干净也更利于分享。
+  cleanUrls: true,
   // Markdown 扩展：脚注 / 任务列表 / 上下标 / 高亮 / 定义列表 / 数学公式 / [TOC]。
   // 其余语法（表格、Shiki 代码高亮、标题锚点、emoji、容器等）VitePress 已内置。
   markdown: {

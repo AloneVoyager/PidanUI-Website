@@ -48,7 +48,7 @@ const FEATURES = [
         </span>
         <h2>立即 <span class="highlight">下载</span></h2>
         <p>获取最新版本 · Windows 7/10/11 · 完全免费</p>
-        <a class="arrow-hint" :href="withBase('/download.html')">
+        <a class="arrow-hint" :href="withBase('/download')">
           前往下载
           <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
         </a>

@@ -58,7 +58,7 @@ export function collectTerms(kind: 'categories' | 'tags'): TermItem[] {
     .map(([name, count]) => ({
       name,
       count,
-      path: `/${kind}/${encodeURIComponent(name)}.html`,
+      path: `/${kind}/${encodeURIComponent(name)}`,
     }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 }

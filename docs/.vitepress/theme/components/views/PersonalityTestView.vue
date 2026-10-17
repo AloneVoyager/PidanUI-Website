@@ -56,7 +56,7 @@
         <button class="btn btn--ghost" type="button" @click="restart">重新测试</button>
       </section>
 
-      <a class="back-link" :href="withBase('/about.html')">
+      <a class="back-link" :href="withBase('/about')">
         <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
         返回关于页
       </a>

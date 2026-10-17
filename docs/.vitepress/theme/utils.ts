@@ -33,9 +33,9 @@ export function termDir(kind: 'categories' | 'tags', name: string): string {
   return `/${kind}/${encodeURIComponent(name)}`;
 }
 
-/** 分类 / 标签第 1 页地址，如 /categories/公告.html */
+/** 分类 / 标签第 1 页地址，如 /categories/公告（cleanUrls，无扩展名） */
 export function termPath(kind: 'categories' | 'tags', name: string): string {
-  return `${termDir(kind, name)}.html`;
+  return termDir(kind, name);
 }
 
 /** 分类 / 标签第 n(>=2) 页地址前缀，如 /categories/公告/page/ */
