@@ -68,7 +68,7 @@ const COPYRIGHT = [
             <h2>蛋仔专属性格测试</h2>
             <p>几道关于日常性格与游戏习惯的小问题，测出最适配你的专属蛋仔角色。</p>
           </div>
-          <a class="game-entry-btn" :href="withBase('/personality-test.html')">开始测试 🚀</a>
+          <a class="game-entry-btn" :href="withBase('/personality-test')">开始测试 🚀</a>
         </section>
 
         <!-- 项目简介 -->

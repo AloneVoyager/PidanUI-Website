@@ -2,7 +2,7 @@
 export interface Post {
   /** 标题 */
   title: string;
-  /** 站点内路由，如 /posts/xxx.html */
+  /** 站点内路由，如 /posts/xxx */
   url: string;
   /** 展示用日期 YYYY-MM-DD */
   date: string;

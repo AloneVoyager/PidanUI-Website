@@ -7,7 +7,7 @@ const props = defineProps<{
   current: number;
   /** 总页数 */
   totalPages: number;
-  /** 第 1 页地址，如 / 、/archives/ 、/categories/公告.html */
+  /** 第 1 页地址，如 / 、/archives/ 、/categories/公告 */
   firstHref: string;
   /** 第 n(>=2) 页地址前缀，如 /page/ 、/archives/page/ 、/categories/公告/page/ */
   pagePrefix: string;

@@ -25,7 +25,7 @@ const dateISO = computed(() => {
   return Number.isNaN(date.getTime()) ? dateText.value : date.toISOString();
 });
 
-/** 去掉前后缀，便于用 relativePath（posts/x.md）匹配 loader 产出的 url（/posts/x.html） */
+/** 去掉前后缀，便于用 relativePath（posts/x.md）匹配 loader 产出的 url（/posts/x） */
 function normalize(value: string): string {
   return value.replace(/^\/+/, '').replace(/\.md$/, '').replace(/\.html$/, '');
 }

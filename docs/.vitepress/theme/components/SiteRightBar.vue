@@ -78,6 +78,10 @@ const drawerStyle = computed(
           <i class="fa-brands fa-qq" aria-hidden="true"></i>
           QQ 交流群
         </a>
+        <a :href="SOCIAL_LINKS.Alternate" target="_blank" rel="noopener">
+          <i class="fa-solid fa-globe" aria-hidden="true"></i>
+          另一个 PidanUI 官网
+        </a>
       </div>
     </section>
 

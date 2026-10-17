@@ -18,7 +18,9 @@ export const SOCIAL_LINKS = {
   RSS: '/atom.xml',
   GitHub: 'https://github.com/PidanEggyTeam',
   Bilibili: 'https://space.bilibili.com/3493144343612119',
-  QQ群: 'https://qm.qq.com/q/IIwIhrHycq',
+  QQ群: 'https://qm.qq.com/q/WiTRsJYre0',
+  /** 另一个 PidanUI 官网（社区维护的镜像站） */
+  Alternate: 'https://eggyui.mysxl.cn/',
 } as const;
 
 /** 文章列表每页显示数量 */
