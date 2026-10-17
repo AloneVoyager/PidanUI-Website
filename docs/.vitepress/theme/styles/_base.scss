@@ -34,6 +34,9 @@
 
 :root {
   color-scheme: light;
+  // 与全站字体保持一致，供 VitePress 内置组件（代码块、搜索等）复用
+  --vp-font-family-base: #{$font-ui};
+  --vp-font-family-mono: #{$font-mono};
   --brand: #ffc53d;
   --brand-deep: #ff9f1a;
   --brand-soft: #fff7e0;
