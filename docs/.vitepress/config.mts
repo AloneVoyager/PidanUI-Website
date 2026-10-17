@@ -197,7 +197,7 @@ export default defineConfig({
     const publishedISO =
       published && !Number.isNaN(published.getTime()) ? published.toISOString() : undefined;
     const cover =
-      absoluteAssetUrl(frontmatter.cover) ?? absoluteAssetUrl('/images/default_cover.png');
+      absoluteAssetUrl(frontmatter.cover) ?? absoluteAssetUrl('/images/default_cover.webp');
 
     if (publishedISO) {
       head.push(['meta', { property: 'article:published_time', content: publishedISO }]);
@@ -225,7 +225,7 @@ export default defineConfig({
         '@type': 'Organization',
         name: SITE.brand,
         url: SITE.mainUrl,
-        logo: { '@type': 'ImageObject', url: absoluteAssetUrl('/images/logo.png') },
+        logo: { '@type': 'ImageObject', url: absoluteAssetUrl('/images/logo.webp') },
       },
       ...(publishedISO ? { datePublished: publishedISO, dateModified: publishedISO } : {}),
       ...(cover ? { image: [cover] } : {}),
@@ -312,7 +312,7 @@ export default defineConfig({
       `  <id>${xmlEscape(SITE.newsUrl)}</id>`,
       `  <updated>${updated}</updated>`,
       `  <author><name>${xmlEscape(SITE.author)}</name></author>`,
-      `  <icon>${xmlEscape(absolute('/images/logo.png'))}</icon>`,
+      `  <icon>${xmlEscape(absolute('/images/logo.webp'))}</icon>`,
       items,
       '</feed>',
       '',

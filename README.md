@@ -33,7 +33,7 @@ PidanUI 项目的官方网站，使用 VitePress + TypeScript + SCSS 构建，�
 2. 安装 `pnpm`：在终端执行 `npm install -g pnpm` 命令来安装 `pnpm`（可以执行 `pnpm --version` 来验证安装是否完成，安装后建议重启终端）
 3. 在项目文件夹下打开终端，执行 `pnpm install` 命令安装依赖
 4. 执行 `pnpm dev`（或 `pnpm run dev`）命令来启动开发服务器（开发服务器网址一般是 `http://localhost:5173`），执行 `pnpm build`（或 `pnpm run build`）命令来生成静态产物
-5. 在 `docs/dist` 
+5. 在 `docs/dist` 下找到静态网页的构建产物。
 
 ## 字体
 
