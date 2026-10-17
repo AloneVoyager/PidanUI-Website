@@ -1,8 +1,8 @@
 ---
 title: Pidan System Win11 26H2 正式发布
 date: 2026-10-17 8:00:00
-categories: [公告]
-tags: [公告, 发布]
+categories: [新版本发布]
+tags: [Pidan System, 发布]
 description: EggyUI Finale Mini 已正式发布，它是 EggyUI 的第二个独立安装包版本，也是最后一个版本。本文说明该版本的定位、特性与发布意义。
 stickypost: false
 cover: https://img.remit.ee/i/1vxnuuLttEYy
