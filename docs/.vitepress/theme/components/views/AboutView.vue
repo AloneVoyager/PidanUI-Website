@@ -19,16 +19,8 @@ const RENAME_REASONS = [
 
 const FEATURES = [
   {
-    title: '不修改系统核心文件',
-    desc: '所有美化内容通过主题包、壁纸、Rainmeter 小组件等安全方式部署，不替换 imageres.dll.mun、shell32.dll.mun 等系统文件，安装与卸载不影响系统稳定性。',
-  },
-  {
     title: '辅助组件使用 .NET 10',
     desc: '抛弃早期使用的易语言组件，采用 .NET 10 重构辅助程序，解决高 DPI 缩放适配与杀毒软件误报问题。',
-  },
-  {
-    title: '精简美化方案',
-    desc: '聚焦主题、小组件等基础美化特性，移除冗余、持久化的美化方式，让系统体验更接近原版 Windows。',
   },
   {
     title: '清晰的定位',
@@ -39,14 +31,12 @@ const FEATURES = [
 const COMPOSITION = [
   { name: '主题包', desc: '蛋仔风格的 Windows 主题，支持 Windows 7 ~ Windows 11。' },
   { name: 'Rainmeter 小组件', desc: '配套的桌面小组件，支持 Windows 10 1607 ~ Windows 11。' },
-  { name: '辅助组件', desc: '基于 .NET 10 开发的辅助程序，用于主题部署与组件管理。' },
-  { name: '系统镜像', desc: '轻简版系统镜像，在保持系统可用性的前提下适量精简，降低资源占用。' },
+  { name: '辅助组件', desc: '基于 .NET 10 和 Python 开发的辅助程序，用于主题部署与组件管理。' },
 ] as const;
 
 const DISTRIBUTION = [
   { name: 'GitHub Releases', desc: '辅助组件、主题包等代码相关资源。' },
   { name: '项目官网', desc: '项目介绍、新闻动态、下载导航。' },
-  { name: '指定资源站', desc: '系统镜像体积较大，通过项目指定的资源站发布。' },
 ] as const;
 
 const COPYRIGHT = [
@@ -75,7 +65,7 @@ const COPYRIGHT = [
         <!-- 性格测试入口 -->
         <section class="card game-entry">
           <div class="game-entry-text">
-            <h2>🎮 蛋仔专属性格测试</h2>
+            <h2>蛋仔专属性格测试</h2>
             <p>几道关于日常性格与游戏习惯的小问题，测出最适配你的专属蛋仔角色。</p>
           </div>
           <a class="game-entry-btn" :href="withBase('/personality-test.html')">开始测试 🚀</a>
