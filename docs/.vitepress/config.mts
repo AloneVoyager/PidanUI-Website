@@ -8,8 +8,8 @@ import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
 import taskLists from 'markdown-it-task-lists';
 import { createContentLoader, defineConfig, type HeadConfig } from 'vitepress';
-import { archiveYears } from './build/posts';
-import { SITE } from './theme/config';
+import { archiveYears } from './build/posts.ts';
+import { SITE } from './theme/config.ts';
 
 // ============================================================
 // 部署路径（base）
@@ -255,13 +255,12 @@ export default defineConfig({
     return head;
   },
   vite: {
-    // 使用 Sass 现代 JS API（Vite 5.4+），避免 Dart Sass 2.0 移除 legacy API 后构建失败
+    // Sass 现代 API 在 Vite 8 已是唯一实现（不再提供 `api` 选项），
+    // 这里只需让 .vue 里的 scoped <style lang="scss"> 也能直接
+    // @use 'variables' / @use 'mixins'，无需写相对路径
     css: {
       preprocessorOptions: {
         scss: {
-          api: 'modern',
-          // 让 .vue 里的 scoped <style lang="scss"> 也能直接
-          // @use 'variables' / @use 'mixins'，无需写相对路径
           loadPaths: [fileURLToPath(new URL('./theme/styles', import.meta.url))],
         },
       },

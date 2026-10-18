@@ -1,6 +1,6 @@
 import { createContentLoader } from 'vitepress';
-import type { Post } from './types';
-import { byDateDesc, stripHtml, toBasePost } from './postMap';
+import type { Post } from './types.ts';
+import { byDateDesc, stripHtml, toBasePost } from './postMap.ts';
 
 /**
  * 全文检索语料加载器（**含纯文本正文**，截断至 CONTENT_LIMIT 字）。
