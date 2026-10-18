@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
-import { PAGE_SIZE } from '../theme/config';
+import { PAGE_SIZE } from '../theme/config.ts';
 
 /**
  * 构建期文章元数据读取（供 *.paths.ts 动态路由使用）。

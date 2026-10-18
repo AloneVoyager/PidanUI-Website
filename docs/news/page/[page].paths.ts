@@ -1,4 +1,4 @@
-import { countPosts, paginationParams } from '../../.vitepress/build/posts';
+import { countPosts, paginationParams } from '../../.vitepress/build/posts.ts';
 
 /**
  * 新闻列表分页动态路由。

@@ -1,6 +1,6 @@
 import { createContentLoader } from 'vitepress';
-import type { Post } from './types';
-import { byDateDesc, toBasePost } from './postMap';
+import type { Post } from './types.ts';
+import { byDateDesc, toBasePost } from './postMap.ts';
 
 /**
  * 轻量文章数据加载器（**不含正文**）。

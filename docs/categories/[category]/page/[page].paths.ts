@@ -1,4 +1,4 @@
-import { termPaginationParams } from '../../../.vitepress/build/posts';
+import { termPaginationParams } from '../../../.vitepress/build/posts.ts';
 
 /**
  * 分类列表分页：第 1 页为 /categories/<name>.html，此处生成第 2..N 页

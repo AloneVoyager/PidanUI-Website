@@ -1,5 +1,5 @@
-import { formatDate, toArray } from './utils';
-import type { Post } from './types';
+import { formatDate, toArray } from './utils.ts';
+import type { Post } from './types.ts';
 
 // ============================================================
 // 内容加载器共用映射

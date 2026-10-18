@@ -1,4 +1,4 @@
-import { countYears, yearPaginationParams } from '../../.vitepress/build/posts';
+import { countYears, yearPaginationParams } from '../../.vitepress/build/posts.ts';
 
 /**
  * 归档动态路由：按年分页，每年一页。
