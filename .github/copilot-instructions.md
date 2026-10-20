@@ -52,12 +52,12 @@ docs/
    ├─ build/posts.ts    # 构建期读取 docs/posts/*.md frontmatter（供 *.paths.ts 使用）
    └─ theme/
       ├─ index.ts, Layout.vue        # 主题入口与页面外壳（按 layout 分派视图）
-      ├─ config.ts                   # SITE / SOCIAL_LINKS / PAGE_SIZE / GISCUS 常量（唯一来源）
+      ├─ config.ts                   # SITE / PAGE_SIZE / GISCUS 常量（唯一来源）
       ├─ types.ts, postMap.ts, utils.ts
       ├─ posts.data.ts, postsSearch.data.ts   # 内容加载器（轻量 / 含正文）
       ├─ components/  components/views/       # 组件与页面视图
       ├─ composables/                         # useTheme / useSearch / useMobileDrawer / usePostEnhance …
-      ├─ data/                                # download.json、personalityTest.ts
+      ├─ data/                                # download.json、personalityTest.ts、socialLinks.ts
       └─ styles/                              # 全局 SCSS（入口 index.scss）
 ```
 
@@ -82,7 +82,8 @@ docs/
 - 两个内容加载器职责不同，勿混用：
   - `posts.data.ts`：轻量列表数据，**不含正文**，会进入每个页面公共 chunk；
   - `postsSearch.data.ts`：含纯文本正文，仅给本地搜索语料用。
-- 站点信息、社交链接、分页大小、giscus 配置都在 `theme/config.ts`，改链接改常量，不要散落在组件里。
+- 站点信息、分页大小、giscus 配置都在 `theme/config.ts`，改链接改常量，不要散落在组件里。
+- 「关注我们」渠道列表在 `theme/data/socialLinks.ts`（`SOCIAL_LINKS`），增删渠道只改数据；站内相对路径需以 `/` 开头，组件会经 `withBase` 处理并给 `.xml` 订阅源补 `alternate` / Atom MIME。
 - 文章内增强（`[TOC]`、页内锚点、Mermaid、代码块复制）由 `usePostEnhance.ts` 在客户端完成，是纯渐进增强，禁用 JS 时正文仍可读。
 
 ## 样式约定
