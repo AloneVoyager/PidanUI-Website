@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 import { computed, type CSSProperties } from 'vue';
 import { withBase } from 'vitepress';
-import { SOCIAL_LINKS } from '@/config';
+import { SOCIAL_LINKS } from '@/data/socialLinks';
 import { latestPosts } from '@/composables/usePosts';
 import {
   activeMobileDrawer,
@@ -13,6 +13,18 @@ import {
 
 // 右侧小部件栏：最新动态 + 关注我们 + 项目状态（搜索框已移至新闻页顶部）
 const posts = latestPosts(3);
+
+// 关注我们：站内相对路径补 base，订阅源补 alternate / Atom MIME
+const socialLinks = SOCIAL_LINKS.map((link) => {
+  const isFeed = link.url.endsWith('.xml');
+  return {
+    ...link,
+    href: link.url.startsWith('/') ? withBase(link.url) : link.url,
+    rel: isFeed ? 'alternate noopener' : 'noopener',
+    type: isFeed ? 'application/atom+xml' : undefined,
+  };
+});
+
 const drawerOpen = computed(() => activeMobileDrawer.value === 'right');
 const drawerStyle = computed(
   () =>
@@ -62,25 +74,16 @@ const drawerStyle = computed(
     <section class="widget">
       <h2 class="widget-title">关注我们</h2>
       <div class="social-links">
-        <a :href="withBase(SOCIAL_LINKS.RSS)" target="_blank" rel="alternate noopener" type="application/atom+xml">
-          <i class="fa-solid fa-rss" aria-hidden="true"></i>
-          RSS 订阅
-        </a>
-        <a :href="SOCIAL_LINKS.GitHub" target="_blank" rel="noopener">
-          <i class="fa-brands fa-github" aria-hidden="true"></i>
-          GitHub
-        </a>
-        <a :href="SOCIAL_LINKS.Bilibili" target="_blank" rel="noopener">
-          <i class="fa-brands fa-bilibili" aria-hidden="true"></i>
-          哔哩哔哩
-        </a>
-        <a :href="SOCIAL_LINKS.QQ群" target="_blank" rel="noopener">
-          <i class="fa-brands fa-qq" aria-hidden="true"></i>
-          QQ 交流群
-        </a>
-        <a :href="SOCIAL_LINKS.Alternate" target="_blank" rel="noopener">
-          <i class="fa-solid fa-globe" aria-hidden="true"></i>
-          另一个 PidanUI 官网
+        <a
+          v-for="link in socialLinks"
+          :key="link.url"
+          :href="link.href"
+          target="_blank"
+          :rel="link.rel"
+          :type="link.type"
+        >
+          <i :class="link.iconClass" aria-hidden="true"></i>
+          {{ link.name }}
         </a>
       </div>
     </section>
