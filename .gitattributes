@@ -1,2 +1,5 @@
-# VitePress Project
-docs/** -linguist-documentation
+# PidanUI Website (Nuxt)
+# 内容目录下的 md 不计入 GitHub 语言统计（等价于旧仓库对 docs/** 的处理）
+content/** -linguist-documentation
+# 静态资源视为外部资源，避免图片 / giscus 样式影响语言统计
+public/** linguist-vendored

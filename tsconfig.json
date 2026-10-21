@@ -1,26 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "strict": true,
-    "allowImportingTsExtensions": true,
-    "jsx": "preserve",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "isolatedModules": true,
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "types": ["node", "vitepress"],
-    "paths": {
-      "@/*": ["./docs/.vitepress/theme/*"]
-    }
-  },
-  "include": [
-    "docs/.vitepress/**/*.ts",
-    "docs/.vitepress/**/*.mts",
-    "docs/.vitepress/**/*.vue"
-  ],
-  "exclude": ["node_modules", "docs/.vitepress/dist", "docs/.vitepress/cache"]
+  // Nuxt 生成的 tsconfig 包含 app / server / shared 三套别名与自动导入声明
+  "extends": "./.nuxt/tsconfig.json"
 }
