@@ -1,0 +1,661 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// ============================================================
+// 文章详情 + Markdown 正文排版
+//
+// 说明：本文件保持「全局引入」而非组件 scoped —— 正文由 VitePress 的
+// <Content /> 组件渲染，其 DOM 不携带 PostView 的 data-v 标记，scoped
+// 选择器无法命中（除非全量 :deep()，反而更难维护）。
+// 所有颜色都走 CSS 变量（见 _base.scss），深浅色模式自动跟随。
+// ============================================================
+
+// 代码块复制按钮的两个状态图标：直接使用 Font Awesome 7（CDN）字形，
+//   常规态 = fa-copy（U+F0C5）、完成态 = fa-check（U+F00C）
+
+// ---- 文章外壳 ----
+.post-view {
+  max-width: $max-w;
+  margin: 0 auto;
+  padding: 30px 34px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid $line;
+  border-radius: $radius-l;
+  box-shadow: $shadow-card;
+
+  // 深色下用半透明深灰底（手动深色 + 系统深色均生效）
+  @include dark-mode {
+    background: rgba(31, 31, 35, 0.6);
+  }
+}
+
+.post-back {
+  margin-bottom: 18px;
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: $brand-deep;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.post-header {
+  .post-title {
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.3;
+    color: $ink;
+    letter-spacing: -0.01em;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 0 24px;
+    font-size: 13px;
+    color: $ink-3;
+
+    .tag {
+      padding: 2px 10px;
+      color: $brand-deep;
+      background: rgba(255, 159, 26, 0.1);
+      border-radius: $radius-full;
+
+      &:hover {
+        background: rgba(255, 159, 26, 0.2);
+      }
+    }
+  }
+}
+
+// ============================================================
+// 正文排版（Markdown）
+// ============================================================
+.post-content {
+  font-size: 16px;
+  line-height: 1.85;
+  color: $ink-2;
+  // 长单词 / 长 URL 不撑破布局
+  overflow-wrap: break-word;
+  word-break: break-word;
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+
+  // ---- 标题 ----
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    position: relative;
+    margin: 1.6em 0 0.7em;
+    font-weight: 700;
+    line-height: 1.4;
+    color: $ink;
+    scroll-margin-top: 20px;
+
+    // 标题锚点：默认隐藏，hover 标题时在左侧淡入一个 #
+    .header-anchor {
+      position: absolute;
+      top: 0;
+      left: -0.9em;
+      color: $brand-deep;
+      text-decoration: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+
+      &::before {
+        content: '\f0c1';
+        font-family: 'Font Awesome 7 Free';
+        font-size: 0.8em;
+        font-weight: 900;
+      }
+    }
+
+    &:hover .header-anchor {
+      opacity: 1;
+    }
+  }
+
+  h1 {
+    font-size: 1.7em;
+  }
+
+  h2 {
+    font-size: 1.35em;
+    padding-bottom: 0.35em;
+    border-bottom: 1px solid $line;
+  }
+
+  h3 {
+    font-size: 1.15em;
+  }
+
+  h4 {
+    font-size: 1.02em;
+  }
+
+  h5 {
+    font-size: 0.95em;
+    color: $ink-2;
+  }
+
+  h6 {
+    font-size: 0.9em;
+    color: $ink-3;
+  }
+
+  // ---- 文本 ----
+  p {
+    margin: 0.85em 0;
+  }
+
+  a {
+    color: $brand-deep;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+
+  strong {
+    font-weight: 700;
+    color: $ink;
+  }
+
+  del {
+    color: $ink-3;
+  }
+
+  // ==高亮==
+  mark {
+    padding: 0.05em 0.28em;
+    color: $ink;
+    background: linear-gradient(transparent 58%, rgba(255, 197, 61, 0.7) 58%);
+    border-radius: 3px;
+  }
+
+  // H~2~O / X^2^
+  sub,
+  sup {
+    font-size: 0.75em;
+    line-height: 0;
+  }
+
+  // <kbd>
+  kbd {
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    font-family: $font-mono;
+    font-size: 0.82em;
+    line-height: 1.6;
+    color: $ink;
+    background: $bg;
+    border: 1px solid $line;
+    border-bottom-width: 2px;
+    border-radius: $radius-s;
+  }
+
+  // ---- 列表 ----
+  ul,
+  ol {
+    margin: 0.7em 0 1em 1.5em;
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  li {
+    margin: 0.3em 0;
+
+    &::marker {
+      color: $brand-deep;
+    }
+  }
+
+  li > ul,
+  li > ol {
+    margin: 0.25em 0 0.25em 1.2em;
+  }
+
+  // ---- 任务列表 ----
+  .task-list-item {
+    list-style: none;
+
+    > input[type='checkbox'] {
+      width: 1em;
+      height: 1em;
+      margin: 0 0.5em 0 0;
+      vertical-align: -0.12em;
+      accent-color: $brand-deep;
+      cursor: default;
+    }
+
+    > label {
+      display: inline;
+    }
+  }
+
+  ul.contains-task-list {
+    margin-left: 1.6em;
+  }
+
+  // ---- 定义列表 ----
+  dl {
+    margin: 1em 0;
+  }
+
+  dt {
+    margin-top: 0.7em;
+    font-weight: 600;
+    color: $ink;
+  }
+
+  dd {
+    margin: 0.15em 0 0 1.1em;
+    padding-left: 0.8em;
+    color: $ink-2;
+    border-left: 2px solid rgba(255, 159, 26, 0.35);
+  }
+
+  // ---- 引用 ----
+  blockquote {
+    margin: 1.1em 0;
+    padding: 0.7em 1.1em;
+    color: $ink-2;
+    background: rgba(255, 159, 26, 0.08);
+    border-left: 3px solid $brand-static;
+    border-radius: 0 10px 10px 0;
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+
+    // 嵌套引用
+    blockquote {
+      margin: 0.7em 0;
+      background: rgba(255, 159, 26, 0.05);
+      border-left-color: rgba(255, 159, 26, 0.5);
+    }
+  }
+
+  // ---- 分隔线 ----
+  hr {
+    margin: 2em 0;
+    border: none;
+    border-top: 1px solid $line;
+  }
+
+  // ---- 行内代码 ----
+  code {
+    padding: 0.15em 0.42em;
+    font-family: $font-mono;
+    font-size: 0.9em;
+    color: var(--inline-code-ink);
+    background: var(--inline-code-bg);
+    border-radius: 6px;
+  }
+
+  // ---- 代码块（VitePress 输出 <div class="language-xxx vp-adaptive-theme">）----
+  div[class*='language-'] {
+    position: relative;
+    margin: 1.2em 0;
+    background: var(--code-bg);
+    border: 1px solid $line;
+    border-radius: $radius-m;
+    overflow: hidden;
+
+    // 语言标签（左上角）
+    > .lang {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      padding: 3px 12px;
+      font-family: $font-mono;
+      font-size: 11px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: $ink-3;
+      background: var(--code-hd);
+      border-bottom-right-radius: $radius-s;
+      user-select: none;
+      pointer-events: none;
+
+      // 无语言代码块 VitePress 会输出空的 .lang，隐藏之
+      &:empty {
+        display: none;
+      }
+    }
+
+    // 复制按钮（右上角，hover / 聚焦时淡入）
+    > .copy {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      color: $ink-3;
+      background: transparent;
+      border: none;
+      border-radius: $radius-s;
+      opacity: 0;
+      transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+
+      &::before {
+        content: '\f0c5';
+        display: block;
+        font-family: 'Font Awesome 7 Free';
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1;
+      }
+
+      &:hover,
+      &:focus-visible {
+        color: $brand-deep;
+        background: var(--code-hd);
+      }
+
+      &.copied {
+        color: $brand-deep;
+        opacity: 1;
+
+        &::before {
+          content: '\f00c';
+          font-weight: 900;
+        }
+      }
+    }
+
+    &:hover > .copy,
+    > .copy:focus-visible {
+      opacity: 1;
+    }
+
+    pre {
+      margin: 0;
+      // 顶部留出语言标签 / 复制按钮所在的「标题条」高度，避免遮挡首行代码
+      padding: 32px 16px 14px;
+      overflow-x: auto;
+      background: transparent;
+      @include thin-scrollbar;
+    }
+
+    code {
+      padding: 0;
+      font-size: 0.86em;
+      line-height: 1.7;
+      color: inherit;
+      background: none;
+      border-radius: 0;
+    }
+
+    // Shiki 的每一行是独立 span.line（MDC 默认 ProsePre 自带这条规则，
+    // 这里改为自定义 ProsePre 后需要自己保留）
+    code .line {
+      display: block;
+    }
+  }
+
+  // Shiki 双主题 token 上色
+  // 行内自定义属性（--shiki-light / --shiki-dark）由 Shiki 写在每个 span 上，
+  // 本站为自定义主题，需在此自行应用。
+  .shiki span {
+    color: var(--shiki-light, inherit);
+
+    // 深色（手动或系统）下改用 Shiki 的 dark token
+    @include dark-mode {
+      color: var(--shiki-dark, inherit);
+    }
+  }
+
+  // ---- 表格 ----
+  table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 1.2em 0;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: 14.5px;
+    @include thin-scrollbar;
+
+    th,
+    td {
+      padding: 9px 14px;
+      text-align: left;
+      border: 1px solid $line;
+    }
+
+    thead th {
+      font-weight: 600;
+      color: $ink;
+      background: $bg;
+    }
+
+    tbody tr:nth-child(2n) {
+      background: rgba(127, 127, 127, 0.07);
+    }
+  }
+
+  // ---- 图片 ----
+  img {
+    max-width: 100%;
+    height: auto;
+    margin: 1em 0;
+    border-radius: $radius-m;
+  }
+
+  // 空图片（![]() ）不显示破图
+  img:not([src]),
+  img[src=''] {
+    display: none;
+  }
+
+  // ---- <details> 折叠 ----
+  details {
+    margin: 1em 0;
+    padding: 0.8em 1em;
+    background: $bg;
+    border: 1px solid $line;
+    border-radius: $radius-m;
+
+    summary {
+      font-weight: 600;
+      color: $ink;
+      cursor: pointer;
+
+      &::marker {
+        color: $brand-deep;
+      }
+    }
+
+    &[open] summary {
+      margin-bottom: 0.6em;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // ---- 脚注 ----
+  .footnote-ref {
+    margin-left: 2px;
+    font-size: 0.75em;
+
+    a {
+      padding: 0 0.3em;
+      color: $brand-deep;
+      text-decoration: none;
+      background: var(--inline-code-bg);
+      border-radius: 4px;
+    }
+  }
+
+  .footnotes {
+    margin-top: 1.4em;
+    font-size: 0.92em;
+    color: $ink-3;
+
+    .footnotes-list {
+      margin-left: 1.4em;
+    }
+
+    .footnote-item p {
+      margin: 0.35em 0;
+    }
+
+    .footnote-backref {
+      margin-left: 4px;
+      text-decoration: none;
+    }
+  }
+
+  hr.footnotes-sep {
+    margin-top: 2em;
+  }
+
+  // ---- 数学公式（KaTeX，构建期由 rehype-katex 渲染为 HTML + MathML）----
+  .katex-display {
+    margin: 1em 0;
+    padding: 2px 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .katex {
+    font-size: 1.06em;
+  }
+
+  // ---- [TOC] 目录 ----
+  .post-toc {
+    margin: 1.2em 0;
+    padding: 14px 18px;
+    background: $bg;
+    border: 1px solid $line;
+    border-left: 3px solid $brand-static;
+    border-radius: 0 $radius-m $radius-m 0;
+  }
+
+  .post-toc-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14.5px;
+  }
+
+  .post-toc-item {
+    margin: 0.25em 0;
+
+    a {
+      color: $ink-2;
+      text-decoration: none;
+
+      &:hover {
+        color: $brand-deep;
+      }
+    }
+
+    &.level-3 {
+      padding-left: 1.15em;
+      font-size: 0.94em;
+    }
+  }
+}
+
+// ---- 上一篇 / 下一篇 ----
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 1.4rem 0 1rem;
+  padding-top: 18px;
+  border-top: 1px solid $line;
+
+  a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    max-width: 46%;
+    font-size: 14px;
+    color: $brand-deep;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &.next {
+      margin-left: auto;
+      text-align: right;
+    }
+  }
+
+  span {
+    flex: 1;
+  }
+}
+
+// ---- 评论 ----
+.post-comments-wrap {
+  padding-top: 10px;
+}
+
+// ---- 响应式 ----
+@include respond-below($bp-sm) {
+  .post-content h1,
+  .post-content h2,
+  .post-content h3,
+  .post-content h4 {
+    .header-anchor {
+      display: none;
+    }
+  }
+
+  // 触屏设备没有 hover，复制按钮常显
+  .post-content div[class*='language-'] > .copy {
+    opacity: 1;
+  }
+}
+
+@include respond-below($bp-xs) {
+  .post-view {
+    padding: 20px 18px;
+  }
+
+  .post-content {
+    font-size: 15px;
+  }
+}

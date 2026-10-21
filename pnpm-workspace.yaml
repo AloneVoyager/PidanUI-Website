@@ -1,3 +1,5 @@
 allowBuilds:
   esbuild: true
   '@parcel/watcher': true
+  # @nuxt/content 的构建期数据库（SQLite）需要编译原生绑定
+  better-sqlite3: true

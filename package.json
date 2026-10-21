@@ -1,29 +1,28 @@
 {
-  "name": "pidanuiwebsite-vitepress",
+  "name": "pidanuiwebsite-nuxt",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "packageManager": "pnpm@12.11.2",
   "scripts": {
-    "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
-    "preview": "vitepress preview docs"
+    "dev": "nuxt dev",
+    "build": "nuxt generate",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "preview:static": "node scripts/serve-static.mjs"
   },
   "dependencies": {
+    "nuxt": "^4.6.2",
     "vue": "^3.5.41"
   },
   "devDependencies": {
-    "@types/node": "^24.13.3",
+    "@nuxt/content": "^3.16.2",
+    "better-sqlite3": "^13.0.3",
     "gray-matter": "^4.0.3",
-    "markdown-it-deflist": "^4.0.0",
-    "markdown-it-footnote": "^4.0.0",
-    "markdown-it-mark": "^4.0.0",
-    "markdown-it-mathjax3": "^4.3.2",
-    "markdown-it-sub": "^2.0.0",
-    "markdown-it-sup": "^2.0.0",
-    "markdown-it-task-lists": "^2.1.1",
+    "katex": "^0.19.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "sass": "1.105.2",
-    "typescript": "~7.0.2",
-    "vitepress": "^2.0.0-alpha.20"
+    "typescript": "~7.0.2"
   }
 }

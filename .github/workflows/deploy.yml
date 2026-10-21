@@ -24,7 +24,7 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: latest
+          node-version: 22
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
@@ -33,7 +33,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: docs/.vitepress/dist
+          path: .output/public
 
   deploy:
     needs: build
