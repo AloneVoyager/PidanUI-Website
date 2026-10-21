@@ -3,6 +3,7 @@ import { SITE } from '#shared/site';
 import { parsePostDate } from '#shared/utils/date';
 import { absoluteAsset, absoluteUrl } from '#shared/utils/post';
 import { toArray } from '#shared/utils/term';
+import { withSiteSuffix } from '#shared/utils/title';
 
 /**
  * 文章页 SEO：标题 / 描述 / OG / article:* / JSON-LD(NewsArticle)。
@@ -21,17 +22,21 @@ export function usePostSeo(doc: MaybeRefOrGetter<Record<string, any> | null | un
     const date = parsePostDate(d.value?.date);
     return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
   });
+  // <title> 的 `· PidanUI` 后缀由 app.vue 的全局 titleTemplate 追加；
+  // og / twitter 标签不经过模板，这里显式补，保持与 <title> 一致
+  const pageTitle = computed(() => withSiteSuffix(title.value));
 
   useSeoMeta({
     title,
     description,
     ogType: 'article',
     ogSiteName: SITE.brand,
-    ogTitle: title,
+    ogTitle: pageTitle,
     ogDescription: description,
     ogUrl: url,
     ogImage: cover,
     twitterCard: 'summary_large_image',
+    twitterTitle: pageTitle,
     articlePublishedTime: published,
     articleAuthor: [SITE.author],
     articleTag: () => toArray(d.value?.tags),
