@@ -41,12 +41,10 @@ const stats = computed(() => {
   <CardGrid v-if="tokens.length" :posts="hits" empty-text="未找到相关新闻" />
 </template>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-
+<style scoped>
 .search-tip {
   margin: 8px 0 16px;
   font-size: 14px;
-  color: $ink-3;
+  color: var(--ink-3);
 }
 </style>

@@ -20,8 +20,8 @@ defineProps<{
   ></div>
 </template>
 
-<style scoped lang="scss">
-// 顶部固定进度条：层级高于侧栏与抽屉，宽度由真实加载进度驱动
+<style scoped>
+/* 顶部固定进度条：层级高于侧栏与抽屉，宽度由真实加载进度驱动 */
 .page-progress {
   position: fixed;
   top: 0;
@@ -35,15 +35,15 @@ defineProps<{
   background: linear-gradient(90deg, var(--brand), var(--brand-deep), #ff7a00);
   box-shadow: 0 0 12px rgba(255, 159, 26, 0.35);
   transition: width 0.25s ease, opacity 0.4s ease;
+}
 
-  &.active {
-    opacity: 1;
-  }
+.page-progress.active {
+  opacity: 1;
+}
 
-  &.done {
-    opacity: 0;
-    transition: opacity 0.45s ease;
-  }
+.page-progress.done {
+  opacity: 0;
+  transition: opacity 0.45s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -20,7 +20,7 @@
 | --- | --- |
 | 定位 | PidanUI 项目官网，纯静态站点（SSG），部署于 GitHub Pages |
 | 线上地址 | https://pidanui.eggycore.top（`app.baseURL = '/'`，URL 不带 `.html` 与尾斜杠） |
-| 技术栈 | Nuxt `4.6.2`（Vite 8 + Nitro 预渲染）+ Vue 3 + TypeScript `~7.0.2` + SCSS + @nuxt/content `3.16.2` |
+| 技术栈 | Nuxt `4.6.2`（Vite 8 + Nitro 预渲染）+ Vue 3 + TypeScript `~7.0.2` + Tailwind CSS `4.3.3`（原生 CSS）+ @nuxt/content `3.16.2` |
 | 包管理器 | pnpm（`packageManager: pnpm@12.11.2`），CI 用 `pnpm install --frozen-lockfile` |
 | 发布流程 | 推送到 `main` → `.github/workflows/deploy.yml` 构建并部署 `.output/public` |
 | 许可证 | AGPL v3，禁止商业用途 |
@@ -54,7 +54,7 @@ app/                                  # srcDir
 ├─ composables/                       # usePosts / useSearch / useTheme / useMobileDrawer …
 ├─ data/                              # download.json、personalityTest.ts、socialLinks.ts
 ├─ utils/base.ts                      # withBase 垫片（自动导入）
-└─ assets/styles/                     # 全局 SCSS（入口 index.scss），组件 scoped 样式共用变量
+└─ assets/styles/                     # 全局 CSS（入口 index.css）+ tokens.css（@theme 令牌）
 content/posts/*.md                    # 文章（唯一内容源）
 public/                               # 原样拷贝的静态资源：images/、giscus/、.nojekyll …
 server/routes/                        # atom.xml、api/posts.json、api/posts/<slug>/index.json、api/search.json
@@ -96,11 +96,14 @@ content.config.ts / nuxt.config.ts    # 内容集合定义 / 站点配置
 
 ## 样式约定
 
-- 全局样式只有 `app/assets/styles/index.scss`（variables / mixins / base / layout / sidebar / post / animation / responsive）。页面级样式写在各自 `.vue` 的 `<style scoped lang="scss">`。
-- `.vue` 里直接 `@use 'variables' as *;` / `@use 'mixins' as *;`——`nuxt.config.ts` 的 `vite.css.preprocessorOptions.scss.loadPaths` 已指向 `app/assets/styles`，**不要写相对路径**。
-- 颜色、圆角、阴影、尺寸、断点**必须**用 `_variables.scss` 变量；深色专属规则用 `@include dark-mode`；媒体查询用 `@include respond-below($bp-*)` 或传统 `max-width` 写法。
-- **禁止 Media Queries Level 4 范围语法**（如 `width<=820px`）：`vite.build.cssTarget` 已锁定到 `chrome103` 系列，改动此处会让旧内核整块丢弃媒体查询。
-- 主题由 `<html data-theme="auto|light|dark">` + CSS 变量驱动（见 `_base.scss` / `useTheme.ts`）。`localStorage` key 为 `pidanui-theme`，改 key 必须同步 `nuxt.config.ts` head 里的首帧内联脚本。
+- 全局样式只有 `app/assets/styles/index.css`（tokens / base / layout / sidebar / post / animation / responsive），页面级样式写在各自 `.vue` 的 `<style scoped>`，**一律原生 CSS**（无预处理器）。
+- `index.css` 顶部四条铁律：`@import` 必须全部置顶，Tailwind 两条排在项目文件之前；项目局部文件**故意不进 `@layer`**（未分层规则优先级恒高于分层规则，语义类层叠关系与迁移前一致）；不引入 Preflight（保留 `base.css` 自己的重置）；`@theme` / `@custom-variant` 只写在 `tokens.css`。
+- 设计令牌在 `tokens.css`（必须 `@theme static`，否则未被工具类引用的变量会被摇树删掉）：圆角 / 阴影 / 断点 / 容器宽度只定义一次，直接 `var()` 取用；颜色与字体的**真值**只在 `base.css` 的 `:root`（深色覆盖也在那里），`tokens.css` 只做 1:1 别名，别名里不写死颜色。
+- 工具类只做「增量修饰」：加工具类时必须同时删掉语义类里被取代的声明，否则未分层的语义类会压住它。当前用到工具类的地方很少（ChipsNav / PostCard / Pagination / HomeView 等）。
+- 深色规则两种写法都要考虑：`[data-theme='dark']`（手动切换）与 `@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) … }`（auto 跟随系统）；工具类可用 `dark:` 变体（`tokens.css` 已定义 `@custom-variant dark`）。
+- 媒体查询**手写** `@media (max-width: Npx)`，不用 `sm:` / `md:` 变体：960px 必须与 `useMobileDrawer` 的 `matchMedia('(max-width: 960px)')` 完全一致。
+- `vite.build.cssTarget` 已对齐 Tailwind v4 的支持矩阵（chrome111 / safari16.4 / firefox128）：v4 产物本身要求这个下限（`@property`、`color-mix()`、级联层），下调前必须先确认旧内核可用。
+- 主题由 `<html data-theme="auto|light|dark">` + CSS 变量驱动（见 `base.css` / `useTheme.ts`）。`localStorage` key 为 `pidanui-theme`，改 key 必须同步 `nuxt.config.ts` head 里的首帧内联脚本。
 - `body { overflow: hidden }`，**全站唯一纵向滚动容器是 `.site-main`**。路由滚动由 `app/router.options.ts` 接管（返回 `false` + 手动滚 `.site-main`）；页内锚点由 `usePostEnhance` 接管。
 - 折叠/展开动画统一手感：缓动用 `cubic-bezier(0.25, 0.46, 0.45, 0.94)`，头部是 `<button aria-expanded>`、内容区靠 `.active` 切换。高度未知 / 会变的（归档按月分组）用 `grid-template-rows: 1fr ↔ 0fr`；下载页手风琴是 `max-height`（上限 1400px），内容变长会被裁切。
 - 注释风格与现有文件一致：中文、`// ====` 分节横幅，只解释“为什么”，不复述代码。

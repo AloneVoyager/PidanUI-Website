@@ -17,12 +17,13 @@
   },
   "devDependencies": {
     "@nuxt/content": "^3.16.2",
+    "@tailwindcss/vite": "4.3.3",
     "better-sqlite3": "^13.0.3",
     "gray-matter": "^4.0.3",
     "katex": "^0.19.0",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
-    "sass": "1.105.2",
+    "tailwindcss": "4.3.3",
     "typescript": "~7.0.2"
   }
 }

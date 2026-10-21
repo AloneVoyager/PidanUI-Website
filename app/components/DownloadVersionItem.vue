@@ -28,12 +28,12 @@ function onImgError() {
 <template>
   <div class="accordion-item" :class="{ active: expanded }">
     <button class="accordion-header" type="button" :aria-expanded="expanded" @click="emit('toggle')">
-      <span class="header-left">
+      <span class="header-left flex flex-1 min-w-0 items-center flex-wrap gap-3.5">
         <span class="type">{{ version.type || '版本' }}</span>
         <span v-if="version.version" class="ver">{{ version.version }}</span>
         <span v-if="version.fileSize" class="size-tag">{{ version.fileSize }}</span>
       </span>
-      <span class="header-right">
+      <span class="header-right flex shrink-0 items-center gap-2.5">
         <span class="status-dot" aria-hidden="true"></span>
         <span class="arrow" aria-hidden="true">
           <i class="fa-solid fa-chevron-down"></i>
@@ -68,7 +68,7 @@ function onImgError() {
         <p class="body-desc">{{ version.description || '暂无描述' }}</p>
 
         <!-- 元信息 -->
-        <div class="body-meta">
+        <div class="body-meta flex flex-wrap justify-center gap-x-8 gap-y-4">
           <span class="meta-item">
             <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
             <span class="label">大小</span>
@@ -101,27 +101,24 @@ function onImgError() {
   </div>
 </template>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-@use 'mixins' as *;
-
-// ---- 手风琴 item（单个版本块） ----
+<style scoped>
+/* ---- 手风琴 item（单个版本块） ---- */
 .accordion-item {
   overflow: hidden;
-  background: $card;
-  border: 1px solid $line;
-  border-radius: $radius-l;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-  &:hover {
-    border-color: rgba(255, 159, 26, 0.25);
-    box-shadow: $shadow-card;
-  }
+.accordion-item:hover {
+  border-color: rgba(255, 159, 26, 0.25);
+  box-shadow: var(--shadow-card);
+}
 
-  &.active {
-    border-color: $brand-deep;
-    box-shadow: 0 4px 24px rgba(255, 159, 26, 0.12);
-  }
+.accordion-item.active {
+  border-color: var(--brand-deep);
+  box-shadow: 0 4px 24px rgba(255, 159, 26, 0.12);
 }
 
 .accordion-header {
@@ -136,79 +133,61 @@ function onImgError() {
   background: transparent;
   border: none;
   transition: background 0.2s ease;
-
-  &:hover {
-    background: rgba(255, 197, 61, 0.06);
-  }
 }
 
-.header-left {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-
-  .type {
-    font-size: 17px;
-    font-weight: 600;
-    color: $ink;
-  }
-
-  .ver,
-  .size-tag {
-    padding: 0 12px;
-    font-size: 13px;
-    line-height: 26px;
-    color: $ink-3;
-    background: $bg;
-    border-radius: $radius-full;
-  }
-
-  .ver {
-    font-size: 14px;
-    color: $ink-2;
-  }
+.accordion-header:hover {
+  background: rgba(255, 197, 61, 0.06);
 }
 
-.header-right {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 10px;
-
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #cbd5e1;
-    transition: background 0.3s ease;
-  }
-
-  .arrow {
-    transition: transform 0.3s ease;
-
-    i {
-      font-size: 15px;
-      color: $ink-3;
-      transition: color 0.2s ease;
-    }
-  }
+.header-left .type {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
 }
 
-.accordion-item.active .header-right {
-  .status-dot {
-    background: $brand-deep;
-  }
+.header-left .ver,
+.header-left .size-tag {
+  padding: 0 12px;
+  font-size: 13px;
+  line-height: 26px;
+  color: var(--ink-3);
+  background: var(--bg);
+  border-radius: var(--radius-full);
+}
 
-  .arrow {
-    transform: rotate(180deg);
+.header-left .ver {
+  font-size: 14px;
+  color: var(--ink-2);
+}
 
-    i {
-      color: $brand-deep;
-    }
-  }
+.header-right .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  transition: background 0.3s ease;
+}
+
+.header-right .arrow {
+  transition: transform 0.3s ease;
+}
+
+.header-right .arrow i {
+  font-size: 15px;
+  color: var(--ink-3);
+  transition: color 0.2s ease;
+}
+
+.accordion-item.active .header-right .status-dot {
+  background: var(--brand-deep);
+}
+
+.accordion-item.active .header-right .arrow {
+  transform: rotate(180deg);
+}
+
+.accordion-item.active .header-right .arrow i {
+  color: var(--brand-deep);
 }
 
 .accordion-body {
@@ -223,20 +202,16 @@ function onImgError() {
   padding: 0 24px 24px;
 }
 
-// 禁用 JavaScript 时强制展开所有手风琴：点击头部分页依赖 JS toggle，
-// 把 max-height 设为 none 让所有内容立即可读。
-// 顶层 html 选择器 Vue scoped 不会加 data-v-xxx 前缀，仍能命中
-html:not(.js) {
-  .accordion-item {
-    .accordion-body {
-      max-height: none;
-      padding: 0 24px 24px;
-    }
+/* 禁用 JavaScript 时强制展开所有手风琴：点击头部展开依赖 JS toggle，
+   把 max-height 设为 none 让所有内容立即可读。
+   顶层 html 选择器 Vue scoped 不会加 data-v-xxx 前缀，仍能命中 */
+html:not(.js) .accordion-item .accordion-body {
+  max-height: none;
+  padding: 0 24px 24px;
+}
 
-    .accordion-header {
-      cursor: default;
-    }
-  }
+html:not(.js) .accordion-item .accordion-header {
+  cursor: default;
 }
 
 .body-inner {
@@ -251,72 +226,68 @@ html:not(.js) {
   width: 100%;
   max-width: 560px;
   overflow: hidden;
-  background: $bg;
-  border-radius: $radius-m;
+  background: var(--bg);
+  border-radius: var(--radius-m);
+}
 
-  img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-  }
+.body-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
 
-  .image-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    color: $ink-3;
-    background: $bg;
+.body-image .image-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  color: var(--ink-3);
+  background: var(--bg);
+}
 
-    i {
-      font-size: 40px;
-    }
+.body-image .image-state i {
+  font-size: 40px;
+}
 
-    span {
-      font-size: 13px;
-    }
+.body-image .image-state span {
+  font-size: 13px;
+}
 
-    &.error i {
-      color: #ef4444;
-    }
-  }
+.body-image .image-state.error i {
+  color: #ef4444;
 }
 
 .body-desc {
   max-width: 560px;
   font-size: 15px;
   line-height: 1.7;
-  color: $ink-2;
+  color: var(--ink-2);
   text-align: center;
 }
 
 .body-meta {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px 32px;
   font-size: 14px;
-  color: $ink-3;
+  color: var(--ink-3);
+}
 
-  .meta-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+.body-meta .meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
-    i {
-      font-size: 14px;
-    }
+.body-meta .meta-item i {
+  font-size: 14px;
+}
 
-    .value {
-      font-weight: 500;
-      color: $ink;
-    }
-  }
+.body-meta .meta-item .value {
+  font-weight: 500;
+  color: var(--ink);
 }
 
 .body-download-btn {
@@ -329,29 +300,29 @@ html:not(.js) {
   font-size: 16px;
   font-weight: 600;
   color: #fff;
-  background: $brand-grad;
+  background: var(--brand-grad);
   border: none;
   border-radius: 60px;
-  box-shadow: $shadow-brand;
+  box-shadow: var(--shadow-brand);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-
-  i {
-    font-size: 16px;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.55;
-    background: linear-gradient(135deg, #94a3b8, #64748b);
-    box-shadow: none;
-
-    &:hover {
-      transform: none;
-    }
-  }
 }
 
-@include respond-below($bp-xs) {
+.body-download-btn i {
+  font-size: 16px;
+}
+
+.body-download-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+  box-shadow: none;
+}
+
+.body-download-btn:disabled:hover {
+  transform: none;
+}
+
+@media (max-width: 640px) {
   .accordion-header {
     padding: 14px 16px;
   }

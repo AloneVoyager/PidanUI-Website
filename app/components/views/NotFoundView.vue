@@ -10,44 +10,42 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-@use 'variables' as *;
-
+<style scoped>
 .not-found {
   max-width: 520px;
   margin: 10vh auto 0;
   padding: 40px 32px;
   text-align: center;
-  background: $card;
-  border: 1px solid $line;
-  border-radius: $radius-l;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+}
 
-  .code {
-    font-size: 64px;
-    font-weight: 800;
-    line-height: 1;
-    color: $brand-deep;
-  }
+.not-found .code {
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--brand-deep);
+}
 
-  h1 {
-    margin: 12px 0 8px;
-    font-size: 22px;
-    color: $ink;
-  }
+.not-found h1 {
+  margin: 12px 0 8px;
+  font-size: 22px;
+  color: var(--ink);
+}
 
-  .desc {
-    margin-bottom: 24px;
-    font-size: 15px;
-    color: $ink-2;
-  }
+.not-found .desc {
+  margin-bottom: 24px;
+  font-size: 15px;
+  color: var(--ink-2);
+}
 
-  .btn {
-    display: inline-block;
-    padding: 11px 28px;
-    font-weight: 600;
-    color: #fff;
-    background: $brand-grad;
-    border-radius: $radius-full;
-  }
+.not-found .btn {
+  display: inline-block;
+  padding: 11px 28px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--brand-grad);
+  border-radius: var(--radius-full);
 }
 </style>

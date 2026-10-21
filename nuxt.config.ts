@@ -1,13 +1,11 @@
-import { fileURLToPath } from 'node:url';
+import tailwindcss from '@tailwindcss/vite';
 import { buildRoutes } from './build/post-index';
-
-const stylesDir = fileURLToPath(new URL('./app/assets/styles', import.meta.url));
 
 // ============================================================
 // PidanUI 官网 · Nuxt 站点配置
 //   - 纯静态站点：`nuxt generate` 产出 .output/public，部署 GitHub Pages
 //   - 内容由 @nuxt/content v3 驱动（content/posts/*.md）
-//   - 版式与主题沿用 VitePress 时期的 SCSS 与 [data-theme] 三态机制
+//   - 样式为原生 CSS + Tailwind v4（@theme 令牌），沿用 [data-theme] 三态机制
 // ============================================================
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-01',
@@ -68,26 +66,25 @@ export default defineNuxtConfig({
         },
       ],
     },
-    // 保住 .page-enter-from / .page-leave-to 等类名（见 _animation.scss）
+    // 保住 .page-enter-from / .page-leave-to 等类名（见 animation.css）
     pageTransition: { name: 'page', mode: 'out-in', appear: true },
   },
 
-  css: ['katex/dist/katex.min.css', '~/assets/styles/index.scss'],
+  css: ['katex/dist/katex.min.css', '~/assets/styles/index.css'],
 
   // 组件按文件名注册（<ListView> / <PostCard> …），模板保持零改动
   components: [{ path: '~/components', pathPrefix: false }],
 
   vite: {
-    css: {
-      preprocessorOptions: {
-        // 让任意 .vue 的 scoped SCSS 直接 @use 'variables' / 'mixins'，无需相对路径
-        scss: { loadPaths: [stylesDir] },
-      },
-    },
+    // Tailwind CSS v4：只提供 @theme 令牌与工具类，样式主体仍是原生 CSS
+    // （分层与顺序约定见 app/assets/styles/index.css 顶部注释）
+    plugins: [tailwindcss()],
     build: {
-      // 与 VitePress 时期一致：避免 LightningCSS 把媒体查询改写成范围语法后
-      // 被旧内核整块丢弃（旧目标 Chrome 103 / Safari 16.3）
-      cssTarget: ['chrome103', 'edge103', 'firefox101', 'safari16.3', 'ios16.3'],
+      // CSS 压缩目标锁定在 Tailwind v4 的官方支持矩阵：
+      // v4 产物本身要求 Chrome 111 / Safari 16.4 / Firefox 128 起，
+      // 更低内核拿不到能跑的样式，因此不再为媒体查询范围语法把 target 降到 103。
+      // 若日后调整此矩阵，必须同步 useMobileDrawer 的 matchMedia 断点（960px）。
+      cssTarget: ['chrome111', 'edge111', 'firefox128', 'safari16.4', 'ios16.4'],
     },
   },
 
@@ -112,7 +109,7 @@ export default defineNuxtConfig({
         toc: { depth: 3, searchDepth: 3 },
         highlight: {
           // 键名必须是 light / dark：产物才是 --shiki-light / --shiki-dark，
-          // 与 _post.scss 里自行应用的双主题规则对齐；default 是类型要求的基础主题
+          // 与 post.css 里自行应用的双主题规则对齐；default 是类型要求的基础主题
           theme: { default: 'github-light', light: 'github-light', dark: 'github-dark' },
           langs: [
             'bash',

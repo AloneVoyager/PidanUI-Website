@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue';
 import CardGrid from '../CardGrid.vue';
 import Pagination from '../Pagination.vue';
+import PageTitle from '../PageTitle.vue';
+import EmptyState from '../EmptyState.vue';
 import { useAllPosts } from '~/composables/usePosts';
 import type { Post } from '#shared/types/post';
 
@@ -76,7 +78,7 @@ function toggleMonth(key: string): void {
 <template>
   <div class="archive-view">
     <div class="list-head">
-      <h1 class="list-title">归档</h1>
+      <PageTitle title="归档" />
       <p class="archive-total">
         共 {{ allPosts.length }} 篇文章 · {{ totalPages }} 个年份
       </p>
@@ -87,7 +89,7 @@ function toggleMonth(key: string): void {
       <span class="year-count">{{ currentPosts.length }} 篇</span>
     </h2>
 
-    <p v-if="!months.length" class="empty-state">暂无归档内容</p>
+    <EmptyState v-if="!months.length" text="暂无归档内容" />
 
     <div v-else class="month-groups">
       <section
@@ -123,19 +125,16 @@ function toggleMonth(key: string): void {
   </div>
 </template>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-@use 'mixins' as *;
-
-// ============================================================
-// 归档页：按年分页，页内按月折叠分组
-// ============================================================
+<style scoped>
+/* ============================================================
+   归档页：按年分页，页内按月折叠分组
+   ============================================================ */
 .archive-view {
-  max-width: $max-w;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
-// 页面主标题（与列表 / 搜索 / 分类索引页保持一致）
+/* 页面主标题（与列表 / 搜索 / 分类索引页保持一致） */
 .list-head {
   display: flex;
   flex-wrap: wrap;
@@ -145,16 +144,9 @@ function toggleMonth(key: string): void {
   margin-bottom: 18px;
 }
 
-.list-title {
-  font-size: clamp(24px, 3.6vw, 32px);
-  font-weight: 700;
-  color: $ink;
-  letter-spacing: -0.01em;
-}
-
 .archive-total {
   font-size: 14px;
-  color: $ink-3;
+  color: var(--ink-3);
 }
 
 .archive-year {
@@ -164,13 +156,13 @@ function toggleMonth(key: string): void {
   margin-bottom: 14px;
   font-size: 20px;
   font-weight: 700;
-  color: $brand-deep;
+  color: var(--brand-deep);
+}
 
-  .year-count {
-    font-size: 13px;
-    font-weight: 500;
-    color: $ink-3;
-  }
+.archive-year .year-count {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
 }
 
 .month-groups {
@@ -179,14 +171,21 @@ function toggleMonth(key: string): void {
   gap: 12px;
 }
 
-// 月份分组：点击头部展开 / 收起，动画与下载页手风琴一致
+/* 月份分组：点击头部展开 / 收起，动画与下载页手风琴一致 */
 .month-group {
   padding: 0 14px;
   background: rgba(255, 255, 255, 0.55);
-  border: 1px solid $line;
-  border-radius: $radius-l;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+}
 
-  @include dark-mode {
+/* 深色下用半透明深灰底（手动深色 + 系统深色均生效） */
+[data-theme='dark'] .month-group {
+  background: rgba(31, 31, 35, 0.6);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .month-group {
     background: rgba(31, 31, 35, 0.6);
   }
 }
@@ -198,48 +197,48 @@ function toggleMonth(key: string): void {
   width: 100%;
   padding: 12px 2px;
   font: inherit;
-  color: $ink;
+  color: var(--ink);
   text-align: left;
   background: none;
   border: none;
   cursor: pointer;
-
-  &:hover {
-    color: $brand-deep;
-  }
-
-  &:focus-visible {
-    outline: 2px solid rgba(255, 159, 26, 0.45);
-    outline-offset: 2px;
-    border-radius: $radius-s;
-  }
-
-  .month-name {
-    font-size: 15px;
-    font-weight: 600;
-  }
-
-  .month-count {
-    font-size: 12.5px;
-    color: $ink-3;
-  }
-
-  .month-arrow {
-    display: inline-block;
-    margin-left: auto;
-    font-size: 12px;
-    color: $ink-3;
-    transition: transform 0.3s ease;
-  }
 }
 
-// 收起时箭头朝右
+.month-head:hover {
+  color: var(--brand-deep);
+}
+
+.month-head:focus-visible {
+  outline: 2px solid rgba(255, 159, 26, 0.45);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+
+.month-head .month-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.month-head .month-count {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.month-head .month-arrow {
+  display: inline-block;
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink-3);
+  transition: transform 0.3s ease;
+}
+
+/* 收起时箭头朝右 */
 .month-group:not(.open) .month-arrow {
   transform: rotate(-90deg);
 }
 
-// 展开 / 收起动画：grid-template-rows 0fr ↔ 1fr，
-// 高度随卡片数量自适应（无需写死 max-height），观感与下载页手风琴一致
+/* 展开 / 收起动画：grid-template-rows 0fr ↔ 1fr，
+   高度随卡片数量自适应（无需写死 max-height），观感与下载页手风琴一致 */
 .month-body {
   display: grid;
   grid-template-rows: 1fr;
@@ -259,14 +258,7 @@ function toggleMonth(key: string): void {
   margin-bottom: 14px;
 }
 
-.empty-state {
-  padding: 40px 0;
-  font-size: 15px;
-  color: $ink-3;
-  text-align: center;
-}
-
-@include respond-below($bp-sm) {
+@media (max-width: 768px) {
   .list-head {
     flex-direction: column;
     align-items: flex-start;

@@ -2,6 +2,7 @@
 import ChipsNav from '../ChipsNav.vue';
 import CardGrid from '../CardGrid.vue';
 import Pagination from '../Pagination.vue';
+import PageTitle from '../PageTitle.vue';
 import type { Post } from '#shared/types/post';
 
 // 列表页通用外壳：标题 + 快捷入口 + 卡片网格 + 分页
@@ -23,7 +24,7 @@ defineProps<{
     <slot name="top" />
 
     <div class="list-head">
-      <h1 class="list-title">{{ title }}</h1>
+      <PageTitle :title="title" />
       <ChipsNav v-if="!hideChips" />
     </div>
 
@@ -38,15 +39,12 @@ defineProps<{
   </div>
 </template>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-@use 'mixins' as *;
-
-// ============================================================
-// 列表页通用外壳：新闻 / 分类 / 标签 列表共用
-// ============================================================
+<style scoped>
+/* ============================================================
+   列表页通用外壳：新闻 / 分类 / 标签 列表共用
+   ============================================================ */
 .news-list {
-  max-width: $max-w;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -59,15 +57,7 @@ defineProps<{
   margin-bottom: 22px;
 }
 
-// 页面主标题（与搜索 / 归档 / 分类索引 / 标签索引页保持一致的排版）
-.list-title {
-  font-size: clamp(24px, 3.6vw, 32px);
-  font-weight: 700;
-  color: $ink;
-  letter-spacing: -0.01em;
-}
-
-@include respond-below($bp-sm) {
+@media (max-width: 768px) {
   .list-head {
     flex-direction: column;
     align-items: flex-start;

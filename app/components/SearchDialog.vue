@@ -96,9 +96,7 @@ onBeforeUnmount(() => {
   </dialog>
 </template>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-
+<style scoped>
 .search-dialog {
   position: fixed;
   display: none;
@@ -109,9 +107,9 @@ onBeforeUnmount(() => {
   margin: auto;
   padding: 24px;
   overflow-y: auto;
-  color: $ink;
-  background: $card;
-  border: 1px solid $line;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
   border-radius: 20px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
   opacity: 0;
@@ -121,25 +119,27 @@ onBeforeUnmount(() => {
     transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
     display 0.24s allow-discrete,
     overlay 0.24s allow-discrete;
-
-  &[open] {
-    display: block;
-    opacity: 1;
-    transform: none;
-  }
-
-  &::backdrop {
-    background: rgba(12, 16, 24, 0);
-    backdrop-filter: blur(0);
-    transition: background-color 0.24s ease, backdrop-filter 0.24s ease;
-  }
-
-  &[open]::backdrop {
-    background: rgba(12, 16, 24, 0.58);
-    backdrop-filter: blur(4px);
-  }
 }
 
+.search-dialog[open] {
+  display: block;
+  opacity: 1;
+  transform: none;
+}
+
+.search-dialog::backdrop {
+  background: rgba(12, 16, 24, 0);
+  backdrop-filter: blur(0);
+  transition: background-color 0.24s ease, backdrop-filter 0.24s ease;
+}
+
+.search-dialog[open]::backdrop {
+  background: rgba(12, 16, 24, 0.58);
+  backdrop-filter: blur(4px);
+}
+
+/* 入场起点：@starting-style 需要 Chrome 117 / Safari 17.4，
+   低于基线的浏览器只是没有入场动画，终态样式照常生效 */
 @starting-style {
   .search-dialog[open] {
     opacity: 0;
@@ -158,12 +158,12 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 18px;
+}
 
-  h2 {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 700;
-  }
+.search-dialog-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
 }
 
 .search-dialog-close {
@@ -172,23 +172,23 @@ onBeforeUnmount(() => {
   width: 40px;
   height: 40px;
   place-items: center;
-  color: $ink-2;
+  color: var(--ink-2);
   background: transparent;
-  border: 1px solid $line;
-  border-radius: $radius-full;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
   cursor: pointer;
   transition: color 0.2s ease, background 0.2s ease;
+}
 
-  i {
-    font-size: 16px;
-  }
+.search-dialog-close i {
+  font-size: 16px;
+}
 
-  &:hover,
-  &:focus-visible {
-    color: $ink;
-    background: $bg;
-    outline: none;
-  }
+.search-dialog-close:hover,
+.search-dialog-close:focus-visible {
+  color: var(--ink);
+  background: var(--bg);
+  outline: none;
 }
 
 @media (max-width: 640px) {

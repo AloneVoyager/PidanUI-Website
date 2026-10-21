@@ -19,7 +19,7 @@ const nextHref = computed(() => `${props.pagePrefix}${props.current + 1}`);
 </script>
 
 <template>
-  <nav v-if="totalPages > 1" class="pagination" role="navigation">
+  <nav v-if="totalPages > 1" class="pagination flex items-center justify-center gap-3.5 mt-7" role="navigation">
     <NuxtLink v-if="current > 1" class="page-btn" :to="prevHref">
       <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
       上一页
@@ -32,41 +32,31 @@ const nextHref = computed(() => `${props.pagePrefix}${props.current + 1}`);
   </nav>
 </template>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-
-.pagination {
-  display: flex;
+<style scoped>
+.pagination .page-btn {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin-top: 28px;
+  gap: 6px;
+  padding: 6px 18px;
+  font-size: 13px;
+  color: var(--brand-deep);
+  background: var(--brand-soft);
+  border-radius: var(--radius-full);
+  transition: background 0.25s ease;
+}
 
-  .page-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 18px;
-    font-size: 13px;
-    color: $brand-deep;
-    background: $brand-soft;
-    border-radius: $radius-full;
-    transition: background 0.25s ease;
+.pagination .page-btn:hover {
+  background: rgba(255, 159, 26, 0.2);
+}
 
-    &:hover {
-      background: rgba(255, 159, 26, 0.2);
-    }
+.pagination .page-btn.disabled {
+  color: var(--ink-3);
+  background: var(--bg);
+  cursor: not-allowed;
+}
 
-    &.disabled {
-      color: $ink-3;
-      background: $bg;
-      cursor: not-allowed;
-    }
-  }
-
-  .page-info {
-    font-size: 13px;
-    color: $ink-3;
-  }
+.pagination .page-info {
+  font-size: 13px;
+  color: var(--ink-3);
 }
 </style>

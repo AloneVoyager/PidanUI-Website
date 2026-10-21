@@ -31,10 +31,8 @@ const label = computed(() => LABELS[mode.value]);
   </button>
 </template>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-
-// 置于左侧栏底部（父级为 flex column，用 margin-top:auto 顶到底）
+<style scoped>
+/* 置于左侧栏底部（父级为 flex column，用 margin-top:auto 顶到底） */
 .theme-toggle {
   display: flex;
   align-items: center;
@@ -42,28 +40,28 @@ const label = computed(() => LABELS[mode.value]);
   margin-top: auto;
   padding: 10px 12px;
   font-size: 14px;
-  color: $ink-2;
+  color: var(--ink-2);
   background: transparent;
-  border: 1px solid $line;
-  border-radius: $radius-m;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
 
-  .toggle-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
+.theme-toggle .toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
 
-    i {
-      font-size: 15px;
-    }
-  }
+.theme-toggle .toggle-icon i {
+  font-size: 15px;
+}
 
-  &:hover {
-    color: $brand-deep;
-    background: rgba(255, 197, 61, 0.1);
-    border-color: rgba(255, 159, 26, 0.35);
-  }
+.theme-toggle:hover {
+  color: var(--brand-deep);
+  background: rgba(255, 197, 61, 0.1);
+  border-color: rgba(255, 159, 26, 0.35);
 }
 </style>

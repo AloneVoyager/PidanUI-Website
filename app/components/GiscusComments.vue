@@ -122,10 +122,8 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-
-// 评论区加载占位：骨架条降低「页面底部空白」的观感
+<style scoped>
+/* 评论区加载占位：骨架条降低「页面底部空白」的观感 */
 .comments-skeleton {
   padding: 6px 0 2px;
 }
@@ -142,14 +140,14 @@ onBeforeUnmount(() => {
   background-size: 400% 100%;
   border-radius: 6px;
   animation: skeleton-loading 1.4s ease infinite;
+}
 
-  &.w-30 {
-    width: 30%;
-  }
+.skeleton-line.w-30 {
+  width: 30%;
+}
 
-  &.w-70 {
-    width: 70%;
-  }
+.skeleton-line.w-70 {
+  width: 70%;
 }
 
 @keyframes skeleton-loading {

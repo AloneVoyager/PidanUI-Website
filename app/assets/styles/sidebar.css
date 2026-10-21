@@ -1,0 +1,327 @@
+/* ============================================================
+   左侧导航栏 + 右侧小部件栏 + 移动端抽屉
+   版式与配色对齐参考站 PidanUIWebsite_O
+   ============================================================ */
+
+/* ---- 左侧导航栏 ---- */
+.sidebar-left {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  width: 240px;
+  padding: 24px 16px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidebar-left .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px;
+  margin-bottom: 24px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sidebar-left .brand .brand-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  object-fit: contain;
+  display: block;
+}
+
+.sidebar-left .nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-left .nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-m);
+  color: var(--ink-2);
+  font-size: 14.5px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-left .nav-item .nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.sidebar-left .nav-item .nav-icon i {
+  font-size: 15px;
+}
+
+.sidebar-left .nav-item:hover {
+  background: rgba(255, 197, 61, 0.1);
+  color: var(--brand-deep);
+}
+
+.sidebar-left .nav-item.active {
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+  font-weight: 600;
+}
+
+/* ---- 右侧小部件栏 ---- */
+.sidebar-right {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+  width: 280px;
+  padding: 24px 20px;
+  background: var(--sidebar-bg);
+  border-left: 1px solid var(--line);
+  overflow-y: auto;
+  box-shadow: none;
+  scrollbar-width: thin;
+  scrollbar-color: #ffc53d transparent;
+}
+
+.sidebar-right::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.sidebar-right::-webkit-scrollbar-thumb {
+  background: rgba(255, 197, 61, 0.6);
+  border-radius: 8px;
+}
+
+.sidebar-right::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-right .widget {
+  padding: 16px;
+  margin-bottom: 16px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+}
+
+.sidebar-right .widget-title {
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.sidebar-right .widget-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-right .widget-list a {
+  padding: 7px 0;
+  font-size: 14px;
+  color: var(--ink-2);
+  border-bottom: 1px dashed var(--line);
+  /* 多行文本截断（原 clamp-lines mixin 展开） */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sidebar-right .widget-list a:last-child {
+  border-bottom: none;
+}
+
+.sidebar-right .widget-list a:hover {
+  color: var(--brand-deep);
+}
+
+.sidebar-right .widget-empty {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.sidebar-right .widget-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--brand-deep);
+}
+
+.sidebar-right .social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-right .social-links a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  font-size: 14px;
+  color: var(--ink-2);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+.sidebar-right .social-links a svg,
+.sidebar-right .social-links a i {
+  font-size: 16px;
+}
+
+.sidebar-right .social-links a:hover {
+  color: var(--brand-deep);
+  border-color: rgba(255, 159, 26, 0.35);
+}
+
+.sidebar-right .widget-note {
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+/* ---- 移动端菜单按钮 & 遮罩 ---- */
+/* z-index 层级（自下而上）：
+    80  .menu-toggle      移动端汉堡按钮
+    90  .sidebar-overlay  抽屉遮罩
+   100  .sidebar-left / .sidebar-right
+   汉堡按钮必须低于左栏：抽屉展开时它正好落在品牌 Logo 的位置，
+   若层级更高会把 Logo 盖住。收起时左栏被 translateX(-100%) 移出屏幕，
+   不会遮挡按钮，因此按钮仍可正常点击展开。 */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 80;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-deep);
+  background: var(--brand-soft);
+  border: 1px solid rgba(255, 159, 26, 0.35);
+  border-radius: var(--radius-full);
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.menu-toggle-right {
+  right: 16px;
+  left: auto;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  visibility: hidden;
+  opacity: 0;
+  background: rgba(0, 0, 0, var(--overlay-alpha, 0));
+  backdrop-filter: blur(var(--overlay-blur, 0px));
+  pointer-events: none;
+  /* 离场时 visibility 必须延后 0.3s 再切到 hidden，否则淡出会被拦腰截断。
+     写成 var() 延迟而不是字面量：压缩器会把 `visibility 0s linear .3s`
+     合并成 `visibility .3s`（离散属性在 50% 处翻转），带 var() 时不会合并。 */
+  --overlay-fade-delay: 0.3s;
+  transition:
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    -webkit-backdrop-filter 0.3s ease,
+    backdrop-filter 0.3s ease,
+    visibility 0s linear var(--overlay-fade-delay);
+}
+
+.sidebar-overlay.open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  --overlay-fade-delay: 0s;
+  transition:
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    -webkit-backdrop-filter 0.3s ease,
+    backdrop-filter 0.3s ease,
+    visibility 0s linear var(--overlay-fade-delay);
+}
+
+/* ---- 响应式：≤960px 左右侧栏分别变为抽屉 ---- */
+@media (max-width: 960px) {
+  .sidebar-left {
+    visibility: hidden;
+    transform: translateX(-100%);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, var(--drawer-shadow-alpha, 0));
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s linear 0.3s;
+    /* 与右侧抽屉一致：允许纵向滚动，横向拖动交给手势逻辑，
+       否则浏览器会接管横向手势并触发 pointercancel，表现为拖动回弹 */
+    touch-action: pan-y;
+  }
+
+  .sidebar-left.open {
+    visibility: visible;
+    transform: translateX(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .sidebar-right {
+    display: block;
+    width: min(280px, calc(100vw - 48px));
+    visibility: hidden;
+    transform: translateX(100%);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, var(--drawer-shadow-alpha, 0));
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s linear 0.3s;
+    touch-action: pan-y;
+  }
+
+  .sidebar-right.open {
+    visibility: visible;
+    transform: translateX(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s;
+  }
+
+  .sidebar-left.is-dragging,
+  .sidebar-right.is-dragging {
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, var(--drawer-shadow-alpha, 0));
+    transition: none;
+    user-select: none;
+  }
+
+  .sidebar-left.is-dragging {
+    visibility: visible;
+    transform: translateX(calc(var(--drawer-offset, 0px) - 100%));
+  }
+
+  .sidebar-right.is-dragging {
+    visibility: visible;
+    transform: translateX(calc(100% - var(--drawer-offset, 0px)));
+  }
+
+  .site-main {
+    touch-action: pan-y;
+  }
+}

@@ -4,10 +4,10 @@
 [![Nuxt](https://img.shields.io/badge/Nuxt-4.6.2-00DC82?logo=Nuxt&logoColor=white)](https://nuxt.com/)
 [![Vue](https://img.shields.io/badge/Vue-3.5.44-4FC08D?logo=Vue.js&logoColor=white)](https://cn.vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-7.0.2-3178C6?logo=TypeScript&logoColor=white)](https://www.typescriptlang.org/)
-[![SCSS](https://img.shields.io/badge/SCSS-1.105.2-CC6699?logo=Sass&logoColor=white)](https://sass.hk)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.3.3-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 ![License](https://img.shields.io/badge/License-AGPL--3.0-orange)
 
-PidanUI 项目的官方网站，使用 Nuxt 4 + @nuxt/content + TypeScript + SCSS 构建，通过 `nuxt generate` 静态生成（SSG）后部署到 GitHub Pages。
+PidanUI 项目的官方网站，使用 Nuxt 4 + @nuxt/content + TypeScript + Tailwind CSS 构建，通过 `nuxt generate` 静态生成（SSG）后部署到 GitHub Pages。
 
 ## 网站结构
 
@@ -22,7 +22,7 @@ PidanUI 项目的官方网站，使用 Nuxt 4 + @nuxt/content + TypeScript + SCS
 - [Nuxt 4](https://nuxt.com/)（Nitro 预渲染 + SSG）
 - [@nuxt/content v3](https://content.nuxt.com/)（Markdown 内容库，MDC + Shiki 双主题）
 - [TypeScript](https://www.typescriptlang.org/)
-- [SCSS](https://www.sass.hk/docs/index.html)
+- [Tailwind CSS v4](https://tailwindcss.com/)（`@theme` 设计令牌 + 原生 CSS，样式主体不依赖工具类堆叠）
 - [KaTeX](https://katex.org/)（数学公式）
 
 ## 数据文件

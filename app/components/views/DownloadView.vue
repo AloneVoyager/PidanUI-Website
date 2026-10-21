@@ -51,19 +51,16 @@ function handleToggle(index: number) {
   </div>
 </template>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-@use 'mixins' as *;
-
-// ============================================================
-// 下载页 · 页面外壳（单个版本块的样式在 DownloadVersionItem.vue 内）
-// ============================================================
+<style scoped>
+/* ============================================================
+   下载页 · 页面外壳（单个版本块的样式在 DownloadVersionItem.vue 内）
+   ============================================================ */
 .download-view {
-  max-width: $max-w;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
-// 版本手风琴容器（内部 .accordion-item 的样式见 DownloadVersionItem.vue）
+/* 版本手风琴容器（内部 .accordion-item 的样式见 DownloadVersionItem.vue） */
 .accordion {
   display: flex;
   flex-direction: column;
@@ -80,32 +77,32 @@ function handleToggle(index: number) {
 .page-title {
   font-size: 28px;
   font-weight: 800;
-  color: $ink;
+  color: var(--ink);
 }
 
 .version-badge {
   padding: 3px 14px;
   font-size: 13px;
   font-weight: 600;
-  color: $ink-2;
-  background: $brand-soft;
-  border: 1px solid $line;
-  border-radius: $radius-full;
+  color: var(--ink-2);
+  background: var(--brand-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
 }
 
 .page-desc {
   margin: 8px 0 28px;
   font-size: 15px;
-  color: $ink-2;
+  color: var(--ink-2);
 }
 
 .empty-tip {
   padding: 20px 0;
   font-size: 15px;
-  color: $ink-3;
+  color: var(--ink-3);
 }
 
-// ---- 状态栏 ----
+/* ---- 状态栏 ---- */
 .status-bar {
   display: flex;
   align-items: center;
@@ -113,18 +110,18 @@ function handleToggle(index: number) {
   min-height: 28px;
   margin-top: 24px;
   font-size: 14px;
-  color: $ink-3;
-
-  .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #cbd5e1;
-  }
+  color: var(--ink-3);
 }
 
-// ---- 响应式 ----
-@include respond-below($bp-xs) {
+.status-bar .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #cbd5e1;
+}
+
+/* ---- 响应式 ---- */
+@media (max-width: 640px) {
   .page-title {
     font-size: 23px;
   }

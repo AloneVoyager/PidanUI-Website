@@ -10,9 +10,7 @@ import { openSearchDialog } from '~/composables/useSearch';
   <a class="search-launcher-fallback" :href="withBase('/search/')">打开搜索页</a>
 </template>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-
+<style scoped>
 .search-launcher {
   display: flex;
   align-items: center;
@@ -20,33 +18,33 @@ import { openSearchDialog } from '~/composables/useSearch';
   width: 100%;
   margin: 0 0 18px;
   padding: 12px 18px;
-  color: $ink-3;
+  color: var(--ink-3);
   font: inherit;
   font-size: 15px;
   text-align: left;
-  background: $card;
-  border: 1px solid $line;
+  background: var(--card);
+  border: 1px solid var(--line);
   border-radius: 40px;
   cursor: pointer;
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
 
-  i {
-    flex: 0 0 auto;
-    font-size: 15px;
-  }
+.search-launcher i {
+  flex: 0 0 auto;
+  font-size: 15px;
+}
 
-  &:hover,
-  &:focus-visible {
-    border-color: $brand-deep;
-    box-shadow: 0 0 0 4px rgba(255, 159, 26, 0.14);
-    outline: none;
-  }
+.search-launcher:hover,
+.search-launcher:focus-visible {
+  border-color: var(--brand-deep);
+  box-shadow: 0 0 0 4px rgba(255, 159, 26, 0.14);
+  outline: none;
 }
 
 .search-launcher-fallback {
   display: none;
   margin-bottom: 18px;
-  color: $brand-deep;
+  color: var(--brand-deep);
   text-decoration: underline;
 }
 

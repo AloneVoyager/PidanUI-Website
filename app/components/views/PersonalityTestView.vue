@@ -24,7 +24,7 @@
 
         <h2 class="question-text">{{ currentQuestion.text }}</h2>
 
-        <div class="options">
+        <div class="options flex flex-col gap-3">
           <button
             v-for="option in currentQuestion.options"
             :key="option.key"
@@ -81,13 +81,10 @@ const {
 } = usePersonalityTest();
 </script>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-@use 'mixins' as *;
-
-// ============================================================
-// 蛋仔性格测试 · 欢迎 / 答题 / 结果
-// ============================================================
+<style scoped>
+/* ============================================================
+   蛋仔性格测试 · 欢迎 / 答题 / 结果
+   ============================================================ */
 .test-view {
   display: flex;
   align-items: center;
@@ -108,74 +105,78 @@ const {
 .card {
   width: 100%;
   padding: 32px;
-  background: $card;
-  border: 1px solid $line;
-  border-radius: $radius-l;
-  box-shadow: $shadow-float;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-float);
 }
 
-// ---- 欢迎页 ----
+/* ---- 欢迎页 ---- */
 .welcome {
   text-align: center;
-
-  h1 {
-    font-size: 26px;
-    font-weight: 700;
-    line-height: 1.4;
-    letter-spacing: -0.02em;
-    @include brand-text;
-  }
-
-  .intro {
-    margin-top: 12px;
-    font-size: 15px;
-    line-height: 1.8;
-    color: $ink-2;
-  }
 }
 
-// ---- 按钮 ----
+.welcome h1 {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  /* 品牌渐变文字（原 brand-text mixin 展开） */
+  background: var(--brand-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome .intro {
+  margin-top: 12px;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+
+/* ---- 按钮 ---- */
 .btn {
   width: 100%;
   padding: 15px;
   font-size: 16px;
   font-weight: 600;
   border: 1px solid transparent;
-  border-radius: $radius-full;
+  border-radius: var(--radius-full);
   transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-
-  &--primary {
-    margin-top: 24px;
-    color: #fff;
-    background: $brand-grad;
-    box-shadow: $shadow-brand;
-  }
-
-  &--ghost {
-    color: $ink;
-    background: $bg;
-    border-color: $line;
-
-    &:hover {
-      background: $card;
-      border-color: rgba(255, 159, 26, 0.3);
-    }
-  }
 }
 
-// ---- 答题页 ----
+.btn--primary {
+  margin-top: 24px;
+  color: #fff;
+  background: var(--brand-grad);
+  box-shadow: var(--shadow-brand);
+}
+
+.btn--ghost {
+  color: var(--ink);
+  background: var(--bg);
+  border-color: var(--line);
+}
+
+.btn--ghost:hover {
+  background: var(--card);
+  border-color: rgba(255, 159, 26, 0.3);
+}
+
+/* ---- 答题页 ---- */
 .progress {
   height: 6px;
   margin-bottom: 20px;
   overflow: hidden;
-  background: $line;
-  border-radius: $radius-full;
+  background: var(--line);
+  border-radius: var(--radius-full);
 }
 
 .progress-bar {
   height: 100%;
-  background: $brand-grad;
-  border-radius: $radius-full;
+  background: var(--brand-grad);
+  border-radius: var(--radius-full);
   transition: width 0.3s ease;
 }
 
@@ -192,26 +193,20 @@ const {
   font-size: 13px;
   font-weight: 600;
   color: #fff;
-  background: $brand-grad;
-  border-radius: $radius-full;
+  background: var(--brand-grad);
+  border-radius: var(--radius-full);
 }
 
 .question-count {
   font-size: 13px;
-  color: $ink-3;
+  color: var(--ink-3);
 }
 
 .question-text {
   margin-bottom: 24px;
   font-size: 20px;
   line-height: 1.5;
-  color: $ink;
-}
-
-.options {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  color: var(--ink);
 }
 
 .option {
@@ -221,39 +216,39 @@ const {
   width: 100%;
   padding: 15px 16px;
   font-size: 15px;
-  color: $ink;
+  color: var(--ink);
   text-align: left;
-  background: $card;
-  border: 2px solid $line;
-  border-radius: $radius-m;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-m);
   transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
-
-  &:hover {
-    background: rgba(255, 159, 26, 0.06);
-    border-color: $brand-deep;
-  }
-
-  .option-key {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #fff;
-    background: $brand-grad;
-    border-radius: 50%;
-  }
-
-  .option-text {
-    flex: 1;
-    line-height: 1.5;
-  }
 }
 
-// ---- 结果页 ----
+.option:hover {
+  background: rgba(255, 159, 26, 0.06);
+  border-color: var(--brand-deep);
+}
+
+.option .option-key {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--brand-grad);
+  border-radius: 50%;
+}
+
+.option .option-text {
+  flex: 1;
+  line-height: 1.5;
+}
+
+/* ---- 结果页 ---- */
 .result {
   text-align: center;
 }
@@ -263,55 +258,55 @@ const {
   height: 120px;
   margin: 0 auto 20px;
   overflow: hidden;
-  background: $bg;
-  border: 4px solid $brand-deep;
+  background: var(--bg);
+  border: 4px solid var(--brand-deep);
   border-radius: 50%;
+}
 
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.result-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .result-name {
   margin-bottom: 12px;
   font-size: 28px;
   font-weight: 700;
-  color: $ink;
+  color: var(--ink);
   text-align: center;
 }
 
 .result-tag {
   margin-bottom: 24px;
   font-size: 18px;
-  color: $brand-deep;
+  color: var(--brand-deep);
 }
 
 .result-desc {
   margin-bottom: 24px;
   padding: 16px;
   text-align: left;
-  background: $bg;
-  border-radius: $radius-m;
+  background: var(--bg);
+  border-radius: var(--radius-m);
+}
 
-  h3 {
-    margin-bottom: 12px;
-    font-size: 17px;
-    color: $brand-deep;
-  }
+.result-desc h3 {
+  margin-bottom: 12px;
+  font-size: 17px;
+  color: var(--brand-deep);
+}
 
-  p {
-    margin-bottom: 12px;
-    font-size: 15px;
-    line-height: 1.7;
-    color: $ink-2;
+.result-desc p {
+  margin-bottom: 12px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
 
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+.result-desc p:last-child {
+  margin-bottom: 0;
 }
 
 .back-link {
@@ -319,15 +314,15 @@ const {
   align-items: center;
   gap: 6px;
   font-size: 14px;
-  color: $brand-deep;
-
-  &:hover {
-    opacity: 0.75;
-  }
+  color: var(--brand-deep);
 }
 
-// ---- 响应式 ----
-@include respond-below($bp-xs) {
+.back-link:hover {
+  opacity: 0.75;
+}
+
+/* ---- 响应式 ---- */
+@media (max-width: 640px) {
   .card {
     padding: 22px;
   }

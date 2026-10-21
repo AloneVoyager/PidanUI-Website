@@ -1,3 +1,8 @@
+# Tailwind 的包族（@tailwindcss/node、@tailwindcss/oxide …）在 Windows 默认的
+# isolated 链接布局下出现过「只链了一半」的问题（顶层只有空壳目录、传递依赖缺失），
+# 改用扁平 node_modules 布局规避；Linux/CI 下同样适用，行为一致。
+nodeLinker: hoisted
+
 allowBuilds:
   esbuild: true
   '@parcel/watcher': true

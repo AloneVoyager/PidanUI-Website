@@ -60,85 +60,81 @@ onMounted(() => {
   </form>
 </template>
 
-<style scoped lang="scss">
-@use 'variables' as *;
-
+<style scoped>
 .news-search {
   position: relative;
   display: flex;
   align-items: center;
   margin: 0 0 18px;
-
-  // 降级提示：默认隐藏（有 JS 时 <head> 内联脚本会立即给 <html> 加上 .js），
-  // 仅在无 JS 时由下方 html:not(.js) 规则显示。
-  .news-search-noscript {
-    display: none;
-    padding: 0 2px;
-    font-size: 14px;
-    color: $ink-2;
-    text-align: center;
-
-    a {
-      color: $brand-deep;
-      text-decoration: underline;
-    }
-  }
-
-  .news-search-icon {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    display: flex;
-    color: $ink-3;
-    pointer-events: none;
-    transform: translateY(-50%);
-
-    i {
-      font-size: 15px;
-    }
-  }
-
-  input {
-    width: 100%;
-    padding: 12px 18px 12px 46px;
-    font-size: 15px;
-    color: $ink;
-    background: $card;
-    border: 1px solid $line;
-    border-radius: 40px;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-
-    &::placeholder {
-      color: $ink-3;
-    }
-
-    &:focus {
-      border-color: $brand-deep;
-      box-shadow: 0 0 0 4px rgba(255, 159, 26, 0.14);
-    }
-  }
 }
 
-// 禁用 JS 时的搜索框降级：隐藏表单控件，只显示降级提示文本
-// 顶层 html 选择器 Vue scoped 不会加 data-v-xxx 前缀，仍能命中
-html:not(.js) {
-  .news-search {
-    display: block;
-    padding: 0;
-    background: transparent;
-    border: none;
-  }
+/* 降级提示：默认隐藏（有 JS 时 <head> 内联脚本会立即给 <html> 加上 .js），
+   仅在无 JS 时由下方 html:not(.js) 规则显示。 */
+.news-search .news-search-noscript {
+  display: none;
+  padding: 0 2px;
+  font-size: 14px;
+  color: var(--ink-2);
+  text-align: center;
+}
 
-  .news-search-icon,
-  .news-search input {
-    display: none !important;
-  }
+.news-search .news-search-noscript a {
+  color: var(--brand-deep);
+  text-decoration: underline;
+}
 
-  // 此时 <template v-if="mounted"> 不会渲染（mounted 永远为 false），
-  // 整个 <form> 里只剩这条提示，把它显示出来
-  .news-search-noscript {
-    display: block;
-  }
+.news-search .news-search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  display: flex;
+  color: var(--ink-3);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.news-search .news-search-icon i {
+  font-size: 15px;
+}
+
+.news-search input {
+  width: 100%;
+  padding: 12px 18px 12px 46px;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 40px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.news-search input::placeholder {
+  color: var(--ink-3);
+}
+
+.news-search input:focus {
+  border-color: var(--brand-deep);
+  box-shadow: 0 0 0 4px rgba(255, 159, 26, 0.14);
+}
+
+/* 禁用 JS 时的搜索框降级：隐藏表单控件，只显示降级提示文本
+   顶层 html 选择器 Vue scoped 不会加 data-v-xxx 前缀，仍能命中 */
+html:not(.js) .news-search {
+  display: block;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+html:not(.js) .news-search .news-search-icon,
+html:not(.js) .news-search input {
+  display: none !important;
+}
+
+/* 此时 <template v-if="mounted"> 不会渲染（mounted 永远为 false），
+   整个 <form> 里只剩这条提示，把它显示出来 */
+html:not(.js) .news-search .news-search-noscript {
+  display: block;
 }
 </style>
