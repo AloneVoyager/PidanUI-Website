@@ -113,50 +113,12 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="giscus-host">
-    <div v-if="loading" class="comments-skeleton" aria-hidden="true">
-      <div class="skeleton-line w-30" />
-      <div class="skeleton-line" />
-      <div class="skeleton-line w-70" />
+    <!-- 加载占位：骨架条降低「页面底部空白」的观感（USkeleton 自带扫光动画） -->
+    <div v-if="loading" class="flex flex-col gap-3 py-1.5" aria-hidden="true">
+      <USkeleton class="h-3.5 w-[30%]" />
+      <USkeleton class="h-3.5 w-full" />
+      <USkeleton class="h-3.5 w-[70%]" />
     </div>
     <div ref="container" class="post-comments" />
   </div>
 </template>
-
-<style scoped>
-/* 评论区加载占位：骨架条降低「页面底部空白」的观感 */
-.comments-skeleton {
-  padding: 6px 0 2px;
-}
-
-.skeleton-line {
-  height: 14px;
-  margin-bottom: 12px;
-  background: linear-gradient(
-    90deg,
-    rgba(127, 127, 127, 0.12) 25%,
-    rgba(127, 127, 127, 0.22) 37%,
-    rgba(127, 127, 127, 0.12) 63%
-  );
-  background-size: 400% 100%;
-  border-radius: 6px;
-  animation: skeleton-loading 1.4s ease infinite;
-}
-
-.skeleton-line.w-30 {
-  width: 30%;
-}
-
-.skeleton-line.w-70 {
-  width: 70%;
-}
-
-@keyframes skeleton-loading {
-  0% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0 50%;
-  }
-}
-</style>

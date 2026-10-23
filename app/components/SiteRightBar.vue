@@ -45,7 +45,7 @@ const drawerStyle = computed(
     :aria-expanded="drawerOpen"
     @click="toggleMobileDrawer('right')"
   >
-    <i class="fa-solid fa-table-columns" aria-hidden="true"></i>
+    <UIcon name="i-lucide-panel-right" class="size-5" aria-hidden="true" />
   </button>
 
   <aside
@@ -56,42 +56,55 @@ const drawerStyle = computed(
     aria-label="侧边栏"
   >
     <!-- 最新动态 -->
-    <section class="widget">
-      <h2 class="widget-title">最新动态</h2>
-      <div class="widget-list">
-        <NuxtLink v-for="post in posts" :key="post.url" :to="post.url">
+    <section class="mb-4 rounded-(--radius-l) border border-default bg-muted p-4">
+      <h2 class="mb-3 text-[13px] font-bold tracking-[0.5px] text-dimmed uppercase">最新动态</h2>
+      <div class="flex flex-col">
+        <NuxtLink
+          v-for="post in posts"
+          :key="post.url"
+          class="line-clamp-2 border-b border-dashed border-default py-[7px] text-sm text-toned transition-colors last:border-b-0 hover:text-brand-600"
+          :to="post.url"
+        >
           {{ post.title }}
         </NuxtLink>
-        <p v-if="!posts.length" class="widget-empty">暂无动态</p>
+        <p v-if="!posts.length" class="text-[13px] text-dimmed">暂无动态</p>
       </div>
-      <NuxtLink class="widget-more" :to="'/posts/'">
-        查看全部新闻
-        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-      </NuxtLink>
+      <UButton
+        class="mt-3"
+        to="/posts/"
+        variant="soft"
+        color="primary"
+        size="xs"
+        rounded-full
+        block
+        trailing-icon="i-lucide-arrow-right"
+        label="查看全部新闻"
+      />
     </section>
 
     <!-- 关注我们 -->
-    <section class="widget">
-      <h2 class="widget-title">关注我们</h2>
-      <div class="social-links">
+    <section class="mb-4 rounded-(--radius-l) border border-default bg-muted p-4">
+      <h2 class="mb-3 text-[13px] font-bold tracking-[0.5px] text-dimmed uppercase">关注我们</h2>
+      <div class="flex flex-col gap-2.5">
         <a
           v-for="link in socialLinks"
           :key="link.url"
+          class="flex items-center gap-2.5 rounded-(--radius-m) border border-default bg-default px-2.5 py-2 text-sm text-toned transition-colors hover:border-brand-600/35 hover:text-brand-600"
           :href="link.href"
           target="_blank"
           :rel="link.rel"
           :type="link.type"
         >
-          <i :class="link.iconClass" aria-hidden="true"></i>
+          <UIcon :name="link.icon" class="size-4 shrink-0" aria-hidden="true" />
           {{ link.name }}
         </a>
       </div>
     </section>
 
     <!-- 项目状态 -->
-    <section class="widget">
-      <h2 class="widget-title">项目状态</h2>
-      <p class="widget-note">PidanUI 项目组持续维护中，欢迎加入我们。</p>
+    <section class="mb-4 rounded-(--radius-l) border border-default bg-muted p-4">
+      <h2 class="mb-3 text-[13px] font-bold tracking-[0.5px] text-dimmed uppercase">项目状态</h2>
+      <p class="text-[13.5px] text-toned">PidanUI 项目组持续维护中，欢迎加入我们。</p>
     </section>
   </aside>
 </template>

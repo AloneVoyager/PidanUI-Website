@@ -98,6 +98,38 @@ export default defineNuxtConfig({
   // 组件按文件名注册（<ListView> / <PostCard> …），模板保持零改动
   components: [{ path: '~/components', pathPrefix: false }],
 
+  // 图标：只用本地 @iconify-json 集合，构建期直接内联 SVG。
+  // 不配置时 @nuxt/icon 会在渲染期向 Iconify API 取图 —— 静态站点必须离线可用。
+  icon: {
+    serverBundle: { collections: ['lucide', 'simple-icons'] },
+    clientBundle: {
+      scan: true,
+      sizeLimitKb: 256,
+      // scan 认不出动态绑定的图标（:name="item.icon" / :name="link.icon"），
+      // 这些必须显式列出，否则会退化成运行时向 Iconify API 取图。
+      // 新增动态图标时同步这里。
+      icons: [
+        // 壳层导航与移动端控件
+        'lucide:house',
+        'lucide:download',
+        'lucide:newspaper',
+        'lucide:info',
+        'lucide:menu',
+        'lucide:panel-right',
+        // 主题切换三态
+        'lucide:monitor',
+        'lucide:sun',
+        'lucide:moon',
+        // 关注我们
+        'simple-icons:github',
+        'simple-icons:bilibili',
+        'simple-icons:tencentqq',
+        'lucide:rss',
+        'lucide:globe',
+      ],
+    },
+  },
+
   vite: {
     // Tailwind CSS v4：只提供 @theme 令牌与工具类，样式主体仍是原生 CSS
     // （分层与顺序约定见 app/assets/styles/index.css 顶部注释）

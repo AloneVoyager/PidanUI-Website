@@ -12,6 +12,11 @@
  * 多余的语义色（secondary / success / info / warning）不生成 CSS。
  */
 export default defineAppConfig({
+  // 图标一律渲染成内联 <svg>（Nuxt Icon 默认的 css 模式输出 <span class="iconify">，
+  // 要等客户端拿到图标数据才有内容；静态站点要首屏就有图标，必须用 svg 模式）
+  icon: {
+    mode: 'svg',
+  },
   ui: {
     colors: {
       primary: 'brand',

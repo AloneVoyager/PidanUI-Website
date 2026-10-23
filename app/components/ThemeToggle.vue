@@ -11,57 +11,26 @@ const LABELS: Record<ThemeMode, string> = {
   dark: '深色模式',
 };
 
+const ICONS: Record<ThemeMode, string> = {
+  auto: 'i-lucide-monitor',
+  light: 'i-lucide-sun',
+  dark: 'i-lucide-moon',
+};
+
 const label = computed(() => LABELS[mode.value]);
+const icon = computed(() => ICONS[mode.value]);
 </script>
 
 <template>
-  <button
-    class="theme-toggle"
-    type="button"
+  <!-- mt-auto：父级是 flex column，把按钮顶到左栏底部 -->
+  <UButton
+    class="mt-auto w-full justify-start gap-3 px-3 py-2.5"
+    variant="outline"
+    color="neutral"
+    :icon="icon"
+    :label="label"
     :title="`当前：${label}（点击切换）`"
     :aria-label="`切换主题，当前${label}`"
     @click="cycle"
-  >
-    <span class="toggle-icon" aria-hidden="true">
-      <i v-if="mode === 'auto'" class="fa-solid fa-display"></i>
-      <i v-else-if="mode === 'light'" class="fa-solid fa-sun"></i>
-      <i v-else class="fa-solid fa-moon"></i>
-    </span>
-    <span class="toggle-label">{{ label }}</span>
-  </button>
+  />
 </template>
-
-<style scoped>
-/* 置于左侧栏底部（父级为 flex column，用 margin-top:auto 顶到底） */
-.theme-toggle {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: auto;
-  padding: 10px 12px;
-  font-size: 14px;
-  color: var(--ink-2);
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-m);
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-
-.theme-toggle .toggle-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-}
-
-.theme-toggle .toggle-icon i {
-  font-size: 15px;
-}
-
-.theme-toggle:hover {
-  color: var(--brand-deep);
-  background: rgba(255, 197, 61, 0.1);
-  border-color: rgba(255, 159, 26, 0.35);
-}
-</style>
