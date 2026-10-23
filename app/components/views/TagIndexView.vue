@@ -9,61 +9,21 @@ const terms = computed(() => collectTerms('tags', allPosts.value));
 </script>
 
 <template>
-  <div class="terms-view">
+  <div class="mx-auto max-w-[1000px]">
     <PageTitle title="标签" />
 
-    <div class="term-cloud">
+    <!-- 标签云：胶囊尺寸随文字长度自然伸缩 -->
+    <div class="mt-5 flex flex-wrap gap-3">
       <NuxtLink
         v-for="term in terms"
         :key="term.name"
-        class="tag-chip"
+        class="inline-flex items-center gap-1.5 rounded-full border border-default bg-default px-[18px] py-2 text-sm text-toned transition-colors duration-200 hover:border-brand-600/30 hover:bg-brand-soft hover:text-brand-600"
         :to="term.path"
       >
         #{{ term.name }}
-        <span class="term-count">{{ term.count }}</span>
+        <span class="text-xs text-dimmed">{{ term.count }}</span>
       </NuxtLink>
       <EmptyState v-if="!terms.length" text="暂无标签" />
     </div>
   </div>
 </template>
-
-<style scoped>
-/* ============================================================
-   标签索引页：标签云罗列全部标签
-   ============================================================ */
-.terms-view {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.term-cloud {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.term-cloud .tag-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
-  font-size: 14px;
-  color: var(--ink-2);
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-full);
-  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
-}
-
-.term-cloud .tag-chip:hover {
-  color: var(--brand-deep);
-  background: var(--brand-soft);
-  border-color: rgba(255, 159, 26, 0.3);
-}
-
-.term-cloud .tag-chip .term-count {
-  font-size: 12px;
-  color: var(--ink-3);
-}
-</style>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-
 // 首页：Hero 主视觉 + 重要说明 + 下载卡片 + 核心特性
-// 结构参考 EggyUIWeb-Vue3，但去除容器卡片外观，与 VitePress 暖黄渐变背景融为一体
+// 容器弱化，与暖黄渐变背景融为一体
 const FEATURES = [
   {
     tag: '现代技术栈',
@@ -22,289 +21,112 @@ const FEATURES = [
 </script>
 
 <template>
-  <div class="home-view">
+  <div class="mx-auto max-w-page">
     <!-- Hero 主视觉 -->
-    <section class="hero">
-      <h1 class="hero-title">Pidan<em>UI</em></h1>
-      <p class="hero-desc">
+    <section class="hero flex flex-col items-center pt-10 pb-7 text-center">
+      <h1 class="hero-title mb-4 text-[clamp(32px,5vw,48px)] leading-[1.25] font-extrabold tracking-[1px]">
+        Pidan<em>UI</em>
+      </h1>
+      <p class="max-w-[600px] text-base leading-[1.7] text-toned">
         一个由蛋仔爱好者发起的 Windows & Liunx 桌面美化项目，专注于实现《蛋仔派对》风格的桌面视觉体验。
       </p>
 
-      <!-- 重要说明（警告条） -->
-      <div class="hero-warning" role="note">
-        <h3><span class="warn-icon" aria-hidden="true"><i class="fa-solid fa-exclamation"></i></span> 温馨提示</h3>
-        <p>
+      <!-- 重要说明：极浅背景 + 左边框，不用卡片外观 -->
+      <div
+        class="mx-auto mt-6 max-w-[720px] rounded-(--radius-m) border-l-4 border-brand bg-brand-a14 px-[18px] py-3.5 text-left"
+        role="note"
+      >
+        <h3 class="mb-1.5 flex items-center gap-2 text-sm font-semibold text-brand-600">
+          <span
+            class="inline-flex size-[18px] items-center justify-center rounded-full bg-brand text-white"
+            aria-hidden="true"
+          >
+            <UIcon name="i-lucide-triangle-alert" class="size-3" />
+          </span>
+          温馨提示
+        </h3>
+        <p class="text-[13.5px] leading-[1.65] text-toned">
           PidanUI 是一个普通的 Windows & Liunx 桌面美化包，不适用于手机系统或其他操作系统。本项目为《蛋仔派对》粉丝二次创作作品，严格禁止任何商业用途。
         </p>
       </div>
     </section>
 
-    <!-- 下载引导卡片（与背景融合） -->
-    <section class="download-callout" aria-label="立即下载">
-      <div class="download-copy">
-        <span class="callout-icon" aria-hidden="true">
-          <i class="fa-solid fa-download"></i>
+    <!-- 下载引导卡片 -->
+    <section
+      class="download-callout mt-8 mb-2 flex items-center gap-7 rounded-(--radius-m) bg-brand-a10 px-7 py-6"
+      aria-label="立即下载"
+    >
+      <div class="min-w-0 flex-1">
+        <span class="mb-2.5 inline-flex text-brand-600" aria-hidden="true">
+          <UIcon name="i-lucide-download" class="size-8" />
         </span>
-        <h2>立即 <span class="highlight">下载</span></h2>
-        <p>获取最新版本 · Windows 7/10/11 · 完全免费</p>
-        <NuxtLink class="arrow-hint" :to="'/download'">
-          前往下载
-          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-        </NuxtLink>
+        <h2 class="mb-1 text-[clamp(22px,3.2vw,28px)] font-bold tracking-[-0.01em] text-default">
+          立即 <span class="grad-text">下载</span>
+        </h2>
+        <p class="mb-3.5 text-sm text-toned">获取最新版本 · Windows 7/10/11 · 完全免费</p>
+        <UButton
+          to="/download"
+          variant="soft"
+          color="primary"
+          size="sm"
+          rounded-full
+          trailing-icon="i-lucide-arrow-right"
+          label="前往下载"
+        />
       </div>
-      <div class="download-visual" aria-hidden="true">
-        <img :src="withBase('/images/characters/yeggy.webp')" alt="" loading="lazy" />
+      <div class="callout-visual size-[140px] flex-none" aria-hidden="true">
+        <img
+          class="size-full rounded-(--radius-m) object-cover"
+          :src="withBase('/images/characters/yeggy.webp')"
+          alt=""
+          loading="lazy"
+        />
       </div>
     </section>
 
     <!-- 项目特性 -->
     <section
       id="features"
-      class="feature-grid grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4.5 mt-10"
+      class="feature-grid mt-10 grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4.5"
       aria-label="项目特性"
     >
-      <article v-for="item in FEATURES" :key="item.title" class="feature-card">
-        <span class="tag">{{ item.tag }}</span>
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.desc }}</p>
+      <article
+        v-for="item in FEATURES"
+        :key="item.title"
+        class="rounded-(--radius-l) border border-default bg-default px-[22px] pt-[22px] pb-5"
+      >
+        <UBadge class="mb-3" variant="soft" color="primary" size="sm" :label="item.tag" />
+        <h3 class="mb-1.5 text-base font-bold text-default">{{ item.title }}</h3>
+        <p class="text-[13.5px] leading-[1.7] text-toned">{{ item.desc }}</p>
       </article>
     </section>
   </div>
 </template>
 
 <style scoped>
-/* ============================================================
-   首页 · Hero + 警告条 + 下载引导 + 特性网格
-   结构参考 EggyUIWeb-Vue3，但容器弱化，与暖黄渐变背景融为一体
-   ============================================================ */
-.home-view {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* ---- Hero 主视觉 ---- */
-.hero {
-  padding: 40px 0 28px;
-  text-align: center;
-}
-
-.hero-title {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 800;
-  letter-spacing: 1px;
-  line-height: 1.25;
-  margin: 0 0 16px;
+/* 品牌渐变文字：需要 background-clip:text，工具类写起来过于冗长 */
+.hero-title,
+.grad-text {
   background: var(--brand-grad);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .hero-title em {
   font-style: normal;
 }
 
-.hero-desc {
-  max-width: 600px;
-  margin: 0 auto;
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--ink-2);
-}
-
-/* ---- 重要说明 / 警告条（弱化外观：极浅背景 + 左边框） ---- */
-.hero-warning {
-  max-width: 720px;
-  margin: 24px auto 0;
-  padding: 14px 18px;
-  text-align: left;
-  color: var(--ink-2);
-  background: rgba(255, 197, 61, 0.14);
-  border-left: 4px solid var(--brand);
-  border-radius: var(--radius-m);
-}
-
-.hero-warning h3 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 6px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--brand-deep);
-}
-
-.hero-warning .warn-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  font-size: 10px;
-  line-height: 1;
-  color: #fff;
-  background: var(--brand);
-  border-radius: 50%;
-}
-
-.hero-warning .warn-icon i {
-  font-size: inherit;
-}
-
-.hero-warning p {
-  margin: 0;
-  font-size: 13.5px;
-  line-height: 1.65;
-  color: var(--ink-2);
-}
-
-/* ---- 下载引导（左右分栏，弱化容器） ---- */
-.download-callout {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  margin: 32px 0 8px;
-  padding: 24px 28px;
-  color: var(--ink);
-  text-decoration: none;
-  /* 弱化容器：只用一层极淡的背景，不设 border-radius / box-shadow */
-  background: rgba(255, 197, 61, 0.1);
-  border-radius: var(--radius-m);
-}
-
-.download-copy {
-  flex: 1;
-  min-width: 0;
-}
-
-.download-copy .callout-icon {
-  display: inline-flex;
-  margin-bottom: 10px;
-  color: var(--brand-deep);
-}
-
-.download-copy .callout-icon i {
-  font-size: 32px;
-}
-
-.download-copy h2 {
-  margin: 0 0 4px;
-  font-size: clamp(22px, 3.2vw, 28px);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-
-.download-copy h2 .highlight {
-  background: var(--brand-grad);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.download-copy > p {
-  margin: 0 0 14px;
-  font-size: 14px;
-  color: var(--ink-2);
-}
-
-.arrow-hint {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 18px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--brand-deep);
-  text-decoration: none;
-  background: rgba(255, 159, 26, 0.08);
-  border: 1px solid rgba(255, 159, 26, 0.14);
-  border-radius: 30px;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.arrow-hint i {
-  font-size: 16px;
-  transition: transform 0.25s ease;
-}
-
-.arrow-hint:hover {
-  background: rgba(255, 159, 26, 0.16);
-}
-
-.arrow-hint:hover i {
-  transform: translateX(3px);
-}
-
-.download-visual {
-  flex: 0 0 140px;
-  width: 140px;
-  height: 140px;
-}
-
-.download-visual img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: var(--radius-m);
-}
-
-/* ---- 项目特性网格 ---- */
-/* 布局（columns / gap / 上边距）在模板上用工具类，这里只留窄屏覆盖 */
-.feature-card {
-  padding: 22px 22px 20px;
-  /* 卡片底色用 CSS 变量承载深浅两套（浅色纯白 / 深色 #1f1f23），
-     再叠一层极弱的品牌黄让卡片与暖色品牌微微呼应 */
-  background: linear-gradient(180deg, rgba(255, 197, 61, 0.1) 0%, transparent 100%), var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-l);
-}
-
-.feature-card .tag {
-  display: inline-block;
-  margin-bottom: 12px;
-  padding: 3px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--brand-deep);
-  background: var(--brand-soft);
-  border-radius: var(--radius-full);
-}
-
-.feature-card h3 {
-  margin: 0 0 6px;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--ink);
-}
-
-.feature-card p {
-  margin: 0;
-  font-size: 13.5px;
-  line-height: 1.7;
-  color: var(--ink-2);
-}
-
-/* ---- 响应式 ---- */
+/* 窄屏：下载卡片转纵向，插图置顶 */
 @media (max-width: 960px) {
   .download-callout {
     flex-direction: column;
-    text-align: center;
     padding: 22px 20px;
+    text-align: center;
   }
 
-  .download-callout .download-copy .callout-icon {
-    justify-content: center;
-  }
-
-  .download-callout .arrow-hint {
-    justify-content: center;
-  }
-
-  .download-callout .download-visual {
+  .download-callout .callout-visual {
     order: -1;
-    flex: 0 0 110px;
     width: 110px;
     height: 110px;
   }

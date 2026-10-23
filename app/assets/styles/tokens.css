@@ -62,6 +62,11 @@
   --color-transparent: transparent;
   --color-white: #fff;
   --color-black: #000;
+  /* Nuxt UI 的组件主题直接使用 bg-primary / text-primary / ring-primary 这类
+     工具类，而它们依赖 --color-primary —— 上面的 --color-*: initial 会把它
+     一并清掉，必须在这里补回，否则实心按钮、进度条等会变成透明。 */
+  --color-primary: var(--ui-primary);
+  --color-error: var(--ui-error);
   --color-brand: var(--brand);
   --color-brand-deep: var(--brand-deep);
   --color-brand-soft: var(--brand-soft);

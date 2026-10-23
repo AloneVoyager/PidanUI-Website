@@ -51,7 +51,11 @@
      值都来自本项目变量，不要在这里写死颜色。 */
   --ui-radius: var(--radius-m);
   --ui-container: 1400px;
-  --ui-primary: var(--brand);
+  /* primary 用 --brand-deep(#ff9f1a) 而不是 --brand(#ffc53d)：
+     Nuxt UI 把同一个 --ui-primary 同时用于「实心按钮底色」和 text-primary
+     文字色，而 #ffc53d 在白底上做文字几乎看不清（徽章、胶囊按钮会发白）。
+     #ff9f1a 与站点原有链接/CTA 的着色一致。 */
+  --ui-primary: var(--brand-deep);
   --ui-text: var(--ink);
   --ui-text-toned: var(--ink-2);
   --ui-text-muted: var(--ink-2);

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import ChipsNav from '../ChipsNav.vue';
 import CardGrid from '../CardGrid.vue';
 import Pagination from '../Pagination.vue';
@@ -19,11 +20,11 @@ defineProps<{
 </script>
 
 <template>
-  <div class="news-list">
+  <div class="mx-auto max-w-page">
     <!-- 页面级顶部插槽（如新闻页的搜索框） -->
     <slot name="top" />
 
-    <div class="list-head">
+    <div class="list-head mb-[22px] flex flex-wrap items-center justify-between gap-3.5">
       <PageTitle :title="title" />
       <ChipsNav v-if="!hideChips" />
     </div>
@@ -40,23 +41,6 @@ defineProps<{
 </template>
 
 <style scoped>
-/* ============================================================
-   列表页通用外壳：新闻 / 分类 / 标签 列表共用
-   ============================================================ */
-.news-list {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.list-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 22px;
-}
-
 @media (max-width: 768px) {
   .list-head {
     flex-direction: column;

@@ -1,51 +1,8 @@
-<script setup lang="ts">
-</script>
-
 <template>
-  <div class="not-found">
-    <p class="code">404</p>
-    <h1>页面走丢了</h1>
-    <p class="desc">你访问的页面不存在，或者已经被移动。</p>
-    <NuxtLink class="btn" :to="'/'">返回首页</NuxtLink>
+  <div class="mx-auto mt-[10vh] max-w-[520px] rounded-(--radius-l) border border-default bg-default px-8 py-10 text-center">
+    <p class="text-[64px] leading-none font-extrabold text-brand-600">404</p>
+    <h1 class="mt-3 mb-2 text-[22px] text-default">页面走丢了</h1>
+    <p class="mb-6 text-[15px] text-toned">你访问的页面不存在，或者已经被移动。</p>
+    <UButton to="/" color="primary" size="lg" rounded-full label="返回首页" />
   </div>
 </template>
-
-<style scoped>
-.not-found {
-  max-width: 520px;
-  margin: 10vh auto 0;
-  padding: 40px 32px;
-  text-align: center;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-l);
-}
-
-.not-found .code {
-  font-size: 64px;
-  font-weight: 800;
-  line-height: 1;
-  color: var(--brand-deep);
-}
-
-.not-found h1 {
-  margin: 12px 0 8px;
-  font-size: 22px;
-  color: var(--ink);
-}
-
-.not-found .desc {
-  margin-bottom: 24px;
-  font-size: 15px;
-  color: var(--ink-2);
-}
-
-.not-found .btn {
-  display: inline-block;
-  padding: 11px 28px;
-  font-weight: 600;
-  color: #fff;
-  background: var(--brand-grad);
-  border-radius: var(--radius-full);
-}
-</style>

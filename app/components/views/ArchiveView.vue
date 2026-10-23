@@ -76,40 +76,47 @@ function toggleMonth(key: string): void {
 </script>
 
 <template>
-  <div class="archive-view">
-    <div class="list-head">
+  <div class="mx-auto max-w-page">
+    <div class="list-head mb-[18px] flex flex-wrap items-baseline justify-between gap-x-3.5 gap-y-2.5">
       <PageTitle title="归档" />
-      <p class="archive-total">
+      <p class="text-sm text-dimmed">
         共 {{ allPosts.length }} 篇文章 · {{ totalPages }} 个年份
       </p>
     </div>
 
-    <h2 v-if="currentYear" class="archive-year">
+    <h2
+      v-if="currentYear"
+      class="mb-3.5 flex items-baseline gap-2.5 text-xl font-bold text-brand-600"
+    >
       {{ currentYear }} 年
-      <span class="year-count">{{ currentPosts.length }} 篇</span>
+      <span class="text-[13px] font-medium text-dimmed">{{ currentPosts.length }} 篇</span>
     </h2>
 
     <EmptyState v-if="!months.length" text="暂无归档内容" />
 
-    <div v-else class="month-groups">
+    <div v-else class="flex flex-col gap-3">
       <section
         v-for="month in months"
         :key="month.key"
-        class="month-group"
+        class="month-group rounded-(--radius-l) border border-default bg-default px-3.5"
         :class="{ open: isOpen(month.key) }"
       >
         <button
-          class="month-head"
+          class="month-head flex w-full items-center gap-2.5 rounded-(--radius-s) py-3 text-left text-[15px] font-semibold text-default transition-colors hover:text-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600/45"
           type="button"
           :aria-expanded="isOpen(month.key)"
           @click="toggleMonth(month.key)"
         >
-          <span class="month-name">{{ month.label }}</span>
-          <span class="month-count">{{ month.posts.length }} 篇</span>
-          <i class="fa-solid fa-chevron-down month-arrow" aria-hidden="true"></i>
+          <span>{{ month.label }}</span>
+          <span class="text-[12.5px] font-normal text-dimmed">{{ month.posts.length }} 篇</span>
+          <UIcon
+            name="i-lucide-chevron-down"
+            class="month-arrow ms-auto text-dimmed"
+            aria-hidden="true"
+          />
         </button>
         <div class="month-body">
-          <div class="month-body-inner">
+          <div class="min-h-0 overflow-hidden">
             <CardGrid class="month-grid" :posts="month.posts" />
           </div>
         </div>
@@ -126,119 +133,10 @@ function toggleMonth(key: string): void {
 </template>
 
 <style scoped>
-/* ============================================================
-   归档页：按年分页，页内按月折叠分组
-   ============================================================ */
-.archive-view {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* 页面主标题（与列表 / 搜索 / 分类索引页保持一致） */
-.list-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px 14px;
-  margin-bottom: 18px;
-}
-
-.archive-total {
-  font-size: 14px;
-  color: var(--ink-3);
-}
-
-.archive-year {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: 14px;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--brand-deep);
-}
-
-.archive-year .year-count {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink-3);
-}
-
-.month-groups {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* 月份分组：点击头部展开 / 收起，动画与下载页手风琴一致 */
-.month-group {
-  padding: 0 14px;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-l);
-}
-
-/* 深色下用半透明深灰底（手动深色 + 系统深色均生效） */
-[data-theme='dark'] .month-group {
-  background: rgba(31, 31, 35, 0.6);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .month-group {
-    background: rgba(31, 31, 35, 0.6);
-  }
-}
-
-.month-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 12px 2px;
-  font: inherit;
-  color: var(--ink);
-  text-align: left;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.month-head:hover {
-  color: var(--brand-deep);
-}
-
-.month-head:focus-visible {
-  outline: 2px solid rgba(255, 159, 26, 0.45);
-  outline-offset: 2px;
-  border-radius: var(--radius-s);
-}
-
-.month-head .month-name {
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.month-head .month-count {
-  font-size: 12.5px;
-  color: var(--ink-3);
-}
-
-.month-head .month-arrow {
-  display: inline-block;
-  margin-left: auto;
-  font-size: 12px;
-  color: var(--ink-3);
-  transition: transform 0.3s ease;
-}
-
-/* 收起时箭头朝右 */
-.month-group:not(.open) .month-arrow {
-  transform: rotate(-90deg);
-}
-
 /* 展开 / 收起动画：grid-template-rows 0fr ↔ 1fr，
-   高度随卡片数量自适应（无需写死 max-height），观感与下载页手风琴一致 */
+   高度随卡片数量自适应（无需写死 max-height）。
+   这两个状态类必须留在 CSS 里：open/closed 是父级的 class 切换，
+   工具类无法表达「子树状态改变时才过渡」。 */
 .month-body {
   display: grid;
   grid-template-rows: 1fr;
@@ -249,9 +147,12 @@ function toggleMonth(key: string): void {
   grid-template-rows: 0fr;
 }
 
-.month-body-inner {
-  min-height: 0;
-  overflow: hidden;
+.month-arrow {
+  transition: transform 0.3s ease;
+}
+
+.month-group:not(.open) .month-arrow {
+  transform: rotate(-90deg);
 }
 
 .month-grid {

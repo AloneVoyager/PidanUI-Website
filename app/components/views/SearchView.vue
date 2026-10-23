@@ -5,7 +5,7 @@ import PageTitle from '../PageTitle.vue';
 </script>
 
 <template>
-  <div class="search-view">
+  <div class="mx-auto max-w-page">
     <!-- 搜索框置于标题之上（搜索页独有布局） -->
     <NewsSearchBox autofocus />
 
@@ -16,13 +16,3 @@ import PageTitle from '../PageTitle.vue';
     <SearchResults />
   </div>
 </template>
-
-<style scoped>
-/* ============================================================
-   搜索页：搜索框在上，标题在下
-   ============================================================ */
-.search-view {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-</style>
