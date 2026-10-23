@@ -1,0 +1,637 @@
+/* ============================================================
+   文章详情 + Markdown 正文排版
+   ------------------------------------------------------------
+   为什么是全局文件而不是组件 scoped：正文由 <ContentRenderer> 渲染，
+   其 DOM 不带 PostView 的 data-v 标记，scoped 选择器命中不了
+   （除非全量 :deep()，反而更难维护）。
+
+   两条约定：
+   1) 全部包进 @layer components —— 这样 Nuxt UI / Tailwind 的工具类
+      仍然能覆盖正文里的任意元素（未分层时会把工具类压死）。
+   2) 深色只写 .dark 一条：useTheme 与首帧内联脚本保证「手动深色」与
+      「auto + 系统深色」都会落到 <html class="dark">，
+      因此不再需要 [data-theme='dark'] 与 prefers-color-scheme 两份拷贝。
+
+   图标（标题锚点、代码复制按钮）改为内联 SVG mask，
+   不再依赖 Font Awesome 的私有区码（U+F0C1 / U+F0C5 / U+F00C）。
+   ============================================================ */
+
+@layer components {
+  /* ---- 文章外壳 ---- */
+  .post-view {
+    max-width: var(--container-page);
+    margin: 0 auto;
+    padding: 30px 34px;
+    background: color-mix(in srgb, var(--card) 55%, transparent);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-card);
+  }
+
+  .dark .post-view {
+    background: color-mix(in srgb, var(--card) 60%, transparent);
+  }
+
+  .post-header .post-title {
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .post-header .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 0 24px;
+    font-size: 13px;
+    color: var(--ink-3);
+  }
+
+  .post-header .post-meta .tag {
+    padding: 2px 10px;
+    color: var(--brand-deep);
+    background: var(--color-brand-deep-a10);
+    border-radius: var(--radius-full);
+    transition: background-color 0.2s ease;
+  }
+
+  .post-header .post-meta .tag:hover {
+    background: var(--color-brand-deep-a20);
+  }
+
+  /* ============================================================
+     正文
+     ============================================================ */
+  .post-content {
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--ink-2);
+    /* 长单词 / 长 URL 不撑破布局 */
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .post-content > :first-child {
+    margin-top: 0;
+  }
+
+  .post-content > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---- 标题（6 级共用一份盒模型，仅在下面改字号） ---- */
+  .post-content :is(h1, h2, h3, h4, h5, h6) {
+    position: relative;
+    margin: 1.6em 0 0.7em;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--ink);
+    scroll-margin-top: 20px;
+  }
+
+  /* 标题锚点：默认隐藏，hover 标题时在左侧淡入一个链条图标 */
+  .post-content :is(h1, h2, h3, h4, h5, h6) .header-anchor {
+    position: absolute;
+    top: 0;
+    left: -0.9em;
+    color: var(--brand-deep);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .post-content :is(h1, h2, h3, h4, h5, h6) .header-anchor::before {
+    content: '';
+    display: block;
+    width: 0.8em;
+    height: 0.8em;
+    background-color: currentColor;
+    -webkit-mask: var(--icon-link) center / contain no-repeat;
+    mask: var(--icon-link) center / contain no-repeat;
+  }
+
+  .post-content :is(h1, h2, h3, h4, h5, h6):hover .header-anchor,
+  .post-content :is(h1, h2, h3, h4, h5, h6) .header-anchor:focus-visible {
+    opacity: 1;
+  }
+
+  .post-content h1 {
+    font-size: 1.7em;
+  }
+
+  .post-content h2 {
+    padding-bottom: 0.35em;
+    font-size: 1.35em;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .post-content h3 {
+    font-size: 1.15em;
+  }
+
+  .post-content h4 {
+    font-size: 1.02em;
+  }
+
+  .post-content h5 {
+    font-size: 0.95em;
+    color: var(--ink-2);
+  }
+
+  .post-content h6 {
+    font-size: 0.9em;
+    color: var(--ink-3);
+  }
+
+  /* ---- 文本 ---- */
+  .post-content p {
+    margin: 0.85em 0;
+  }
+
+  .post-content a {
+    color: var(--brand-deep);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .post-content a:hover {
+    opacity: 0.85;
+  }
+
+  .post-content strong {
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .post-content del {
+    color: var(--ink-3);
+  }
+
+  /* ==高亮== */
+  .post-content mark {
+    padding: 0.05em 0.28em;
+    color: var(--ink);
+    background: linear-gradient(transparent 58%, var(--color-brand-a70) 58%);
+    border-radius: 3px;
+  }
+
+  /* H~2~O / X^2^ */
+  .post-content :is(sub, sup) {
+    font-size: 0.75em;
+    line-height: 0;
+  }
+
+  /* <kbd> */
+  .post-content kbd {
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    font-family: var(--font-code);
+    font-size: 0.82em;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: var(--radius-s);
+  }
+
+  /* ---- 列表 ---- */
+  .post-content ul,
+  .post-content ol {
+    margin: 0.7em 0 1em 1.5em;
+  }
+
+  .post-content ul {
+    list-style: disc;
+  }
+
+  .post-content ol {
+    list-style: decimal;
+  }
+
+  .post-content li {
+    margin: 0.3em 0;
+  }
+
+  .post-content li::marker {
+    color: var(--brand-deep);
+  }
+
+  .post-content li > :is(ul, ol) {
+    margin: 0.25em 0 0.25em 1.2em;
+  }
+
+  /* ---- 任务列表 ---- */
+  .post-content .task-list-item {
+    list-style: none;
+  }
+
+  .post-content .task-list-item > input[type='checkbox'] {
+    width: 1em;
+    height: 1em;
+    margin: 0 0.5em 0 0;
+    vertical-align: -0.12em;
+    accent-color: var(--brand-deep);
+    cursor: default;
+  }
+
+  .post-content ul.contains-task-list {
+    margin-left: 1.6em;
+  }
+
+  /* ---- 定义列表 ---- */
+  .post-content dl {
+    margin: 1em 0;
+  }
+
+  .post-content dt {
+    margin-top: 0.7em;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .post-content dd {
+    margin: 0.15em 0 0 1.1em;
+    padding-left: 0.8em;
+    color: var(--ink-2);
+    border-left: 2px solid var(--color-brand-deep-a35);
+  }
+
+  /* ---- 引用 ---- */
+  .post-content blockquote {
+    margin: 1.1em 0;
+    padding: 0.7em 1.1em;
+    color: var(--ink-2);
+    background: var(--color-brand-deep-a08);
+    border-left: 3px solid var(--brand-static);
+    border-radius: 0 10px 10px 0;
+  }
+
+  .post-content blockquote blockquote {
+    margin: 0.7em 0;
+    background: color-mix(in srgb, var(--brand-deep) 5%, transparent);
+    border-left-color: var(--color-brand-deep-a35);
+  }
+
+  .post-content blockquote > :first-child {
+    margin-top: 0;
+  }
+
+  .post-content blockquote > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---- 分隔线 ---- */
+  .post-content hr {
+    margin: 2em 0;
+    border: none;
+    border-top: 1px solid var(--line);
+  }
+
+  /* ---- 行内代码 ---- */
+  .post-content code {
+    padding: 0.15em 0.42em;
+    font-family: var(--font-code);
+    font-size: 0.9em;
+    color: var(--inline-code-ink);
+    background: var(--inline-code-bg);
+    border-radius: 6px;
+  }
+
+  /* ---- 代码块（ProsePre 输出 div.language-xxx > span.lang + button.copy + pre.shiki）---- */
+  .post-content div[class*='language-'] {
+    position: relative;
+    margin: 1.2em 0;
+    overflow: hidden;
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+  }
+
+  /* 语言标签（左上角） */
+  .post-content div[class*='language-'] > .lang {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    padding: 3px 12px;
+    font-family: var(--font-code);
+    font-size: 11px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    background: var(--code-hd);
+    border-bottom-right-radius: var(--radius-s);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* 无语言代码块会输出空的 .lang，隐藏之 */
+  .post-content div[class*='language-'] > .lang:empty {
+    display: none;
+  }
+
+  /* 复制按钮（右上角，hover / 聚焦时淡入） */
+  .post-content div[class*='language-'] > .copy {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    color: var(--ink-3);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-s);
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .post-content div[class*='language-'] > .copy::before {
+    content: '';
+    display: block;
+    width: 15px;
+    height: 15px;
+    background-color: currentColor;
+    -webkit-mask: var(--icon-copy) center / contain no-repeat;
+    mask: var(--icon-copy) center / contain no-repeat;
+  }
+
+  .post-content div[class*='language-'] > .copy:hover,
+  .post-content div[class*='language-'] > .copy:focus-visible {
+    color: var(--brand-deep);
+    background: var(--code-hd);
+  }
+
+  .post-content div[class*='language-'] > .copy.copied {
+    color: var(--brand-deep);
+    opacity: 1;
+  }
+
+  .post-content div[class*='language-'] > .copy.copied::before {
+    -webkit-mask-image: var(--icon-check);
+    mask-image: var(--icon-check);
+  }
+
+  .post-content div[class*='language-']:hover > .copy,
+  .post-content div[class*='language-'] > .copy:focus-visible {
+    opacity: 1;
+  }
+
+  .post-content div[class*='language-'] pre {
+    margin: 0;
+    /* 顶部留出语言标签 / 复制按钮所在的「标题条」高度，避免遮挡首行代码 */
+    padding: 32px 16px 14px;
+    overflow-x: auto;
+    background: transparent;
+  }
+
+  .post-content div[class*='language-'] code {
+    padding: 0;
+    font-size: 0.86em;
+    line-height: 1.7;
+    color: inherit;
+    background: none;
+    border-radius: 0;
+  }
+
+  /* Shiki 的每一行是独立 span.line（自定义 ProsePre 后需自行保留） */
+  .post-content div[class*='language-'] code .line {
+    display: block;
+  }
+
+  /* Shiki 双主题 token 上色：行内 --shiki-light / --shiki-dark 由 Shiki 写在 span 上 */
+  .post-content .shiki span {
+    color: var(--shiki-light, inherit);
+  }
+
+  .dark .post-content .shiki span {
+    color: var(--shiki-dark, inherit);
+  }
+
+  /* ---- 表格 ---- */
+  .post-content table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 1.2em 0;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: 14.5px;
+  }
+
+  .post-content table :is(th, td) {
+    padding: 9px 14px;
+    text-align: left;
+    border: 1px solid var(--line);
+  }
+
+  .post-content table thead th {
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--bg);
+  }
+
+  .post-content table tbody tr:nth-child(2n) {
+    background: color-mix(in srgb, var(--ink-3) 7%, transparent);
+  }
+
+  /* ---- 图片 ---- */
+  .post-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 1em 0;
+    border-radius: var(--radius-m);
+  }
+
+  /* 空图片（![]() ）不显示破图 */
+  .post-content :is(img:not([src]), img[src='']) {
+    display: none;
+  }
+
+  /* ---- <details> 折叠 ---- */
+  .post-content details {
+    margin: 1em 0;
+    padding: 0.8em 1em;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+  }
+
+  .post-content details summary {
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .post-content details summary::marker {
+    color: var(--brand-deep);
+  }
+
+  .post-content details[open] summary {
+    margin-bottom: 0.6em;
+  }
+
+  .post-content details > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---- 脚注 ---- */
+  .post-content .footnote-ref {
+    margin-left: 2px;
+    font-size: 0.75em;
+  }
+
+  .post-content .footnote-ref a {
+    padding: 0 0.3em;
+    color: var(--brand-deep);
+    text-decoration: none;
+    background: var(--inline-code-bg);
+    border-radius: 4px;
+  }
+
+  .post-content .footnotes {
+    margin-top: 1.4em;
+    font-size: 0.92em;
+    color: var(--ink-3);
+  }
+
+  .post-content .footnotes .footnotes-list {
+    margin-left: 1.4em;
+  }
+
+  .post-content .footnotes .footnote-item p {
+    margin: 0.35em 0;
+  }
+
+  .post-content .footnotes .footnote-backref {
+    margin-left: 4px;
+    text-decoration: none;
+  }
+
+  .post-content hr.footnotes-sep {
+    margin-top: 2em;
+  }
+
+  /* ---- 数学公式（KaTeX，构建期由 rehype-katex 渲染为 HTML + MathML）---- */
+  .post-content .katex-display {
+    margin: 1em 0;
+    padding: 2px 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .post-content .katex {
+    font-size: 1.06em;
+  }
+
+  /* ---- [TOC] 目录 ---- */
+  .post-content .post-toc {
+    margin: 1.2em 0;
+    padding: 14px 18px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--brand-static);
+    border-radius: 0 var(--radius-m) var(--radius-m) 0;
+  }
+
+  .post-content .post-toc-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14.5px;
+  }
+
+  .post-content .post-toc-item {
+    margin: 0.25em 0;
+  }
+
+  .post-content .post-toc-item a {
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+
+  .post-content .post-toc-item a:hover {
+    color: var(--brand-deep);
+  }
+
+  .post-content .post-toc-item.level-3 {
+    padding-left: 1.15em;
+    font-size: 0.94em;
+  }
+
+  /* ---- 上一篇 / 下一篇 ---- */
+  .post-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 1.4rem 0 1rem;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+
+  .post-nav a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    max-width: 46%;
+    font-size: 14px;
+    color: var(--brand-deep);
+  }
+
+  .post-nav a:hover {
+    text-decoration: underline;
+  }
+
+  .post-nav a.next {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .post-nav span {
+    flex: 1;
+  }
+
+  /* ---- 评论 ---- */
+  .post-comments-wrap {
+    padding-top: 10px;
+  }
+
+  /* ---- 响应式 ---- */
+  @media (max-width: 768px) {
+    /* 触屏没有 hover，锚点与复制按钮常显/隐藏的取舍：锚点直接不显示 */
+    .post-content :is(h1, h2, h3, h4) .header-anchor {
+      display: none;
+    }
+
+    .post-content div[class*='language-'] > .copy {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .post-view {
+      padding: 20px 18px;
+    }
+
+    .post-content {
+      font-size: 15px;
+    }
+  }
+}
+
+/* ============================================================
+   图标（内联 SVG，data URI 走 mask，颜色跟随 currentColor）
+   ============================================================ */
+:root {
+  --icon-link: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/%3E%3Cpath d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/%3E%3C/svg%3E");
+  --icon-copy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='14' height='14' x='8' y='8' rx='2' ry='2'/%3E%3Cpath d='M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2'/%3E%3C/svg%3E");
+  --icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+}
