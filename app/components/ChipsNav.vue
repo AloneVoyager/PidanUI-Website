@@ -8,16 +8,18 @@ const CHIPS = [
 </script>
 
 <template>
-  <nav class="flex flex-wrap gap-2.5" aria-label="新闻快捷入口">
+  <!-- 浅描边胶囊：--ui-bg-elevated 被映射成卡片白，soft neutral 在白底上等于隐形，
+       因此显式给边框与底色，hover 再转品牌浅黄 -->
+  <nav class="flex flex-wrap gap-2" aria-label="新闻快捷入口">
     <UButton
       v-for="chip in CHIPS"
       :key="chip.href"
       :to="chip.href"
       :label="chip.label"
-      variant="outline"
+      variant="ghost"
       color="neutral"
       size="sm"
-      rounded-full
+      class="rounded-full border border-brand-deep-a20 bg-default px-3.5 text-toned hover:border-brand-600/40 hover:bg-brand-soft hover:text-brand-600"
     />
   </nav>
 </template>

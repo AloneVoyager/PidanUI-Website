@@ -77,44 +77,51 @@ function toggleMonth(key: string): void {
 
 <template>
   <div class="mx-auto max-w-page">
-    <div class="list-head mb-[18px] flex flex-wrap items-baseline justify-between gap-x-3.5 gap-y-2.5">
-      <PageTitle title="归档" />
-      <p class="text-sm text-dimmed">
-        共 {{ allPosts.length }} 篇文章 · {{ totalPages }} 个年份
-      </p>
-    </div>
-
-    <h2
-      v-if="currentYear"
-      class="mb-3.5 flex items-baseline gap-2.5 text-xl font-bold text-brand-600"
+    <header
+      class="list-head mb-6 flex flex-wrap items-end justify-between gap-x-4 gap-y-3 border-b border-default pb-5"
     >
-      {{ currentYear }} 年
-      <span class="text-[13px] font-medium text-dimmed">{{ currentPosts.length }} 篇</span>
+      <div>
+        <PageTitle title="归档" />
+        <p class="mt-1.5 text-[13px] text-dimmed">
+          共 {{ allPosts.length }} 篇文章 · {{ totalPages }} 个年份
+        </p>
+      </div>
+    </header>
+
+    <h2 v-if="currentYear" class="mb-5 flex items-baseline gap-2">
+      <span class="text-[26px] leading-none font-extrabold tracking-[-0.02em] text-default">
+        {{ currentYear }}
+      </span>
+      <span class="text-[13px] font-medium text-dimmed">年 · {{ currentPosts.length }} 篇</span>
     </h2>
 
     <EmptyState v-if="!months.length" text="暂无归档内容" />
 
-    <div v-else class="flex flex-col gap-3">
+    <!-- 时间线：左侧竖线 + 月份节点，月份分组仍是可折叠卡片 -->
+    <div v-else class="timeline">
       <section
         v-for="month in months"
         :key="month.key"
-        class="month-group rounded-(--radius-l) border border-default bg-default px-3.5"
+        class="month-group"
         :class="{ open: isOpen(month.key) }"
       >
+        <span class="timeline-dot" aria-hidden="true" />
+
         <button
-          class="month-head flex w-full items-center gap-2.5 rounded-(--radius-s) py-3 text-left text-[15px] font-semibold text-default transition-colors hover:text-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600/45"
+          class="month-head flex w-full items-center gap-2.5 py-3.5 text-left"
           type="button"
           :aria-expanded="isOpen(month.key)"
           @click="toggleMonth(month.key)"
         >
-          <span>{{ month.label }}</span>
-          <span class="text-[12.5px] font-normal text-dimmed">{{ month.posts.length }} 篇</span>
+          <span class="text-[15px] font-semibold text-default">{{ month.label }}</span>
+          <UBadge variant="soft" color="primary" size="sm" :label="`${month.posts.length} 篇`" />
           <UIcon
             name="i-lucide-chevron-down"
             class="month-arrow ms-auto text-dimmed"
             aria-hidden="true"
           />
         </button>
+
         <div class="month-body">
           <div class="min-h-0 overflow-hidden">
             <CardGrid class="month-grid" :posts="month.posts" />
@@ -133,10 +140,57 @@ function toggleMonth(key: string): void {
 </template>
 
 <style scoped>
-/* 展开 / 收起动画：grid-template-rows 0fr ↔ 1fr，
-   高度随卡片数量自适应（无需写死 max-height）。
-   这两个状态类必须留在 CSS 里：open/closed 是父级的 class 切换，
-   工具类无法表达「子树状态改变时才过渡」。 */
+/* ---- 时间线骨架 ---- */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 24px;
+  border-left: 1px solid var(--line);
+}
+
+.month-group {
+  position: relative;
+  padding: 0 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  transition: border-color 0.2s ease;
+}
+
+.month-group:hover {
+  border-color: color-mix(in srgb, var(--brand-deep) 30%, var(--line));
+}
+
+/* 节点圆点：圆心落在时间线上（-29px = 24px 缩进 + 5px 半径） */
+.timeline-dot {
+  position: absolute;
+  top: 21px;
+  left: -29px;
+  width: 10px;
+  height: 10px;
+  background: var(--brand-deep);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--bg);
+}
+
+.month-head {
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+.month-head:hover {
+  color: var(--brand-deep);
+}
+
+.month-head:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--brand-deep) 45%, transparent);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+
+/* 展开 / 收起：grid-template-rows 0fr ↔ 1fr，高度随内容自适应 */
 .month-body {
   display: grid;
   grid-template-rows: 1fr;
@@ -165,8 +219,16 @@ function toggleMonth(key: string): void {
     align-items: flex-start;
   }
 
+  .timeline {
+    padding-left: 18px;
+  }
+
   .month-group {
     padding: 0 10px;
+  }
+
+  .timeline-dot {
+    left: -23px;
   }
 
   .month-grid {

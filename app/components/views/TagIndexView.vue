@@ -10,18 +10,26 @@ const terms = computed(() => collectTerms('tags', allPosts.value));
 
 <template>
   <div class="mx-auto max-w-[1000px]">
-    <PageTitle title="标签" />
+    <header class="mb-6 border-b border-default pb-5">
+      <PageTitle title="标签" />
+      <p class="mt-1.5 text-[13px] text-dimmed">共 {{ terms.length }} 个标签 · 按收录文章数排序</p>
+    </header>
 
-    <!-- 标签云：胶囊尺寸随文字长度自然伸缩 -->
-    <div class="mt-5 flex flex-wrap gap-3">
+    <!-- 标签云：计数用品牌色小徽章，hover 转浅黄底 -->
+    <div class="flex flex-wrap gap-2.5">
       <NuxtLink
         v-for="term in terms"
         :key="term.name"
-        class="inline-flex items-center gap-1.5 rounded-full border border-default bg-default px-[18px] py-2 text-sm text-toned transition-colors duration-200 hover:border-brand-600/30 hover:bg-brand-soft hover:text-brand-600"
+        class="inline-flex items-center gap-1.5 rounded-full border border-default bg-default py-1.5 pr-2 pl-3.5 text-sm text-toned transition-colors duration-200 hover:border-brand-600/30 hover:bg-brand-soft hover:text-brand-600"
         :to="term.path"
       >
-        #{{ term.name }}
-        <span class="text-xs text-dimmed">{{ term.count }}</span>
+        <UIcon name="i-lucide-hash" class="size-3.5 text-dimmed" aria-hidden="true" />
+        <span>{{ term.name }}</span>
+        <span
+          class="ml-0.5 rounded-full bg-brand-soft px-1.5 text-[11px] leading-[1.6] font-medium text-brand-600"
+        >
+          {{ term.count }}
+        </span>
       </NuxtLink>
       <EmptyState v-if="!terms.length" text="暂无标签" />
     </div>

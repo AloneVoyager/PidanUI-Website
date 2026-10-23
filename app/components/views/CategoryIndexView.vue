@@ -10,17 +10,33 @@ const terms = computed(() => collectTerms('categories', allPosts.value));
 
 <template>
   <div class="mx-auto max-w-[1000px]">
-    <PageTitle title="分类" />
+    <header class="mb-6 border-b border-default pb-5">
+      <PageTitle title="分类" />
+      <p class="mt-1.5 text-[13px] text-dimmed">
+        共 {{ terms.length }} 个分类 · 按收录文章数排序
+      </p>
+    </header>
 
-    <div class="term-grid mt-5 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3.5">
+    <div class="term-grid grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3.5">
       <NuxtLink
         v-for="term in terms"
         :key="term.name"
-        class="flex items-center justify-between gap-3 rounded-(--radius-m) border border-default bg-default px-5 py-4 transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-brand-600/30 hover:shadow-card"
+        class="group flex items-center gap-3 rounded-(--radius-l) border border-default bg-default px-4 py-3.5 transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-brand-600/30 hover:shadow-card"
         :to="term.path"
       >
-        <span class="text-[15px] font-semibold text-default">{{ term.name }}</span>
-        <span class="text-[13px] text-dimmed">{{ term.count }} 篇</span>
+        <span
+          class="flex size-9 shrink-0 items-center justify-center rounded-(--radius-m) bg-brand-soft text-brand-600"
+        >
+          <UIcon name="i-lucide-folder" class="size-4" aria-hidden="true" />
+        </span>
+        <span class="min-w-0 flex-1 truncate text-[15px] font-semibold text-default">
+          {{ term.name }}
+        </span>
+        <span
+          class="shrink-0 rounded-full bg-brand-soft px-2 py-0.5 text-[12px] font-medium text-brand-700"
+        >
+          {{ term.count }}
+        </span>
       </NuxtLink>
       <EmptyState v-if="!terms.length" text="暂无分类" />
     </div>

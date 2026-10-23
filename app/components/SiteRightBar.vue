@@ -69,12 +69,12 @@ const drawerStyle = computed(
         </NuxtLink>
         <p v-if="!posts.length" class="text-[13px] text-dimmed">暂无动态</p>
       </div>
-      <!-- 实心主按钮：与站内其它 CTA 一致，比浅色胶囊更有「可点击」的分量。
-           圆角走 UButton 默认（--radius-md = 12px），不再是胶囊形。 -->
+      <!-- 浅底深字：底色用品牌浅黄（深色下自动转深棕），文字用更深的品牌色，
+           比实心橙底更轻，也比纯胶囊更有按钮感。 -->
       <UButton
-        class="mt-3 py-2"
+        class="mt-3 bg-brand-soft py-2 text-brand-800 hover:bg-brand-100 dark:text-brand-200 dark:hover:bg-brand-900"
         to="/posts/"
-        variant="solid"
+        variant="soft"
         color="primary"
         size="md"
         block
