@@ -9,121 +9,40 @@ const badge = downloadMeta.version ? `v${downloadMeta.version}` : '';
 const overallDesc = downloadMeta.description || '';
 const versions = downloadMeta.versions && downloadMeta.versions.length ? downloadMeta.versions : null;
 
-// -1 表示无展开项
-const activeIndex = ref(-1);
-const statusText = ref('请选择一个版本');
+// 同时只展开一个版本；null 表示全部收起
+const activeId = ref<string | null>(versions?.[0]?.id ?? null);
 
-function handleToggle(index: number) {
-  if (activeIndex.value === index) {
-    activeIndex.value = -1;
-    statusText.value = '请选择一个版本';
-    return;
-  }
-  activeIndex.value = index;
-  const v = versions?.[index];
-  statusText.value = v ? `已选：${v.type || '版本'}` : '';
+function toggle(id: string): void {
+  activeId.value = activeId.value === id ? null : id;
 }
 </script>
 
 <template>
-  <div class="download-view">
-    <div class="page-head">
-      <h1 class="page-title">{{ title }}</h1>
-      <span v-if="badge" class="version-badge">{{ badge }}</span>
-    </div>
-    <p class="page-desc">{{ overallDesc }}</p>
+  <div class="mx-auto max-w-page">
+    <header class="mb-7">
+      <div class="flex flex-wrap items-center gap-3">
+        <PageTitle :title="title" />
+        <UBadge v-if="badge" variant="soft" color="primary" :label="badge" />
+        <UBadge
+          v-if="versions"
+          variant="outline"
+          color="neutral"
+          :label="`共 ${versions.length} 个版本`"
+        />
+      </div>
+      <p v-if="overallDesc" class="mt-2 text-[15px] text-toned">{{ overallDesc }}</p>
+    </header>
 
-    <div v-if="versions" class="accordion">
+    <div v-if="versions" class="flex flex-col gap-3">
       <DownloadVersionItem
         v-for="(v, i) in versions"
         :key="v.id || i"
+        class="rounded-(--radius-l) border border-default bg-default px-4 transition-[border-color] duration-200 hover:border-brand-600/25"
         :version="v"
-        :expanded="activeIndex === i"
-        @toggle="handleToggle(i)"
+        :open="activeId === (v.id ?? String(i))"
+        @toggle="toggle(v.id ?? String(i))"
       />
     </div>
-    <p v-else class="empty-tip">暂无版本信息</p>
-
-    <div class="status-bar">
-      <span class="dot" aria-hidden="true"></span>
-      <span>{{ statusText }}</span>
-    </div>
+    <EmptyState v-else text="暂无版本信息" />
   </div>
 </template>
-
-<style scoped>
-/* ============================================================
-   下载页 · 页面外壳（单个版本块的样式在 DownloadVersionItem.vue 内）
-   ============================================================ */
-.download-view {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* 版本手风琴容器（内部 .accordion-item 的样式见 DownloadVersionItem.vue） */
-.accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.page-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.page-title {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--ink);
-}
-
-.version-badge {
-  padding: 3px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink-2);
-  background: var(--brand-soft);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-full);
-}
-
-.page-desc {
-  margin: 8px 0 28px;
-  font-size: 15px;
-  color: var(--ink-2);
-}
-
-.empty-tip {
-  padding: 20px 0;
-  font-size: 15px;
-  color: var(--ink-3);
-}
-
-/* ---- 状态栏 ---- */
-.status-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 28px;
-  margin-top: 24px;
-  font-size: 14px;
-  color: var(--ink-3);
-}
-
-.status-bar .dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #cbd5e1;
-}
-
-/* ---- 响应式 ---- */
-@media (max-width: 640px) {
-  .page-title {
-    font-size: 23px;
-  }
-}
-</style>
