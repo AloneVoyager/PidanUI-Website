@@ -243,12 +243,6 @@ const COPYRIGHT = [
   border-color: rgba(255, 159, 26, 0.28);
 }
 
-/* 禁用 JavaScript 时隐藏：scoped 后 Vue 会把 data-v 加在 .game-entry 上，
-   外层 html 选择器保持原样仍然能命中 */
-html:not(.js) .game-entry {
-  display: none;
-}
-
 /* ---- 品牌渐变文字 ---- */
 .about-title {
   background: var(--brand-grad);

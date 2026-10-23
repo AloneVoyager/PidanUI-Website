@@ -5,8 +5,8 @@
 ## 项目指南
 
 ### 交互与视觉（硬性规则）
-- 搜索对话框应立即关闭原生 dialog，并由 CSS 对其离场视觉状态做过渡；不要通过 JS 等待动画结束后才调用 close()。
-- 项目移动端左右侧栏菜单按钮使用相同的圆形品牌色样式，仅图标不同（左侧 `fa-bars`，右侧 `fa-table-columns`）。
+- 搜索对话框使用 Nuxt UI 的 `UModal`（焦点陷阱 / ESC / 遮罩 / 滚动锁由组件负责），关闭后只需清空关键词并把焦点还给触发元素。
+- 项目移动端左右侧栏菜单按钮使用相同的圆形品牌色样式，仅图标不同（左侧 `i-lucide-menu`，右侧 `i-lucide-panel-right`）。
 - 新增动效必须遵循系统「减少动态效果」偏好，补 `@media (prefers-reduced-motion: reduce)` 分支。
 - 悬浮反馈以颜色、阴影、发光为主，保持克制：卡片封面可轻微 `scale`（如 `1.04`），不要新增大位移、旋转等夸张效果。
 
@@ -20,7 +20,7 @@
 | --- | --- |
 | 定位 | PidanUI 项目官网，纯静态站点（SSG），部署于 GitHub Pages |
 | 线上地址 | https://pidanui.eggycore.top（`app.baseURL = '/'`，URL 不带 `.html` 与尾斜杠） |
-| 技术栈 | Nuxt `4.6.2`（Vite 8 + Nitro 预渲染）+ Vue 3 + TypeScript `~7.0.2` + Tailwind CSS `4.3.3`（原生 CSS）+ @nuxt/content `3.16.2` |
+| 技术栈 | Nuxt `4.6.2`（Vite 8 + Nitro 预渲染）+ Vue 3 + TypeScript `~7.0.2` + Tailwind CSS `4.3.3` + Nuxt UI `4.12` + @nuxt/content `3.16.2` |
 | 包管理器 | pnpm（`packageManager: pnpm@12.11.2`），CI 用 `pnpm install --frozen-lockfile` |
 | 发布流程 | 推送到 `main` → `.github/workflows/deploy.yml` 构建并部署 `.output/public` |
 | 许可证 | AGPL v3，禁止商业用途 |
@@ -42,7 +42,7 @@ pnpm exec nuxt prepare         # 生成 .nuxt 类型与别名（改 nuxt.config 
 
 ```
 app/                                  # srcDir
-├─ app.vue                            # <NuxtLayout><NuxtPage /></NuxtLayout>
+├─ app.vue                            # <UApp><NuxtLayout><NuxtPage /></NuxtLayout></UApp>
 ├─ error.vue                          # 404 / 错误页（保留站点外壳）
 ├─ router.options.ts                  # scrollBehavior：禁止 window 滚动，改滚 .site-main
 ├─ layouts/default.vue                # 全站壳层：进度条 + 左右栏 + 主滚动区 + 搜索弹窗
@@ -54,7 +54,7 @@ app/                                  # srcDir
 ├─ composables/                       # usePosts / useSearch / useTheme / useMobileDrawer …
 ├─ data/                              # download.json、personalityTest.ts、socialLinks.ts
 ├─ utils/base.ts                      # withBase 垫片（自动导入）
-└─ assets/styles/                     # 全局 CSS（入口 index.css）+ tokens.css（@theme 令牌）
+└─ assets/styles/                     # 全局 CSS：main.css（入口）/ tokens.css（@theme 令牌）/ base.css / layout.css / shell.css / prose.css / animation.css​
 content/posts/*.md                    # 文章（唯一内容源）
 public/                               # 原样拷贝的静态资源：images/、giscus/、.nojekyll …
 server/routes/                        # atom.xml、api/posts.json、api/posts/<slug>/index.json、api/search.json
@@ -96,38 +96,46 @@ content.config.ts / nuxt.config.ts    # 内容集合定义 / 站点配置
 
 ## 样式约定
 
-- 全局样式只有 `app/assets/styles/index.css`（tokens / base / layout / sidebar / post / animation / responsive），页面级样式写在各自 `.vue` 的 `<style scoped>`，**一律原生 CSS**（无预处理器）。
-- `index.css` 顶部四条铁律：`@import` 必须全部置顶，Tailwind 两条排在项目文件之前；项目局部文件**故意不进 `@layer`**（未分层规则优先级恒高于分层规则，语义类层叠关系与迁移前一致）；不引入 Preflight（保留 `base.css` 自己的重置）；`@theme` / `@custom-variant` 只写在 `tokens.css`。
-- 设计令牌在 `tokens.css`（必须 `@theme static`，否则未被工具类引用的变量会被摇树删掉）：圆角 / 阴影 / 断点 / 容器宽度只定义一次，直接 `var()` 取用；颜色与字体的**真值**只在 `base.css` 的 `:root`（深色覆盖也在那里），`tokens.css` 只做 1:1 别名，别名里不写死颜色。
-- 工具类只做「增量修饰」：加工具类时必须同时删掉语义类里被取代的声明，否则未分层的语义类会压住它。当前用到工具类的地方很少（ChipsNav / PostCard / Pagination / HomeView 等）。
-- 深色规则两种写法都要考虑：`[data-theme='dark']`（手动切换）与 `@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) … }`（auto 跟随系统）；工具类可用 `dark:` 变体（`tokens.css` 已定义 `@custom-variant dark`）。
+- 样式分两层：全局在 `app/assets/styles/`（`main.css` 入口 → `tokens` / `base` / `layout` / `shell` / `prose` / `animation`），页面与组件样式写在各自 `.vue` 的 `<style scoped>`，**一律原生 CSS + Tailwind 工具类**，无预处理器。
+- 组件层用 Nuxt UI（`UButton` / `UCard` / `UBadge` / `UModal` / `UAccordion` / `USkeleton`…），**能靠组件表达的外观不要再手写 CSS**。
+- `main.css` 顶部五条铁律：`@import` 全部置顶；Tailwind 两条排在项目文件之前；`@import "@nuxt/ui"` 必须排在 `tokens.css` 之前（它自带只认 `.dark` 的 `@custom-variant dark`，要被我们的三路版本覆盖）；**不引入 Preflight**（保留 `base.css` 自己的重置）；`@theme` / `@custom-variant` 只写在 `tokens.css`。
+- `base.css` 的全局 reset **必须待在 `@layer base` 里**：未分层规则（如 `* { margin:0; padding:0 }`）会压过所有 utilities，导致 Nuxt UI 组件的 `py-*` / `mt-auto` 全部失效。
+- `tokens.css` 用 `@theme static` 定义令牌。注意三处「清空命名空间」的连带后果，新增色/圆角时必须补齐：
+  - `--color-*: initial` 会连 Nuxt UI 的 `--color-primary` / `--color-error` 一起清掉 → 已手动补回；
+  - `--radius-*: initial` 会连 `xs/sm/md/lg/xl/2xl/3xl` 一起清掉 → 已补齐，否则 `rounded-md` 整条规则消失；
+  - `--breakpoint-*: initial` 需要把 `xl/2xl` 补回，否则 Nuxt UI 组件里的 `xl:` 规则静默失效。
+- 品牌色板：`--color-brand-50…950`（500 = `#ffc53d`、600 = `#ff9f1a`、800 = `#a85a00`），灰阶 `--color-ink-50…950`（**不能叫 neutral**，Nuxt UI 对保留名会回退到它自己的 oklch 灰）。`app.config.ts` 里 `ui.colors = { primary: 'brand', neutral: 'ink', error: 'danger' }`。
+- `--ui-primary` 指向 `--brand-deep`（`#ff9f1a`）而不是 `#ffc53d`：同一个变量既做实心按钮底色又做 `text-primary` 文字色，浅黄做文字在白底上几乎不可读。
+- 换成 `U*` 组件的元素，**必须同时删掉旧语义类声明**（未分层规则恒高于工具类，不删会出现「改 class 没反应」）。
+- 深色：`<html>` 上同时有 `data-theme`（三态真源）与 `.dark` / `.light`（Nuxt UI 的 `--ui-*` 按 class 切换），由 `useTheme.apply()` 与首帧内联脚本双写，**两边必须同步**。CSS 里深色只写 `.dark` 一条即可，不再需要 `prefers-color-scheme` 拷贝。
 - 媒体查询**手写** `@media (max-width: Npx)`，不用 `sm:` / `md:` 变体：960px 必须与 `useMobileDrawer` 的 `matchMedia('(max-width: 960px)')` 完全一致。
 - `vite.build.cssTarget` 已对齐 Tailwind v4 的支持矩阵（chrome111 / safari16.4 / firefox128）：v4 产物本身要求这个下限（`@property`、`color-mix()`、级联层），下调前必须先确认旧内核可用。
 - 主题由 `<html data-theme="auto|light|dark">` + CSS 变量驱动（见 `base.css` / `useTheme.ts`）。`localStorage` key 为 `pidanui-theme`，改 key 必须同步 `nuxt.config.ts` head 里的首帧内联脚本。
 - `body { overflow: hidden }`，**全站唯一纵向滚动容器是 `.site-main`**。路由滚动由 `app/router.options.ts` 接管（返回 `false` + 手动滚 `.site-main`）；页内锚点由 `usePostEnhance` 接管。
-- 折叠/展开动画统一手感：缓动用 `cubic-bezier(0.25, 0.46, 0.45, 0.94)`，头部是 `<button aria-expanded>`、内容区靠 `.active` 切换。高度未知 / 会变的（归档按月分组）用 `grid-template-rows: 1fr ↔ 0fr`；下载页手风琴是 `max-height`（上限 1400px），内容变长会被裁切。
+- 折叠/展开动画统一手感：缓动用 `cubic-bezier(0.25, 0.46, 0.45, 0.94)`，头部是 `<button aria-expanded>`、内容区靠 `.active` 切换。高度未知 / 会变的（归档按月分组、下载页手风琴）统一用 `grid-template-rows: 1fr ↔ 0fr`，**不要再用 `max-height` 硬编码上限**。
 - 注释风格与现有文件一致：中文、`// ====` 分节横幅，只解释“为什么”，不复述代码。
 
 ## Markdown 渲染（@nuxt/content）
 
-- `app/components/content/Prose*.vue` 复刻了 VitePress 时期的 DOM 契约，`_post.scss` 690 行排版依赖它：
+- `app/components/content/Prose*.vue` 复刻了 VitePress 时期的 DOM 契约，`app/assets/styles/prose.css` 的排版依赖它：
   - `ProsePre` 必须输出 `div.language-* > button.copy + span.lang + pre.shiki`，复制按钮逻辑靠这个结构定位；
-  - `ProseH2/H3` 输出 `<h2 :id><slot/><a class="header-anchor">`，标题锚点图标是 CSS `::before` 画的；
+  - `ProseH2/H3` 输出 `<h2 :id><slot/><a class="header-anchor">`，标题锚点图标是 `::before` + 内联 SVG mask（`--icon-link`）画的；
   - 新增 Prose 覆盖（如 `ProseTable`）放同一目录，文件名即组件名。
 - Shiki 双主题配置必须是 `highlight.theme = { light, dark }`（键名决定产物里的 `--shiki-light/--shiki-dark`），**不要用 `default`**，否则深色代码块会失去高亮。
 - `[TOC]` 不是构建期占位：`fillToc()` 在客户端把文本为 `[TOC]` 的段落替换成 `.post-toc` 容器再填充。
-- 数学公式走 `remark-math` + `rehype-katex`（构建期出 HTML + MathML），样式见 `_post.scss` 的 `.katex*` 段。
+- 数学公式走 `remark-math` + `rehype-katex`（构建期出 HTML + MathML），样式见 `prose.css` 的 `.katex*` 段。
 - 文章正文不允许内联裸 HTML（MDC 会丢弃）；需要结构化块时用 Vue 组件或 MDC 语法。
 
 ## 字体与图标
 
-- 字体与图标全部走 CDN（见 `nuxt.config.ts` 的 `app.head`），**仓库不保留任何字体 / 图标文件**：
+- 字体走 CDN（见 `nuxt.config.ts` 的 `app.head`），**仓库不保留任何字体文件**：
   - MiSans（`misans-webfont@4.3.1`）—— 正文与 UI；
-  - Cascadia Code（`@fontsource/cascadia-code@5.2.3`）—— 代码块等宽英文字体；
-  - Font Awesome 7（`@fortawesome/fontawesome-free@7.3.1`）—— 全站图标。
-- 图标统一写 `<i class="fa-solid fa-xxx" aria-hidden="true"></i>`（品牌图标用 `fa-brands`），**不要再引入自绘 / 内联 SVG 图标**。
-- 网站 Logo 是图片资源（`public/images/logo.webp`），不属于图标 CDN 体系，保持现状。
-- 字体栈定义在 `_variables.scss`（`$font-ui` / `$font-mono`）并同步到 `--vp-font-family-*`；调整字体请同时改这两处。
+  - Cascadia Code（`@fontsource/cascadia-code@5.2.3`）—— 代码块等宽英文字体。
+- 图标统一用 `<UIcon name="i-lucide-xxx" />`（品牌图标 `i-simple-icons-xxx`），已**不再使用 Font Awesome**。图标集以 `@iconify-json/lucide` / `@iconify-json/simple-icons` 本地安装，构建期内联为 SVG，运行时不请求 Iconify API。
+- **新增图标必须同步 `nuxt.config.ts` 的 `icon.clientBundle.icons`**（写 `lucide:xxx` / `simple-icons:xxx`）：`scan` 只认模板里的字面量，`:name` 动态绑定的图标不登记就会退化成运行时取图。
+- `app.config.ts` 里的 `icon.mode: 'svg'` 保证输出内联 `<svg>`，别改成 `css`（否则首屏只有空占位，等客户端拿到图标数据才有内容）。
+- 网站 Logo 是图片资源（`public/images/logo.webp`），不属于图标体系，保持现状。
+- 字体栈定义在 `base.css` 的 `:root`（`--font-ui` / `--font-code`），`tokens.css` 只做 `--font-sans` / `--font-mono` 别名。
 
 ## 移动端与抽屉
 
@@ -165,5 +173,5 @@ content.config.ts / nuxt.config.ts    # 内容集合定义 / 站点配置
 3. 浏览器实看：首页、`/download`、`/posts/`、`/archives/`、`/tags/`、一篇 `/posts/<slug>`。
 4. 桌面与 ≤960px 移动端各过一遍：左右抽屉开合与拖拽、搜索对话框、主题三态切换。
 5. 站内跳转不整页刷新（Network 里不应出现 document 请求）。
-6. 新增图标是 Font Awesome 类名，新增颜色 / 圆角 / 断点来自变量，新增动效有 reduced-motion 分支。
+6. 新增图标已登记进 `icon.clientBundle.icons`，新增颜色 / 圆角 / 断点来自变量，新增动效有 reduced-motion 分支。
 7. 没有提交构建产物、缓存或临时文件。

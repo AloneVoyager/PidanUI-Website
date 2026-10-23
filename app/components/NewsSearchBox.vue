@@ -63,11 +63,3 @@ onMounted(() => {
     </template>
   </form>
 </template>
-
-<style scoped>
-/* 无 JS 时隐藏表单控件、只显示降级提示。
-   顶层 html 选择器 Vue scoped 不会加 data-v-xxx 前缀，仍能命中 */
-:global(html:not(.js)) .news-search-noscript {
-  display: block;
-}
-</style>

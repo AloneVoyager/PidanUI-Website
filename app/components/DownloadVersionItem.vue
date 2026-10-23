@@ -177,9 +177,4 @@ watch(
 .version.open .version-arrow {
   transform: rotate(180deg);
 }
-
-/* 禁用 JavaScript 时所有版本强制展开：点击依赖 JS，展开状态由 CSS 兜底 */
-html:not(.js) .version-body {
-  grid-template-rows: 1fr;
-}
 </style>

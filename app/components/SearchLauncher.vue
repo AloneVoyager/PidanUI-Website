@@ -19,14 +19,3 @@ import { openSearchDialog } from '~/composables/useSearch';
     >打开搜索页</a
   >
 </template>
-
-<style scoped>
-/* 无 JS 降级：hide/show 由 html 上的 .js 标记决定 */
-:global(html:not(.js)) .search-launcher {
-  display: none;
-}
-
-:global(html:not(.js)) .search-launcher-fallback {
-  display: inline-block;
-}
-</style>

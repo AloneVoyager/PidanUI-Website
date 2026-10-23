@@ -225,3 +225,33 @@
   background-color: rgba(12, 16, 24, 0.58);
   backdrop-filter: blur(4px);
 }
+
+/* ============================================================
+   无 JavaScript 降级
+   ------------------------------------------------------------
+   降级规则集中在这里，不要写进组件的 <style scoped>：
+   Vue 的 scoped 编译会把 `:global(html:not(.js)) .foo` 错误地
+   收窄成只作用于 <html>（曾导致无 JS 时 html 变成 inline-block）。
+   这些规则放在未分层区域，因此在需要时能压过 utilities。
+   ============================================================ */
+html:not(.js) .search-launcher {
+  display: none;
+}
+
+html:not(.js) .search-launcher-fallback {
+  display: inline-block;
+}
+
+html:not(.js) .news-search-noscript {
+  display: block;
+}
+
+/* 性格测试入口依赖 JS */
+html:not(.js) .game-entry {
+  display: none;
+}
+
+/* 下载页手风琴展开依赖 JS：无 JS 时全部展开 */
+html:not(.js) .version-body {
+  grid-template-rows: 1fr;
+}
