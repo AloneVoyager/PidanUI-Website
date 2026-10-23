@@ -16,47 +16,33 @@ const prevHref = computed(() =>
   props.current <= 2 ? props.firstHref : `${props.pagePrefix}${props.current - 1}`,
 );
 const nextHref = computed(() => `${props.pagePrefix}${props.current + 1}`);
+
+// 分页地址是多段中文路径 + 可能带锚点，UPagination 无法承载，
+// 因此保留自定义的上一页/下一页结构，只把按钮换成 UButton。
 </script>
 
 <template>
-  <nav v-if="totalPages > 1" class="pagination flex items-center justify-center gap-3.5 mt-7" role="navigation">
-    <NuxtLink v-if="current > 1" class="page-btn" :to="prevHref">
-      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-      上一页
-    </NuxtLink>
-    <span class="page-info">{{ current }} / {{ totalPages }}</span>
-    <NuxtLink v-if="current < totalPages" class="page-btn" :to="nextHref">
-      下一页
-      <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-    </NuxtLink>
+  <nav v-if="totalPages > 1" class="mt-7 flex items-center justify-center gap-3.5" role="navigation">
+    <UButton
+      v-if="current > 1"
+      :to="prevHref"
+      variant="soft"
+      color="primary"
+      size="sm"
+      rounded-full
+      icon="i-lucide-arrow-left"
+      label="上一页"
+    />
+    <span class="text-[13px] text-dimmed">{{ current }} / {{ totalPages }}</span>
+    <UButton
+      v-if="current < totalPages"
+      :to="nextHref"
+      variant="soft"
+      color="primary"
+      size="sm"
+      rounded-full
+      trailing-icon="i-lucide-arrow-right"
+      label="下一页"
+    />
   </nav>
 </template>
-
-<style scoped>
-.pagination .page-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 18px;
-  font-size: 13px;
-  color: var(--brand-deep);
-  background: var(--brand-soft);
-  border-radius: var(--radius-full);
-  transition: background 0.25s ease;
-}
-
-.pagination .page-btn:hover {
-  background: rgba(255, 159, 26, 0.2);
-}
-
-.pagination .page-btn.disabled {
-  color: var(--ink-3);
-  background: var(--bg);
-  cursor: not-allowed;
-}
-
-.pagination .page-info {
-  font-size: 13px;
-  color: var(--ink-3);
-}
-</style>

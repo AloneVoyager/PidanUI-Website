@@ -42,11 +42,16 @@ const nextPost = computed(() =>
 
 <template>
   <article class="post-view">
-    <nav class="post-back" aria-label="返回新闻列表">
-      <NuxtLink class="back-link" to="/posts/">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-        返回新闻
-      </NuxtLink>
+    <nav class="mb-[18px]" aria-label="返回新闻列表">
+      <UButton
+        to="/posts/"
+        variant="soft"
+        color="primary"
+        size="sm"
+        rounded-full
+        icon="i-lucide-arrow-left"
+        label="返回新闻"
+      />
     </nav>
 
     <header class="post-header">

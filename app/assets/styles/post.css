@@ -32,22 +32,6 @@
   }
 }
 
-.post-back {
-  margin-bottom: 18px;
-}
-
-.post-back .back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  color: var(--brand-deep);
-}
-
-.post-back .back-link:hover {
-  text-decoration: underline;
-}
-
 .post-header .post-title {
   font-size: clamp(24px, 4vw, 34px);
   font-weight: 700;

@@ -33,20 +33,23 @@ onMounted(() => {
 </script>
 
 <template>
-  <form class="news-search" data-js="required" role="search" @submit.prevent="onSubmit">
+  <form class="relative mb-[18px] flex items-center" data-js="required" role="search" @submit.prevent="onSubmit">
     <!-- 降级提示：用普通元素而非 <noscript>。
          <noscript> 在 JS 启用时会被浏览器按「原始文本」解析，其内部标签不会成为
          真实节点，与 SSR 输出的 DOM 结构不一致，从而触发
          "Hydration completed but contains mismatches"。改为普通 <p> 后
          SSR 与客户端结构一致，再由 CSS 依据 <html> 的 .js 标记控制显隐。 -->
-    <p class="news-search-noscript">
-      本站搜索需要启用 JavaScript。你可以使用 <a :href="withBase('/atom.xml')">RSS 订阅</a> 获取最新新闻。
+    <p class="news-search-noscript hidden w-full px-0.5 text-center text-sm text-toned">
+      本站搜索需要启用 JavaScript。你可以使用
+      <a class="text-brand-600 underline" :href="withBase('/atom.xml')">RSS 订阅</a> 获取最新新闻。
     </p>
     <template v-if="mounted">
-      <span class="news-search-icon" aria-hidden="true">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </span>
-        <input
+      <UIcon
+        name="i-lucide-search"
+        class="pointer-events-none absolute top-1/2 left-[18px] -translate-y-1/2 text-dimmed"
+        aria-hidden="true"
+      />
+      <input
         ref="inputEl"
         :value="value"
         type="search"
@@ -54,6 +57,7 @@ onMounted(() => {
         placeholder="搜索新闻标题与正文..."
         aria-label="搜索新闻"
         autocomplete="off"
+        class="w-full rounded-full border border-default bg-default py-3 pr-[18px] pl-[46px] text-[15px] text-default outline-none transition-[border-color,box-shadow] placeholder:text-dimmed focus:border-brand-600 focus:shadow-[0_0_0_4px_rgba(255,159,26,0.14)]"
         @input="onInput"
       />
     </template>
@@ -61,80 +65,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.news-search {
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin: 0 0 18px;
-}
-
-/* 降级提示：默认隐藏（有 JS 时 <head> 内联脚本会立即给 <html> 加上 .js），
-   仅在无 JS 时由下方 html:not(.js) 规则显示。 */
-.news-search .news-search-noscript {
-  display: none;
-  padding: 0 2px;
-  font-size: 14px;
-  color: var(--ink-2);
-  text-align: center;
-}
-
-.news-search .news-search-noscript a {
-  color: var(--brand-deep);
-  text-decoration: underline;
-}
-
-.news-search .news-search-icon {
-  position: absolute;
-  left: 18px;
-  top: 50%;
-  display: flex;
-  color: var(--ink-3);
-  pointer-events: none;
-  transform: translateY(-50%);
-}
-
-.news-search .news-search-icon i {
-  font-size: 15px;
-}
-
-.news-search input {
-  width: 100%;
-  padding: 12px 18px 12px 46px;
-  font-size: 15px;
-  color: var(--ink);
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 40px;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.news-search input::placeholder {
-  color: var(--ink-3);
-}
-
-.news-search input:focus {
-  border-color: var(--brand-deep);
-  box-shadow: 0 0 0 4px rgba(255, 159, 26, 0.14);
-}
-
-/* 禁用 JS 时的搜索框降级：隐藏表单控件，只显示降级提示文本
+/* 无 JS 时隐藏表单控件、只显示降级提示。
    顶层 html 选择器 Vue scoped 不会加 data-v-xxx 前缀，仍能命中 */
-html:not(.js) .news-search {
-  display: block;
-  padding: 0;
-  background: transparent;
-  border: none;
-}
-
-html:not(.js) .news-search .news-search-icon,
-html:not(.js) .news-search input {
-  display: none !important;
-}
-
-/* 此时 <template v-if="mounted"> 不会渲染（mounted 永远为 false），
-   整个 <form> 里只剩这条提示，把它显示出来 */
-html:not(.js) .news-search .news-search-noscript {
+:global(html:not(.js)) .news-search-noscript {
   display: block;
 }
 </style>
