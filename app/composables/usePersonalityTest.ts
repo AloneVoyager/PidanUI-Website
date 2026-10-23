@@ -24,10 +24,13 @@ export const usePersonalityTest = () => {
   /** 当前题号（从 1 开始） */
   const questionNo = computed(() => questionIndex.value + 1);
 
-  /** 答题进度百分比 */
+  /**
+   * 答题进度百分比：按「当前第几题」计算，最后一题正好 100%。
+   * 早先用「已答数 / 总题数」，答完最后一题即离场，进度条永远差一格。
+   */
   const progressPercent = computed(() => {
     if (total === 0) return 0;
-    return Math.round((answers.value.length / total) * 100);
+    return Math.round((questionNo.value / total) * 100);
   });
 
   /** 结果亮点文案按行拆分（\n 分段） */
