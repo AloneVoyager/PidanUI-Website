@@ -49,7 +49,8 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/images/favicon.ico' },
-        // 全站字体与图标（CDN）：MiSans（正文）/ Cascadia Code（代码）/ Font Awesome 7（图标）
+        // 全站字体（CDN）：MiSans（正文）/ Cascadia Code（代码）
+        // 图标已全部改为 Nuxt UI 的 Iconify（构建期内联 SVG），不再引 Font Awesome
         { rel: 'preconnect', href: 'https://cdn.jsdelivr.net', crossorigin: '' },
         {
           rel: 'stylesheet',
@@ -58,10 +59,6 @@ export default defineNuxtConfig({
         {
           rel: 'stylesheet',
           href: 'https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.2.3/index.min.css',
-        },
-        {
-          rel: 'stylesheet',
-          href: 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css',
         },
         // Atom feed 自动发现：浏览器 / RSS 阅读器可通过这个 link 自动订阅
         {
@@ -109,23 +106,32 @@ export default defineNuxtConfig({
       // 这些必须显式列出，否则会退化成运行时向 Iconify API 取图。
       // 新增动态图标时同步这里。
       icons: [
-        // 壳层导航与移动端控件
-        'lucide:house',
+        'lucide:arrow-left',
+        'lucide:arrow-right',
+        'lucide:calendar-days',
+        'lucide:chevron-down',
         'lucide:download',
-        'lucide:newspaper',
-        'lucide:info',
-        'lucide:menu',
-        'lucide:panel-right',
-        // 主题切换三态
-        'lucide:monitor',
-        'lucide:sun',
-        'lucide:moon',
-        // 关注我们
-        'simple-icons:github',
-        'simple-icons:bilibili',
-        'simple-icons:tencentqq',
-        'lucide:rss',
+        'lucide:file-text',
         'lucide:globe',
+        'lucide:house',
+        'lucide:image',
+        'lucide:image-off',
+        'lucide:info',
+        'lucide:link-2-off',
+        'lucide:menu',
+        'lucide:monitor',
+        'lucide:moon',
+        'lucide:newspaper',
+        'lucide:panel-right',
+        'lucide:rotate-ccw',
+        'lucide:rss',
+        'lucide:search',
+        'lucide:sun',
+        'lucide:tag',
+        'lucide:triangle-alert',
+        'simple-icons:bilibili',
+        'simple-icons:github',
+        'simple-icons:tencentqq',
       ],
     },
   },

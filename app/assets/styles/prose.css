@@ -579,7 +579,7 @@
 
   .post-nav a {
     display: inline-flex;
-    align-items: baseline;
+    align-items: center;
     gap: 6px;
     max-width: 46%;
     font-size: 14px;
