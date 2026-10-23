@@ -62,20 +62,21 @@ const drawerStyle = computed(
         <NuxtLink
           v-for="post in posts"
           :key="post.url"
-          class="line-clamp-2 border-b border-dashed border-default py-[7px] text-sm text-toned transition-colors last:border-b-0 hover:text-brand-600"
+          class="line-clamp-2 py-1.5 text-sm text-toned transition-colors hover:text-brand-600"
           :to="post.url"
         >
           {{ post.title }}
         </NuxtLink>
         <p v-if="!posts.length" class="text-[13px] text-dimmed">暂无动态</p>
       </div>
+      <!-- 实心主按钮：与站内其它 CTA 一致，比浅色胶囊更有「可点击」的分量。
+           圆角走 UButton 默认（--radius-md = 12px），不再是胶囊形。 -->
       <UButton
-        class="mt-3"
+        class="mt-3 py-2"
         to="/posts/"
-        variant="soft"
+        variant="solid"
         color="primary"
-        size="xs"
-        rounded-full
+        size="md"
         block
         trailing-icon="i-lucide-arrow-right"
         label="查看全部新闻"
