@@ -19,6 +19,10 @@
   --breakpoint-sm: 768px;
   --breakpoint-md: 960px;
   --breakpoint-lg: 1024px;
+  /* xl / 2xl 必须存在：Nuxt UI 组件的内部主题里有 xl: 规则，
+     断点被清空而未补齐时这些规则会静默消失（产物里直接没有）。 */
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
 
   /* ---- 圆角 ---- */
   --radius-*: initial;
@@ -64,6 +68,54 @@
   --color-inline-code-bg: var(--inline-code-bg);
   --color-inline-code-ink: var(--inline-code-ink);
 
+  /* ---- 语义色板（Nuxt UI 需要完整 50–950 阶）----
+     --color-*: initial 已抹掉 Tailwind 默认调色板，而 Nuxt UI 的
+     primary / neutral / error 都按「色名 + 阶数」取色，缺任何一档都会
+     让对应组件静默失色，所以三套都必须自建，且 50–950 一档不落。
+     brand 的 500 / 600 / 800 分别对齐 --brand / --brand-deep /
+     --inline-code-ink，保证组件与手写样式的品牌色完全一致。 */
+  --color-brand-50: #fffdf5;
+  --color-brand-100: #fff9e6;
+  --color-brand-200: #fff2c8;
+  --color-brand-300: #ffe89e;
+  --color-brand-400: #ffd76a;
+  --color-brand-500: #ffc53d;
+  --color-brand-600: #ff9f1a;
+  --color-brand-700: #d97d00;
+  --color-brand-800: #a85a00;
+  --color-brand-900: #7d4300;
+  --color-brand-950: #4a2800;
+
+  /* ink 与 --bg / --card / --line / --ink 逐档对齐：
+     50=页面底色、100/200=分隔线、300=更重的线、400/500=三级文字、
+     600=二级文字、800=深色分隔线、900/950=一级文字与深色页面底。
+     色名不能叫 neutral：Nuxt UI 对内置的 neutral 别名做了 old- 前缀回退，
+     会绕过我们定义的色阶、改用它的 oklch 灰，导致灰阶与站点不一致。 */
+  --color-ink-50: #fafbfc;
+  --color-ink-100: #f2f3f5;
+  --color-ink-200: #f0f1f3;
+  --color-ink-300: #e5e6eb;
+  --color-ink-400: #c9cdd4;
+  --color-ink-500: #86909c;
+  --color-ink-600: #4e5969;
+  --color-ink-700: #3d4451;
+  --color-ink-800: #2a2f36;
+  --color-ink-900: #1d2129;
+  --color-ink-950: #17171a;
+
+  /* danger：error 语义色，沿用站点一贯的红（下载/表单失败态用） */
+  --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-200: #fecaca;
+  --color-danger-300: #fca5a5;
+  --color-danger-400: #f87171;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+  --color-danger-800: #991b1b;
+  --color-danger-900: #7f1d1d;
+  --color-danger-950: #450a0a;
+
   /* ---- 半透明品牌色 ---- */
   /* 与 bg-brand/10 等价，但保证产物是 rgba() 字面值（见 index.css 注释） */
   --color-brand-a06: rgba(255, 197, 61, 0.06);
@@ -86,12 +138,17 @@
 /* ============================================================
    深色变体（模板里写 dark:xxx 时使用）
    ------------------------------------------------------------
-   同时覆盖「手动 data-theme="dark"」与「auto + 系统深色」两种情况，
-   与 base.css 里两段深色变量的判定完全一致。
+   三路命中，与 base.css 的深色变量判定完全一致：
+     1) 手动 data-theme="dark"
+     2) .dark class（Nuxt UI 与 useTheme 双写时使用）
+     3) auto + 系统深色
    用 :where() 把选择器特指度归零，胜负只由工具类排序决定。
+
+   注意：@nuxt/ui 自带一条只认 .dark 的 @custom-variant dark，
+   本文件在它之后导入，因此这里生效（同名变体后声明者胜）。
    ============================================================ */
 @custom-variant dark {
-  &:where([data-theme='dark'], [data-theme='dark'] *) {
+  &:where([data-theme='dark'], [data-theme='dark'] *, .dark, .dark *) {
     @slot;
   }
 

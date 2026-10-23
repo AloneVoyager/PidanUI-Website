@@ -18,7 +18,11 @@ useHead({
 </script>
 
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <!-- UApp 提供 Toast / Tooltip / 程序化浮层的容器与分析钩子，
+       必须是应用根节点（包住 NuxtLayout）。 -->
+  <UApp>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </UApp>
 </template>

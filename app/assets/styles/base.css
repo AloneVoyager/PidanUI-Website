@@ -43,6 +43,27 @@
   --code-hd: #f0ede5;
   --inline-code-bg: rgba(255, 197, 61, 0.18);
   --inline-code-ink: #a85a00;
+
+  /* ---- Nuxt UI 语义变量对齐 ----
+     Nuxt UI 用 --ui-* 渲染组件，默认值在 @layer theme 里按 .light/.dark
+     给出。这里把「与版式/品牌相关」的那几个指到项目令牌上：一是保持配色
+     与迁移前一致，二是深色无需再写第二份（下面这些 token 自己会翻转）。
+     值都来自本项目变量，不要在这里写死颜色。 */
+  --ui-radius: var(--radius-m);
+  --ui-container: 1400px;
+  --ui-primary: var(--brand);
+  --ui-text: var(--ink);
+  --ui-text-toned: var(--ink-2);
+  --ui-text-muted: var(--ink-2);
+  --ui-text-dimmed: var(--ink-3);
+  --ui-text-highlighted: var(--ink);
+  --ui-bg: var(--card);
+  --ui-bg-muted: var(--bg);
+  --ui-bg-elevated: var(--card);
+  --ui-bg-accented: var(--line);
+  --ui-border: var(--line);
+  --ui-border-muted: var(--line);
+  --ui-border-accented: var(--color-brand-deep-a20);
 }
 
 /* 显式深色 ---------------------------------------------------

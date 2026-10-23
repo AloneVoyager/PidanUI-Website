@@ -3,9 +3,10 @@ import { computed, ref } from 'vue';
 // ============================================================
 // 主题模式（浅色 / 深色 / 跟随系统）
 //
-// 通过 <html data-theme> 驱动（见 styles/_base.scss），并用 localStorage
+// 通过 <html data-theme> 驱动（见 styles/base.css），并用 localStorage
 // 持久化用户选择。auto 模式仍走 prefers-color-scheme 跟随系统。
-// 首帧防闪烁由 config.mts 的 <head> 内联脚本负责读取同一 storage key。
+// 同时给 <html> 写 .dark / .light —— Nuxt UI 的 --ui-* 变量按 class 切换。
+// 首帧防闪烁由 nuxt.config.ts 的 <head> 内联脚本负责读取同一 storage key。
 // ============================================================
 
 export type ThemeMode = 'auto' | 'light' | 'dark';
@@ -42,8 +43,16 @@ let bound = false;
 
 function apply(): void {
   if (typeof document === 'undefined') return;
-  document.documentElement.setAttribute('data-theme', mode.value);
   const dark = resolvedDark.value;
+  const root = document.documentElement;
+  // data-theme 仍是唯一真源（三态原样写入），供 base.css 的变量与所有
+  // [data-theme] 选择器使用
+  root.setAttribute('data-theme', mode.value);
+  // .dark / .light 是给 Nuxt UI 用的：它的 --ui-* 语义变量按 class 切换，
+  // 且 @custom-variant dark 也认 .dark（见 tokens.css）。
+  // 两份标记必须始终同步，否则深色模式下组件与手写样式会各走一套。
+  root.classList.toggle('dark', dark);
+  root.classList.toggle('light', !dark);
   for (const listener of listeners) listener(dark);
 }
 

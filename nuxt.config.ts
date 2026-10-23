@@ -12,7 +12,28 @@ export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: false },
 
-  modules: ['@nuxt/content'],
+  modules: ['@nuxt/content', '@nuxt/ui'],
+
+  // ============================================================
+  // Nuxt UI 接入策略（渐进式接管）
+  //   - 保留样式层自建的 reset 与设计令牌，不引入 Tailwind Preflight
+  //     （@nuxt/ui 的 CSS 入口本身不含 preflight，见 main.css 注释）
+  //   - 主题三态仍由 useTheme.ts 独占，因此关掉 colorMode，
+  //     改由 useTheme 同时写 data-theme 与 .dark class
+  //   - 字体由 CDN <link> 提供，关掉 @nuxt/fonts 避免接管
+  // ============================================================
+  ui: {
+    fonts: false,
+    colorMode: false,
+    theme: {
+      // 只生成实际用到的语义色（primary 承载品牌黄），减小产物体积
+      colors: ['primary', 'error'],
+    },
+    experimental: {
+      // 按实际使用的组件做 CSS 摇树
+      componentDetection: true,
+    },
+  },
 
   app: {
     baseURL: '/',
@@ -52,10 +73,12 @@ export default defineNuxtConfig({
       ],
       script: [
         // 首帧同步脚本（关键）：在首次绘制前把用户选择的主题写入 <html data-theme>，
-        // 避免「先浅后深」的闪烁。storage key 与 useTheme.ts 保持一致。
+        // 同时给 <html> 加 .dark / .light —— Nuxt UI 的 --ui-* 语义变量按 class 切换，
+        // 两套标记必须同时落地，否则深色用户首帧会闪白。
+        // storage key 与 useTheme.ts 保持一致。
         {
           innerHTML:
-            'try{var t=localStorage.getItem("pidanui-theme")||"auto";document.documentElement.setAttribute("data-theme",t)}catch(e){document.documentElement.setAttribute("data-theme","auto")}',
+            'try{var m=localStorage.getItem("pidanui-theme")||"auto";var d=m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);var r=document.documentElement;r.setAttribute("data-theme",m);r.classList.toggle("dark",d);r.classList.toggle("light",!d)}catch(e){var r=document.documentElement;r.setAttribute("data-theme","auto");r.classList.add("light")}',
           tagPriority: 'critical',
         },
         // 首帧同步脚本：DOM 解析时立即给 <html> 加 .js。
@@ -70,7 +93,7 @@ export default defineNuxtConfig({
     pageTransition: { name: 'page', mode: 'out-in', appear: true },
   },
 
-  css: ['katex/dist/katex.min.css', '~/assets/styles/index.css'],
+  css: ['katex/dist/katex.min.css', '~/assets/styles/main.css'],
 
   // 组件按文件名注册（<ListView> / <PostCard> …），模板保持零改动
   components: [{ path: '~/components', pathPrefix: false }],
