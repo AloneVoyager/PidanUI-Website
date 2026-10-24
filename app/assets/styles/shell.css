@@ -70,8 +70,11 @@
   z-index: 90;
   visibility: hidden;
   opacity: 0;
-  background: rgba(0, 0, 0, var(--overlay-alpha, 0));
-  backdrop-filter: blur(var(--overlay-blur, 0px));
+  /* 与弹窗共用色调：透明度与模糊都按拖拽进度（--drawer-progress 0→1）线性放大 */
+  background-color: rgb(
+    var(--overlay-tint) / calc(var(--overlay-alpha) * var(--drawer-progress, 0))
+  );
+  backdrop-filter: blur(calc(var(--overlay-blur) * var(--drawer-progress, 0)));
   pointer-events: none;
   /* 离场时 visibility 必须延后 0.3s 再切到 hidden，否则淡出会被拦腰截断。
      写成 var() 延迟而不是字面量：压缩器会把 `visibility 0s linear .3s`

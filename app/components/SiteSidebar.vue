@@ -22,8 +22,6 @@ const drawerStyle = computed(
       '--drawer-progress': String(drawerProgress.value),
       '--drawer-offset': `${drawerOffset.value}px`,
       '--drawer-shadow-alpha': String(drawerProgress.value * 0.18),
-      '--overlay-alpha': String(drawerProgress.value * 0.3),
-      '--overlay-blur': `${drawerProgress.value * 4}px`,
     }) as CSSProperties,
 );
 let mobileBreakpoint: MediaQueryList | undefined;
