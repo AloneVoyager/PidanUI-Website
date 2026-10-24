@@ -17,7 +17,7 @@ const coverSrc = computed(() => {
   <!-- 紧凑横排卡片：新闻 / 分类 / 标签 / 搜索页 / 搜索对话框共用。
        封面做成「内嵌圆角块」，与卡片外框形成双层圆角，比通栏封面更精致。 -->
   <NuxtLink
-    class="group card flex min-h-[104px] gap-3 rounded-(--radius-l) border border-default bg-default p-2 transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-brand-600/30 hover:shadow-card"
+    class="group card flex min-h-[104px] gap-3 rounded-(--radius-l) border border-default bg-default p-2 transition-[border-color,box-shadow] duration-200 hover:border-brand-600/30 hover:shadow-card"
     :to="post.url"
   >
     <div class="relative w-[148px] shrink-0 overflow-hidden rounded-(--radius-m) bg-muted">
@@ -56,7 +56,7 @@ const coverSrc = computed(() => {
 
     <UIcon
       name="i-lucide-arrow-right"
-      class="my-auto mr-1 shrink-0 text-dimmed transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:text-brand-600"
+      class="my-auto mr-1 shrink-0 text-dimmed transition-colors duration-200 group-hover:text-brand-600"
       aria-hidden="true"
     />
   </NuxtLink>

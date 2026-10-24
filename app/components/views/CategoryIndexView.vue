@@ -21,7 +21,7 @@ const terms = computed(() => collectTerms('categories', allPosts.value));
       <NuxtLink
         v-for="term in terms"
         :key="term.name"
-        class="group flex items-center gap-3 rounded-(--radius-l) border border-default bg-default px-4 py-3.5 transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-brand-600/30 hover:shadow-card"
+        class="group flex items-center gap-3 rounded-(--radius-l) border border-default bg-default px-4 py-3.5 transition-[border-color,box-shadow] duration-200 hover:border-brand-600/30 hover:shadow-card"
         :to="term.path"
       >
         <span

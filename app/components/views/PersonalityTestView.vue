@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
             class="flex flex-col items-center gap-1.5"
           >
             <img
-              class="size-11 rounded-full border-2 object-cover transition-transform duration-200 hover:-translate-y-0.5"
+              class="size-11 rounded-full border-2 object-cover"
               :style="{ borderColor: character.color }"
               :src="withBase(character.avatar)"
               :alt="character.name"
