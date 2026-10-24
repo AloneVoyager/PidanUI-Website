@@ -27,8 +27,13 @@ export const SOCIAL_LINKS: SocialLink[] = [
     icon: 'i-simple-icons-github',
   },
   {
+    name: 'GitCode',
+    url: 'https://gitcode.com/PidanUI-Team',
+    icon: 'i-bi-git',
+  },
+  {
     name: '哔哩哔哩',
-    url: 'https://space.bilibili.com/3493144343612119',
+    url: 'https://space.bilibili.com/3546563248916693',
     icon: 'i-simple-icons-bilibili',
   },
   {
@@ -40,5 +45,10 @@ export const SOCIAL_LINKS: SocialLink[] = [
     name: 'PidanUI 上线了官网',
     url: 'https://eggyui.mysxl.cn',
     icon: 'i-lucide-globe',
+  },
+  {
+    name: '本官网源代码仓库',
+    url: 'https://github.com/PidanEggyTeam/PidanUI-Website',
+    icon: 'i-octicon-repo-16',
   },
 ];
