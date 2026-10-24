@@ -33,6 +33,7 @@ const coverSrc = computed(() => {
         :src="coverSrc"
         :alt="post.title"
         loading="lazy"
+        decoding="async"
       />
     </div>
 

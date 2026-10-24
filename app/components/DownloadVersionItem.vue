@@ -72,6 +72,7 @@ watch(
                 class="size-full object-cover"
                 :class="imgState === 'image' ? '' : 'opacity-0'"
                 loading="lazy"
+                decoding="async"
                 @load="imgState = 'image'"
                 @error="imgState = 'error'"
               />
