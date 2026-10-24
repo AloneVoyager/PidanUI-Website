@@ -131,6 +131,8 @@ onBeforeUnmount(() => {
         :alt="SITE.brand"
         width="34"
         height="34"
+        decoding="async"
+        fetchpriority="high"
       />
       <span>{{ SITE.brand }}</span>
     </NuxtLink>

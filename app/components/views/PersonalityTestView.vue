@@ -107,6 +107,7 @@ onBeforeUnmount(() => {
               width="44"
               height="44"
               loading="lazy"
+              decoding="async"
             />
             <span class="text-[11px] text-dimmed">{{ character.name }}</span>
           </div>
@@ -174,7 +175,13 @@ onBeforeUnmount(() => {
       <UCard v-else-if="stage === 'result' && result" key="result" :ui="{ body: 'p-7' }">
         <div class="text-center">
           <div class="result-avatar mx-auto mb-5 size-[120px]" :style="{ borderColor: result.color }">
-            <img :src="withBase(result.avatar)" :alt="result.name" width="120" height="120" />
+            <img
+              :src="withBase(result.avatar)"
+              :alt="result.name"
+              width="120"
+              height="120"
+              decoding="async"
+            />
           </div>
 
           <p class="text-[28px] leading-tight font-bold text-default">{{ result.name }}</p>

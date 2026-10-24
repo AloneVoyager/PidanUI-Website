@@ -4,9 +4,11 @@ import { GISCUS, SITE } from '#shared/site';
 import { initTheme, onThemeChange, resolvedDark } from '~/composables/useTheme';
 
 // Giscus 评论：客户端按路由动态注入脚本，兼容 SPA 导航。
-// 附带两处增强：
-//   1. 加载占位骨架屏 —— 评论区在 iframe 就绪前保持视觉填充，减少页底「空白」观感
-//   2. 配色跟随站点主题 —— 手动切换深浅色时同步 giscus 主题
+// 三处增强：
+//   1. 懒初始化 —— 评论区在页面底部，滚到附近（rootMargin 400px）才拉取
+//      第三方脚本 + iframe，避免每次打开文章都占用首屏带宽与主线程
+//   2. 加载占位骨架屏 —— iframe 就绪前保持视觉填充，减少页底「空白」观感
+//   3. 配色跟随站点主题 —— 手动切换深浅色时同步 giscus 主题
 const route = useRoute();
 const container = ref<HTMLElement | null>(null);
 const loading = ref(true);
@@ -14,6 +16,8 @@ const loading = ref(true);
 const GISCUS_ORIGIN = 'https://giscus.app';
 
 let observer: MutationObserver | null = null;
+/** 进入视口后才真正加载（null 表示已加载或尚未观察） */
+let visibilityObserver: IntersectionObserver | null = null;
 let stopThemeWatch: (() => void) | null = null;
 let fallbackTimer: number | null = null;
 
@@ -95,16 +99,42 @@ function mountGiscus(): void {
 onMounted(() => {
   initTheme();
   stopThemeWatch = onThemeChange(syncGiscusTheme);
-  void nextTick(mountGiscus);
+
+  const host = container.value;
+  // 不支持 IntersectionObserver（极旧浏览器）时退回立即加载
+  if (!host || typeof IntersectionObserver === 'undefined') {
+    void nextTick(mountGiscus);
+    return;
+  }
+
+  // 评论区在文章最底部：滚到距视口 400px 时再加载，
+  // 打开文章本身不再发起 giscus.app 的请求。
+  visibilityObserver = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      visibilityObserver?.disconnect();
+      visibilityObserver = null;
+      void nextTick(mountGiscus);
+    },
+    { rootMargin: '400px 0px' },
+  );
+  visibilityObserver.observe(host);
 });
 
 watch(
   () => route.fullPath,
-  () => void nextTick(mountGiscus),
+  () => {
+    // 已经加载过（用户滚到过评论区）时，切文章要重建评论；
+    // 还没进入视口则什么都不用做，等观察器触发。
+    if (visibilityObserver) return;
+    void nextTick(mountGiscus);
+  },
 );
 
 onBeforeUnmount(() => {
   observer?.disconnect();
+  visibilityObserver?.disconnect();
+  visibilityObserver = null;
   clearFallback();
   stopThemeWatch?.();
   if (container.value) container.value.innerHTML = '';

@@ -80,6 +80,7 @@ const FEATURES = [
           :src="withBase('/images/characters/yeggy.webp')"
           alt=""
           loading="lazy"
+          decoding="async"
         />
       </div>
     </section>
