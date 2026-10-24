@@ -107,5 +107,8 @@ const drawerStyle = computed(
       <h2 class="mb-3 text-[13px] font-bold tracking-[0.5px] text-dimmed uppercase">项目状态</h2>
       <p class="text-[13.5px] text-toned">PidanUI 项目组持续维护中，欢迎加入我们。</p>
     </section>
+
+    <!-- 实时访客（FeedPulse）：懒加载，宽度随右栏，深浅色跟随主题 -->
+    <TrafficWidget />
   </aside>
 </template>

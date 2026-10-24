@@ -106,6 +106,7 @@ export default defineNuxtConfig({
       // 这些必须显式列出，否则会退化成运行时向 Iconify API 取图。
       // 新增动态图标时同步这里。
       icons: [
+        'lucide:activity',
         'lucide:arrow-left',
         'lucide:arrow-right',
         'lucide:calendar-days',
