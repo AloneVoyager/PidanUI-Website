@@ -76,40 +76,54 @@ function toggleMonth(key: string): void {
 </script>
 
 <template>
-  <div class="archive-view">
-    <div class="list-head">
-      <PageTitle title="归档" />
-      <p class="archive-total">
-        共 {{ allPosts.length }} 篇文章 · {{ totalPages }} 个年份
-      </p>
-    </div>
+  <div class="mx-auto max-w-page">
+    <header
+      class="list-head mb-6 flex flex-wrap items-end justify-between gap-x-4 gap-y-3 border-b border-default pb-5"
+    >
+      <div>
+        <PageTitle title="归档" />
+        <p class="mt-1.5 text-[13px] text-dimmed">
+          共 {{ allPosts.length }} 篇文章 · {{ totalPages }} 个年份
+        </p>
+      </div>
+    </header>
 
-    <h2 v-if="currentYear" class="archive-year">
-      {{ currentYear }} 年
-      <span class="year-count">{{ currentPosts.length }} 篇</span>
+    <h2 v-if="currentYear" class="mb-5 flex items-baseline gap-2">
+      <span class="text-[26px] leading-none font-extrabold tracking-[-0.02em] text-default">
+        {{ currentYear }}
+      </span>
+      <span class="text-[13px] font-medium text-dimmed">年 · {{ currentPosts.length }} 篇</span>
     </h2>
 
     <EmptyState v-if="!months.length" text="暂无归档内容" />
 
-    <div v-else class="month-groups">
+    <!-- 时间线：左侧竖线 + 月份节点，月份分组仍是可折叠卡片 -->
+    <div v-else class="timeline">
       <section
         v-for="month in months"
         :key="month.key"
         class="month-group"
         :class="{ open: isOpen(month.key) }"
       >
+        <span class="timeline-dot" aria-hidden="true" />
+
         <button
-          class="month-head"
+          class="month-head flex w-full items-center gap-2.5 py-3.5 text-left"
           type="button"
           :aria-expanded="isOpen(month.key)"
           @click="toggleMonth(month.key)"
         >
-          <span class="month-name">{{ month.label }}</span>
-          <span class="month-count">{{ month.posts.length }} 篇</span>
-          <i class="fa-solid fa-chevron-down month-arrow" aria-hidden="true"></i>
+          <span class="text-[15px] font-semibold text-default">{{ month.label }}</span>
+          <UBadge variant="soft" color="primary" size="sm" :label="`${month.posts.length} 篇`" />
+          <UIcon
+            name="i-lucide-chevron-down"
+            class="month-arrow ms-auto text-dimmed"
+            aria-hidden="true"
+          />
         </button>
+
         <div class="month-body">
-          <div class="month-body-inner">
+          <div class="min-h-0 overflow-hidden">
             <CardGrid class="month-grid" :posts="month.posts" />
           </div>
         </div>
@@ -126,82 +140,44 @@ function toggleMonth(key: string): void {
 </template>
 
 <style scoped>
-/* ============================================================
-   归档页：按年分页，页内按月折叠分组
-   ============================================================ */
-.archive-view {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* 页面主标题（与列表 / 搜索 / 分类索引页保持一致） */
-.list-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px 14px;
-  margin-bottom: 18px;
-}
-
-.archive-total {
-  font-size: 14px;
-  color: var(--ink-3);
-}
-
-.archive-year {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: 14px;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--brand-deep);
-}
-
-.archive-year .year-count {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink-3);
-}
-
-.month-groups {
+/* ---- 时间线骨架 ---- */
+.timeline {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-left: 24px;
+  border-left: 1px solid var(--line);
 }
 
-/* 月份分组：点击头部展开 / 收起，动画与下载页手风琴一致 */
 .month-group {
+  position: relative;
   padding: 0 14px;
-  background: rgba(255, 255, 255, 0.55);
+  background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius-l);
+  transition: border-color 0.2s ease;
 }
 
-/* 深色下用半透明深灰底（手动深色 + 系统深色均生效） */
-[data-theme='dark'] .month-group {
-  background: rgba(31, 31, 35, 0.6);
+.month-group:hover {
+  border-color: color-mix(in srgb, var(--brand-deep) 30%, var(--line));
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .month-group {
-    background: rgba(31, 31, 35, 0.6);
-  }
+/* 节点圆点：圆心落在时间线上（-29px = 24px 缩进 + 5px 半径） */
+.timeline-dot {
+  position: absolute;
+  top: 21px;
+  left: -29px;
+  width: 10px;
+  height: 10px;
+  background: var(--brand-deep);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--bg);
 }
 
 .month-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 12px 2px;
-  font: inherit;
-  color: var(--ink);
-  text-align: left;
+  color: inherit;
   background: none;
   border: none;
-  cursor: pointer;
 }
 
 .month-head:hover {
@@ -209,36 +185,12 @@ function toggleMonth(key: string): void {
 }
 
 .month-head:focus-visible {
-  outline: 2px solid rgba(255, 159, 26, 0.45);
+  outline: 2px solid color-mix(in srgb, var(--brand-deep) 45%, transparent);
   outline-offset: 2px;
   border-radius: var(--radius-s);
 }
 
-.month-head .month-name {
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.month-head .month-count {
-  font-size: 12.5px;
-  color: var(--ink-3);
-}
-
-.month-head .month-arrow {
-  display: inline-block;
-  margin-left: auto;
-  font-size: 12px;
-  color: var(--ink-3);
-  transition: transform 0.3s ease;
-}
-
-/* 收起时箭头朝右 */
-.month-group:not(.open) .month-arrow {
-  transform: rotate(-90deg);
-}
-
-/* 展开 / 收起动画：grid-template-rows 0fr ↔ 1fr，
-   高度随卡片数量自适应（无需写死 max-height），观感与下载页手风琴一致 */
+/* 展开 / 收起：grid-template-rows 0fr ↔ 1fr，高度随内容自适应 */
 .month-body {
   display: grid;
   grid-template-rows: 1fr;
@@ -249,9 +201,12 @@ function toggleMonth(key: string): void {
   grid-template-rows: 0fr;
 }
 
-.month-body-inner {
-  min-height: 0;
-  overflow: hidden;
+.month-arrow {
+  transition: transform 0.3s ease;
+}
+
+.month-group:not(.open) .month-arrow {
+  transform: rotate(-90deg);
 }
 
 .month-grid {
@@ -264,8 +219,16 @@ function toggleMonth(key: string): void {
     align-items: flex-start;
   }
 
+  .timeline {
+    padding-left: 18px;
+  }
+
   .month-group {
     padding: 0 10px;
+  }
+
+  .timeline-dot {
+    left: -23px;
   }
 
   .month-grid {

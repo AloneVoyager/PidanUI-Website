@@ -22,7 +22,8 @@ PidanUI 项目的官方网站，使用 Nuxt 4 + @nuxt/content + TypeScript + Tai
 - [Nuxt 4](https://nuxt.com/)（Nitro 预渲染 + SSG）
 - [@nuxt/content v3](https://content.nuxt.com/)（Markdown 内容库，MDC + Shiki 双主题）
 - [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS v4](https://tailwindcss.com/)（`@theme` 设计令牌 + 原生 CSS，样式主体不依赖工具类堆叠）
+- [Nuxt UI v4](https://ui.nuxt.com/)（组件层：按钮 / 卡片 / 徽章 / 弹窗 / 手风琴，主题色映射到站点品牌色板）
+- [Tailwind CSS v4](https://tailwindcss.com/)（`@theme` 设计令牌 + 工具类；保留项目自建 reset，**不引 Preflight**）
 - [KaTeX](https://katex.org/)（数学公式）
 
 ## 数据文件
@@ -41,7 +42,9 @@ PidanUI 项目的官方网站，使用 Nuxt 4 + @nuxt/content + TypeScript + Tai
 
 ## 字体与图标
 
-本网站使用的字体为 MiSans 和 Cascadia Code 分包字体，图标来自 Font Awesome，字体和图标通过 CDN 加载，仓库不保留字体和图标文件。
+字体为 MiSans 和 Cascadia Code 分包字体，通过 CDN 加载（样式表由 `nuxt.config.ts` 的 `app.head` 注入），仓库不保留字体文件。
+
+图标使用 Nuxt UI 的 Iconify（Lucide + Simple Icons），图标集合以 `@iconify-json/*` 本地安装，**构建期直接内联为 SVG**，运行时不请求 Iconify API。已不再使用 Font Awesome。
 
 ## 关于 PidanUI
 

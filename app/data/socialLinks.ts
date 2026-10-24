@@ -7,34 +7,38 @@ export interface SocialLink {
   name: string;
   /** 站点链接（站内写 / 开头的相对路径，站外写完整 URL） */
   url: string;
-  /** 显示图标（Font Awesome 类名：品牌图标用 fa-brands） */
-  iconClass: string;
+  /**
+   * 显示图标（Iconify 名称，用 <UIcon> 渲染）。
+   * 品牌图标走 simple-icons 集（i-simple-icons-*），通用图标走 lucide 集
+   * （i-lucide-*）；两个集都由 @iconify-json 本地安装，构建期不联网。
+   */
+  icon: string;
 }
 
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: 'RSS 订阅',
     url: '/atom.xml',
-    iconClass: 'fa-solid fa-rss',
+    icon: 'i-lucide-rss',
   },
   {
     name: 'GitHub',
     url: 'https://github.com/PidanEggyTeam',
-    iconClass: 'fa-brands fa-github',
+    icon: 'i-simple-icons-github',
   },
   {
     name: '哔哩哔哩',
     url: 'https://space.bilibili.com/3493144343612119',
-    iconClass: 'fa-brands fa-bilibili',
+    icon: 'i-simple-icons-bilibili',
   },
   {
     name: 'QQ 交流群',
     url: 'https://qm.qq.com/q/WiTRsJYre0',
-    iconClass: 'fa-brands fa-qq',
+    icon: 'i-simple-icons-tencentqq',
   },
   {
     name: 'PidanUI 上线了官网',
     url: 'https://eggyui.mysxl.cn',
-    iconClass: 'fa-solid fa-globe',
+    icon: 'i-lucide-globe',
   },
 ];

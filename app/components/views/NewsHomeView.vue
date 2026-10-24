@@ -20,6 +20,7 @@ const { pagePosts, page, totalPages } = usePagedPosts(
     :posts="pagePosts"
     :current="page"
     :total-pages="totalPages"
+    :summary="`共 ${allPosts.length} 篇 · 第 ${page} / ${totalPages} 页`"
     first-href="/posts/"
     page-prefix="/posts/page/"
   >

@@ -12,51 +12,78 @@ const props = defineProps<{
   pagePrefix: string;
 }>();
 
-const prevHref = computed(() =>
-  props.current <= 2 ? props.firstHref : `${props.pagePrefix}${props.current - 1}`,
-);
-const nextHref = computed(() => `${props.pagePrefix}${props.current + 1}`);
+/** 页码 → 地址（第 1 页没有前缀，直接回首页地址） */
+function hrefFor(page: number): string {
+  return page === 1 ? props.firstHref : `${props.pagePrefix}${page}`;
+}
+
+/**
+ * 页码窗口：首尾页 + 当前页及其左右各一页，中间用省略号占位。
+ * 站点分页地址是多段中文路径，UPagination 无法承载，因此保留自定义结构。
+ */
+const items = computed<(number | 'gap')[]>(() => {
+  const total = props.totalPages;
+  const current = props.current;
+  const picked = new Set<number>([1, total, current]);
+
+  for (const offset of [-1, 1, -2, 2]) {
+    const page = current + offset;
+    if (page >= 1 && page <= total) picked.add(page);
+  }
+
+  const pages = [...picked].sort((a, b) => a - b);
+  const result: (number | 'gap')[] = [];
+
+  pages.forEach((page, index) => {
+    if (index > 0 && page - pages[index - 1] > 1) result.push('gap');
+    result.push(page);
+  });
+
+  return result;
+});
 </script>
 
 <template>
-  <nav v-if="totalPages > 1" class="pagination flex items-center justify-center gap-3.5 mt-7" role="navigation">
-    <NuxtLink v-if="current > 1" class="page-btn" :to="prevHref">
-      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-      上一页
-    </NuxtLink>
-    <span class="page-info">{{ current }} / {{ totalPages }}</span>
-    <NuxtLink v-if="current < totalPages" class="page-btn" :to="nextHref">
-      下一页
-      <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-    </NuxtLink>
+  <nav
+    v-if="totalPages > 1"
+    class="mt-8 flex flex-wrap items-center justify-center gap-1.5"
+    aria-label="分页导航"
+  >
+    <UButton
+      v-if="current > 1"
+      :to="hrefFor(current - 1)"
+      variant="ghost"
+      color="neutral"
+      size="sm"
+      square
+      icon="i-lucide-chevron-left"
+      aria-label="上一页"
+    />
+
+    <template v-for="(item, index) in items" :key="`${item}-${index}`">
+      <span v-if="item === 'gap'" class="px-1 text-[13px] text-dimmed" aria-hidden="true">…</span>
+      <UButton
+        v-else
+        :to="hrefFor(item)"
+        :variant="item === current ? 'solid' : 'ghost'"
+        :color="item === current ? 'primary' : 'neutral'"
+        size="sm"
+        class="min-w-8 justify-center"
+        :label="String(item)"
+        :aria-current="item === current ? 'page' : undefined"
+        :aria-label="`第 ${item} 页`"
+      />
+    </template>
+
+    <UButton
+      v-if="current < totalPages"
+      :to="hrefFor(current + 1)"
+      variant="ghost"
+      color="neutral"
+      size="sm"
+      square
+      icon="i-lucide-chevron-right"
+      aria-label="下一页"
+    />
   </nav>
 </template>
-
-<style scoped>
-.pagination .page-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 18px;
-  font-size: 13px;
-  color: var(--brand-deep);
-  background: var(--brand-soft);
-  border-radius: var(--radius-full);
-  transition: background 0.25s ease;
-}
-
-.pagination .page-btn:hover {
-  background: rgba(255, 159, 26, 0.2);
-}
-
-.pagination .page-btn.disabled {
-  color: var(--ink-3);
-  background: var(--bg);
-  cursor: not-allowed;
-}
-
-.pagination .page-info {
-  font-size: 13px;
-  color: var(--ink-3);
-}
-</style>

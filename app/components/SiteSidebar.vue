@@ -30,10 +30,10 @@ let mobileBreakpoint: MediaQueryList | undefined;
 let stopDrawerGestures: (() => void) | undefined;
 
 const NAV_ITEMS = [
-  { key: 'home', label: '首页', href: '/', icon: 'fa-solid fa-house' },
-  { key: 'download', label: '下载', href: '/download', icon: 'fa-solid fa-download' },
-  { key: 'news', label: '新闻', href: '/posts/', icon: 'fa-solid fa-newspaper' },
-  { key: 'about', label: '关于', href: '/about', icon: 'fa-solid fa-circle-info' },
+  { key: 'home', label: '首页', href: '/', icon: 'i-lucide-house' },
+  { key: 'download', label: '下载', href: '/download', icon: 'i-lucide-download' },
+  { key: 'news', label: '新闻', href: '/posts/', icon: 'i-lucide-newspaper' },
+  { key: 'about', label: '关于', href: '/about', icon: 'i-lucide-info' },
 ] as const;
 
 type NavKey = (typeof NAV_ITEMS)[number]['key'];
@@ -104,9 +104,8 @@ onBeforeUnmount(() => {
     :aria-expanded="navOpen"
     @click="toggleMenu"
   >
-    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    <UIcon name="i-lucide-menu" class="size-5" aria-hidden="true" />
   </button>
-
   <!-- 遮罩 -->
   <div
     class="sidebar-overlay"
@@ -123,24 +122,36 @@ onBeforeUnmount(() => {
     :style="drawerStyle"
     aria-label="主导航"
   >
-    <NuxtLink class="brand" :to="'/'" :aria-label="SITE.brand">
-      <img class="brand-logo" :src="withBase('/images/logo.webp')" :alt="SITE.brand" width="34" height="34" />
-      <span class="brand-text">{{ SITE.brand }}</span>
+    <NuxtLink
+      class="mb-6 flex items-center gap-2.5 px-2 text-[18px] font-bold text-default"
+      :to="'/'"
+      :aria-label="SITE.brand"
+    >
+      <img
+        class="size-[34px] shrink-0 rounded-[10px] object-contain"
+        :src="withBase('/images/logo.webp')"
+        :alt="SITE.brand"
+        width="34"
+        height="34"
+      />
+      <span>{{ SITE.brand }}</span>
     </NuxtLink>
 
-    <nav class="nav" aria-label="站点导航">
+    <nav class="flex flex-col gap-2" aria-label="站点导航">
       <NuxtLink
         v-for="item in NAV_ITEMS"
         :key="item.key"
-        class="nav-item"
-        :class="{ active: activeKey === item.key }"
+        class="flex items-center gap-3 rounded-(--radius-m) px-3 py-2.5 text-[14.5px] transition-colors"
+        :class="
+          activeKey === item.key
+            ? 'bg-brand-soft font-semibold text-brand-600'
+            : 'text-toned hover:bg-brand-a10 hover:text-brand-600'
+        "
         :to="item.href"
         :aria-current="activeKey === item.key ? 'page' : undefined"
       >
-        <span class="nav-icon" aria-hidden="true">
-          <i :class="item.icon"></i>
-        </span>
-        <span class="nav-label">{{ item.label }}</span>
+        <UIcon :name="item.icon" class="size-5 shrink-0" aria-hidden="true" />
+        <span>{{ item.label }}</span>
       </NuxtLink>
     </nav>
 

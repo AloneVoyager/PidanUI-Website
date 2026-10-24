@@ -14,133 +14,64 @@ const coverSrc = computed(() => {
 </script>
 
 <template>
-  <NuxtLink class="post-card flex items-stretch" :to="post.url">
-    <div class="card-cover">
-      <span v-if="post.stickypost" class="pin-badge">置顶</span>
-      <img :src="coverSrc" :alt="post.title" loading="lazy" />
+  <!-- 紧凑横排卡片：新闻 / 分类 / 标签 / 搜索页 / 搜索对话框共用。
+       封面做成「内嵌圆角块」，与卡片外框形成双层圆角，比通栏封面更精致。 -->
+  <NuxtLink
+    class="group card flex min-h-[104px] gap-3 rounded-(--radius-l) border border-default bg-default p-2 transition-[border-color,box-shadow] duration-200 hover:border-brand-600/30 hover:shadow-card"
+    :to="post.url"
+  >
+    <div class="relative w-[148px] shrink-0 overflow-hidden rounded-(--radius-m) bg-muted">
+      <UBadge
+        v-if="post.stickypost"
+        class="absolute top-1.5 left-1.5 z-1"
+        color="primary"
+        size="sm"
+        label="置顶"
+      />
+      <img
+        class="size-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+        :src="coverSrc"
+        :alt="post.title"
+        loading="lazy"
+      />
     </div>
-    <div class="card-body flex flex-col justify-center gap-1.5 min-w-0 flex-auto">
-      <span class="card-title">{{ post.title }}</span>
-      <div class="card-meta flex items-center gap-2">
-        <time class="card-date">{{ post.date }}</time>
-        <span v-if="post.categories.length" class="card-cat">{{ post.categories[0] }}</span>
+
+    <div class="flex min-w-0 flex-1 flex-col justify-center gap-2 py-1 pr-1">
+      <h3 class="line-clamp-2 text-[15px] leading-[1.5] font-semibold text-default">
+        {{ post.title }}
+      </h3>
+      <div class="flex flex-wrap items-center gap-2 text-[12.5px] text-dimmed">
+        <time class="inline-flex items-center gap-1">
+          <UIcon name="i-lucide-calendar-days" class="size-3.5" aria-hidden="true" />
+          {{ post.date }}
+        </time>
+        <span
+          v-if="post.categories.length"
+          class="rounded-full bg-brand-soft px-2 py-0.5 text-[11.5px] font-medium text-brand-700"
+        >
+          {{ post.categories[0] }}
+        </span>
       </div>
     </div>
-    <i class="fa-solid fa-arrow-right card-arrow" aria-hidden="true"></i>
+
+    <UIcon
+      name="i-lucide-arrow-right"
+      class="my-auto mr-1 shrink-0 text-dimmed transition-colors duration-200 group-hover:text-brand-600"
+      aria-hidden="true"
+    />
   </NuxtLink>
 </template>
 
 <style scoped>
-/* ============================================================
-   文章卡片（紧凑横排）
-     新闻 / 分类 / 标签 / 搜索页 / 搜索对话框共用：横向缩略图 + 标题 + 元信息，
-     在同等高度内可容纳更多条目。
-   ============================================================ */
-.post-card {
-  min-height: 92px;
-  overflow: hidden;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-m);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
-.post-card:hover {
-  box-shadow: var(--shadow-card);
-  border-color: rgba(255, 159, 26, 0.25);
-}
-
-.post-card:hover .card-arrow {
-  color: var(--brand-deep);
-  transform: translateX(3px);
-}
-
-.post-card .card-cover {
-  position: relative;
-  flex: 0 0 128px;
-  align-self: stretch;
-  overflow: hidden;
-  background: var(--bg);
-}
-
-.post-card .card-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.post-card:hover .card-cover img {
-  transform: scale(1.04);
-}
-
-.post-card .pin-badge {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  z-index: 1;
-  padding: 1px 8px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #fff;
-  background: var(--brand-deep);
-  border-radius: var(--radius-full);
-}
-
-.post-card .card-body {
-  padding: 12px 0 12px 14px;
-}
-
-.post-card .card-title {
-  font-size: 14.5px;
-  font-weight: 600;
-  line-height: 1.45;
-  color: var(--ink);
-  /* 多行文本截断（原 clamp-lines mixin 展开） */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.post-card .card-meta {
-  font-size: 12.5px;
-  color: var(--ink-3);
-}
-
-.post-card .card-cat {
-  padding: 0 8px;
-  font-size: 11.5px;
-  line-height: 1.7;
-  color: var(--brand-deep);
-  background: var(--brand-soft);
-  border-radius: var(--radius-full);
-}
-
-.post-card .card-arrow {
-  flex: 0 0 auto;
-  align-self: center;
-  margin: 0 14px 0 10px;
-  font-size: 14px;
-  color: var(--ink-3);
-  transition: color 0.25s ease, transform 0.25s ease;
-}
-
+/* 窄屏收紧缩略图（断点与 tokens.css 的 2xs=480 对齐，
+   仍手写媒体查询，避免与 960px 主断点的约定冲突） */
 @media (max-width: 480px) {
-  .post-card {
-    min-height: 84px;
+  .card {
+    min-height: 96px;
   }
 
-  .post-card .card-cover {
-    flex-basis: 96px;
-  }
-
-  .post-card .card-title {
-    font-size: 14px;
-  }
-
-  .post-card .card-arrow {
-    margin-right: 10px;
+  .card > div:first-child {
+    width: 112px;
   }
 }
 </style>

@@ -9,61 +9,29 @@ const terms = computed(() => collectTerms('tags', allPosts.value));
 </script>
 
 <template>
-  <div class="terms-view">
-    <PageTitle title="标签" />
+  <div class="mx-auto max-w-[1000px]">
+    <header class="mb-6 border-b border-default pb-5">
+      <PageTitle title="标签" />
+      <p class="mt-1.5 text-[13px] text-dimmed">共 {{ terms.length }} 个标签 · 按收录文章数排序</p>
+    </header>
 
-    <div class="term-cloud">
+    <!-- 标签云：计数用品牌色小徽章，hover 转浅黄底 -->
+    <div class="flex flex-wrap gap-2.5">
       <NuxtLink
         v-for="term in terms"
         :key="term.name"
-        class="tag-chip"
+        class="inline-flex items-center gap-1.5 rounded-full border border-default bg-default py-1.5 pr-2 pl-3.5 text-sm text-toned transition-colors duration-200 hover:border-brand-600/30 hover:bg-brand-soft hover:text-brand-600"
         :to="term.path"
       >
-        #{{ term.name }}
-        <span class="term-count">{{ term.count }}</span>
+        <UIcon name="i-lucide-hash" class="size-3.5 text-dimmed" aria-hidden="true" />
+        <span>{{ term.name }}</span>
+        <span
+          class="ml-0.5 rounded-full bg-brand-soft px-1.5 text-[11px] leading-[1.6] font-medium text-brand-600"
+        >
+          {{ term.count }}
+        </span>
       </NuxtLink>
       <EmptyState v-if="!terms.length" text="暂无标签" />
     </div>
   </div>
 </template>
-
-<style scoped>
-/* ============================================================
-   标签索引页：标签云罗列全部标签
-   ============================================================ */
-.terms-view {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.term-cloud {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.term-cloud .tag-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
-  font-size: 14px;
-  color: var(--ink-2);
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-full);
-  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
-}
-
-.term-cloud .tag-chip:hover {
-  color: var(--brand-deep);
-  background: var(--brand-soft);
-  border-color: rgba(255, 159, 26, 0.3);
-}
-
-.term-cloud .tag-chip .term-count {
-  font-size: 12px;
-  color: var(--ink-3);
-}
-</style>

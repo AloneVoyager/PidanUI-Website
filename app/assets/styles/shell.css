@@ -1,0 +1,148 @@
+/* ============================================================
+   布局壳层：左右固定栏 + 移动端抽屉
+   ------------------------------------------------------------
+   这里只留「结构性」样式：定位、尺寸、层级、抽屉位移与手势相关
+   属性。品牌块、导航项、小部件的内容样式已迁到各组件里（工具类 +
+   Nuxt UI 组件），不再占用全局。
+
+   z-index 层级（自下而上）：
+      80  .menu-toggle      移动端汉堡按钮
+      90  .sidebar-overlay  抽屉遮罩
+     100  .sidebar-left / .sidebar-right
+   汉堡按钮必须低于左栏：抽屉展开时它正好落在品牌 Logo 的位置，
+   若层级更高会把 Logo 盖住。收起时左栏被 translateX(-100%) 移出屏幕，
+   不会遮挡按钮，因此按钮仍可正常点击展开。
+   ============================================================ */
+
+/* ---- 左右固定栏 ---- */
+.sidebar-left,
+.sidebar-right {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+  background: var(--sidebar-bg);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidebar-left {
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  padding: 24px 16px;
+  border-right: 1px solid var(--line);
+}
+
+.sidebar-right {
+  right: 0;
+  width: 280px;
+  padding: 24px 20px;
+  overflow-y: auto;
+  border-left: 1px solid var(--line);
+}
+
+/* ---- 移动端菜单按钮 & 遮罩 ---- */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 80;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--brand-deep);
+  background: var(--brand-soft);
+  border: 1px solid var(--color-brand-deep-a35);
+  border-radius: var(--radius-full);
+}
+
+.menu-toggle-right {
+  right: 16px;
+  left: auto;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  visibility: hidden;
+  opacity: 0;
+  background: rgba(0, 0, 0, var(--overlay-alpha, 0));
+  backdrop-filter: blur(var(--overlay-blur, 0px));
+  pointer-events: none;
+  /* 离场时 visibility 必须延后 0.3s 再切到 hidden，否则淡出会被拦腰截断。
+     写成 var() 延迟而不是字面量：压缩器会把 `visibility 0s linear .3s`
+     合并成 `visibility .3s`（离散属性在 50% 处翻转），带 var() 时不会合并。 */
+  --overlay-fade-delay: 0.3s;
+  transition:
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    -webkit-backdrop-filter 0.3s ease,
+    backdrop-filter 0.3s ease,
+    visibility 0s linear var(--overlay-fade-delay);
+}
+
+.sidebar-overlay.open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  --overlay-fade-delay: 0s;
+}
+
+/* ---- 响应式：≤960px 左右侧栏分别变为抽屉 ---- */
+@media (max-width: 960px) {
+  .sidebar-left {
+    visibility: hidden;
+    transform: translateX(-100%);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, var(--drawer-shadow-alpha, 0));
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s linear 0.3s;
+    /* 与右侧抽屉一致：允许纵向滚动，横向拖动交给手势逻辑，
+       否则浏览器会接管横向手势并触发 pointercancel，表现为拖动回弹 */
+    touch-action: pan-y;
+  }
+
+  .sidebar-left.open {
+    visibility: visible;
+    transform: translateX(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .sidebar-right {
+    width: min(280px, calc(100vw - 48px));
+    visibility: hidden;
+    transform: translateX(100%);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, var(--drawer-shadow-alpha, 0));
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s linear 0.3s;
+    touch-action: pan-y;
+  }
+
+  .sidebar-right.open {
+    visibility: visible;
+    transform: translateX(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, visibility 0s;
+  }
+
+  .sidebar-left.is-dragging,
+  .sidebar-right.is-dragging {
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, var(--drawer-shadow-alpha, 0));
+    transition: none;
+    user-select: none;
+  }
+
+  .sidebar-left.is-dragging {
+    visibility: visible;
+    transform: translateX(calc(var(--drawer-offset, 0px) - 100%));
+  }
+
+  .sidebar-right.is-dragging {
+    visibility: visible;
+    transform: translateX(calc(100% - var(--drawer-offset, 0px)));
+  }
+}

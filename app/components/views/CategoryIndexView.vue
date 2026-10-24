@@ -9,13 +9,34 @@ const terms = computed(() => collectTerms('categories', allPosts.value));
 </script>
 
 <template>
-  <div class="terms-view">
-    <PageTitle title="分类" />
+  <div class="mx-auto max-w-[1000px]">
+    <header class="mb-6 border-b border-default pb-5">
+      <PageTitle title="分类" />
+      <p class="mt-1.5 text-[13px] text-dimmed">
+        共 {{ terms.length }} 个分类 · 按收录文章数排序
+      </p>
+    </header>
 
-    <div class="term-grid">
-      <NuxtLink v-for="term in terms" :key="term.name" class="term-card" :to="term.path">
-        <span class="term-name">{{ term.name }}</span>
-        <span class="term-count">{{ term.count }} 篇</span>
+    <div class="term-grid grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3.5">
+      <NuxtLink
+        v-for="term in terms"
+        :key="term.name"
+        class="group flex items-center gap-3 rounded-(--radius-l) border border-default bg-default px-4 py-3.5 transition-[border-color,box-shadow] duration-200 hover:border-brand-600/30 hover:shadow-card"
+        :to="term.path"
+      >
+        <span
+          class="flex size-9 shrink-0 items-center justify-center rounded-(--radius-m) bg-brand-soft text-brand-600"
+        >
+          <UIcon name="i-lucide-folder" class="size-4" aria-hidden="true" />
+        </span>
+        <span class="min-w-0 flex-1 truncate text-[15px] font-semibold text-default">
+          {{ term.name }}
+        </span>
+        <span
+          class="shrink-0 rounded-full bg-brand-soft px-2 py-0.5 text-[12px] font-medium text-brand-700"
+        >
+          {{ term.count }}
+        </span>
       </NuxtLink>
       <EmptyState v-if="!terms.length" text="暂无分类" />
     </div>
@@ -23,50 +44,6 @@ const terms = computed(() => collectTerms('categories', allPosts.value));
 </template>
 
 <style scoped>
-/* ============================================================
-   分类索引页：卡片网格罗列全部分类
-   ============================================================ */
-.terms-view {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.term-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 14px;
-  margin-top: 20px;
-}
-
-.term-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 16px 20px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-m);
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-}
-
-.term-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 159, 26, 0.3);
-  box-shadow: var(--shadow-card);
-}
-
-.term-card .term-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.term-card .term-count {
-  font-size: 13px;
-  color: var(--ink-3);
-}
-
 @media (max-width: 768px) {
   .term-grid {
     grid-template-columns: 1fr;

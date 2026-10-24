@@ -5,7 +5,7 @@ import Pagination from '../Pagination.vue';
 import PageTitle from '../PageTitle.vue';
 import type { Post } from '#shared/types/post';
 
-// 列表页通用外壳：标题 + 快捷入口 + 卡片网格 + 分页
+// 列表页通用外壳：标题 + 统计 + 快捷入口 + 卡片网格 + 分页
 defineProps<{
   title: string;
   posts: Post[];
@@ -13,20 +13,27 @@ defineProps<{
   totalPages: number;
   firstHref: string;
   pagePrefix: string;
+  /** 标题下方的一行说明，如「共 12 篇 · 第 1 / 2 页」 */
+  summary?: string;
   /** 隐藏分类/标签/归档快捷入口（分类、标签详情页使用） */
   hideChips?: boolean;
 }>();
 </script>
 
 <template>
-  <div class="news-list">
+  <div class="mx-auto max-w-page">
     <!-- 页面级顶部插槽（如新闻页的搜索框） -->
     <slot name="top" />
 
-    <div class="list-head">
-      <PageTitle :title="title" />
+    <header
+      class="list-head mb-6 flex flex-wrap items-end justify-between gap-x-4 gap-y-3 border-b border-default pb-5"
+    >
+      <div class="min-w-0">
+        <PageTitle :title="title" />
+        <p v-if="summary" class="mt-1.5 text-[13px] text-dimmed">{{ summary }}</p>
+      </div>
       <ChipsNav v-if="!hideChips" />
-    </div>
+    </header>
 
     <CardGrid :posts="posts" />
 
@@ -40,23 +47,6 @@ defineProps<{
 </template>
 
 <style scoped>
-/* ============================================================
-   列表页通用外壳：新闻 / 分类 / 标签 列表共用
-   ============================================================ */
-.news-list {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.list-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 22px;
-}
-
 @media (max-width: 768px) {
   .list-head {
     flex-direction: column;

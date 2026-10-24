@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 列表 / 归档 / 分类索引 / 标签索引页共用的空状态文案。
-// grid-column 在非 grid 父级下会被忽略，因此四个调用点可以共用同一份样式。
+// col-span-full 在非 grid 父级下会被忽略，因此四个调用点可以共用同一份样式。
 withDefaults(
   defineProps<{
     text?: string;
@@ -10,15 +10,5 @@ withDefaults(
 </script>
 
 <template>
-  <p class="empty-state">{{ text }}</p>
+  <p class="col-span-full py-10 text-center text-[15px] text-dimmed">{{ text }}</p>
 </template>
-
-<style scoped>
-.empty-state {
-  grid-column: 1 / -1;
-  padding: 40px 0;
-  font-size: 15px;
-  color: var(--ink-3);
-  text-align: center;
-}
-</style>

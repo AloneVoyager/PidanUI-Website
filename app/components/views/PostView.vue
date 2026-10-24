@@ -42,11 +42,16 @@ const nextPost = computed(() =>
 
 <template>
   <article class="post-view">
-    <nav class="post-back" aria-label="返回新闻列表">
-      <NuxtLink class="back-link" to="/posts/">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-        返回新闻
-      </NuxtLink>
+    <nav class="mb-[18px]" aria-label="返回新闻列表">
+      <UButton
+        to="/posts/"
+        variant="soft"
+        color="primary"
+        size="sm"
+        rounded-full
+        icon="i-lucide-arrow-left"
+        label="返回新闻"
+      />
     </nav>
 
     <header class="post-header">
@@ -74,13 +79,13 @@ const nextPost = computed(() =>
     <footer class="post-footer">
       <nav class="post-nav" aria-label="上一篇 / 下一篇">
         <NuxtLink v-if="prevPost" class="prev" :to="prevPost.url">
-          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+          <UIcon name="i-lucide-arrow-left" class="size-4 shrink-0" aria-hidden="true" />
           {{ prevPost.title }}
         </NuxtLink>
         <span v-else></span>
         <NuxtLink v-if="nextPost" class="next" :to="nextPost.url">
           {{ nextPost.title }}
-          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          <UIcon name="i-lucide-arrow-right" class="size-4 shrink-0" aria-hidden="true" />
         </NuxtLink>
       </nav>
 

@@ -37,14 +37,9 @@ const stats = computed(() => {
 </script>
 
 <template>
-  <p class="search-tip" aria-live="polite">{{ stats }}</p>
+  <p class="mt-2 mb-4 flex items-center gap-2 text-sm text-dimmed" aria-live="polite">
+    <UIcon name="i-lucide-search" class="size-4 shrink-0" aria-hidden="true" />
+    {{ stats }}
+  </p>
   <CardGrid v-if="tokens.length" :posts="hits" empty-text="未找到相关新闻" />
 </template>
-
-<style scoped>
-.search-tip {
-  margin: 8px 0 16px;
-  font-size: 14px;
-  color: var(--ink-3);
-}
-</style>

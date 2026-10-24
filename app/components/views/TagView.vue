@@ -14,6 +14,7 @@ const source = () =>
 const { pagePosts, page, totalPages } = usePagedPosts(() => props.page, source);
 
 const title = computed(() => `标签：#${props.name}`);
+const total = computed(() => source().length);
 </script>
 
 <template>
@@ -22,6 +23,7 @@ const title = computed(() => `标签：#${props.name}`);
     :posts="pagePosts"
     :current="page"
     :total-pages="totalPages"
+    :summary="`共 ${total} 篇 · 第 ${page} / ${totalPages} 页`"
     :first-href="termPath('tags', name)"
     :page-prefix="termPagePrefix('tags', name)"
     hide-chips

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 // 分类 / 标签 / 归档快捷入口
 const CHIPS = [
   { label: '全部分类', href: '/categories/' },
@@ -9,27 +8,18 @@ const CHIPS = [
 </script>
 
 <template>
-  <nav class="chips-nav flex flex-wrap gap-2.5" aria-label="新闻快捷入口">
-    <NuxtLink v-for="chip in CHIPS" :key="chip.href" class="chip" :to="chip.href">
-      {{ chip.label }}
-    </NuxtLink>
+  <!-- 浅描边胶囊：--ui-bg-elevated 被映射成卡片白，soft neutral 在白底上等于隐形，
+       因此显式给边框与底色，hover 再转品牌浅黄 -->
+  <nav class="flex flex-wrap gap-2" aria-label="新闻快捷入口">
+    <UButton
+      v-for="chip in CHIPS"
+      :key="chip.href"
+      :to="chip.href"
+      :label="chip.label"
+      variant="ghost"
+      color="neutral"
+      size="sm"
+      class="rounded-full border border-brand-deep-a20 bg-default px-3.5 text-toned hover:border-brand-600/40 hover:bg-brand-soft hover:text-brand-600"
+    />
   </nav>
 </template>
-
-<style scoped>
-.chips-nav .chip {
-  padding: 6px 16px;
-  font-size: 13px;
-  color: var(--ink-2);
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-full);
-  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
-}
-
-.chips-nav .chip:hover {
-  color: var(--brand-deep);
-  background: var(--brand-soft);
-  border-color: rgba(255, 159, 26, 0.3);
-}
-</style>
