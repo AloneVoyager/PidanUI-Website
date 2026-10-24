@@ -68,6 +68,19 @@
   --ui-border: var(--line);
   --ui-border-muted: var(--line);
   --ui-border-accented: var(--color-brand-deep-a20);
+
+  /* ---- 浮层遮罩：抽屉与弹窗共用同一套色调 ----
+     tint 是 rgb 三元组（便于用 rgb(… / α) 拼透明通道）；
+     alpha / blur 是「完全不透明时的上限」，抽屉再按拖拽进度乘系数。 */
+  --overlay-tint: 12 16 24;
+  --overlay-alpha: 0.5;
+  --overlay-blur: 6px;
+}
+
+/* 深色下同色调更重一点：纯黑底 + 略高的不透明度，避免深色页面里遮罩看不出来 */
+.dark {
+  --overlay-tint: 0 0 0;
+  --overlay-alpha: 0.62;
 }
 
 /* 显式深色 ---------------------------------------------------
@@ -218,12 +231,12 @@
    ------------------------------------------------------------
    Nuxt UI 的遮罩默认写 bg-elevated/75，而 --ui-bg-elevated 被映射成了
    卡片白（--card）—— 浅色下等于盖了一层白雾，弹窗毫无层次。
-   这里统一改成深色半透明 + 模糊，与迁移前的手写搜索弹窗一致。
-   放在未分层区域，天然压过 utilities 里的 bg-elevated/75。
+   这里改用与抽屉遮罩同一套令牌（--overlay-tint / alpha / blur），
+   深色浅色自动跟随。放在未分层区域，天然压过 utilities 里的 bg-elevated/75。
    ============================================================ */
 [data-slot='overlay'] {
-  background-color: rgba(12, 16, 24, 0.58);
-  backdrop-filter: blur(4px);
+  background-color: rgb(var(--overlay-tint) / var(--overlay-alpha));
+  backdrop-filter: blur(var(--overlay-blur));
 }
 
 /* ============================================================

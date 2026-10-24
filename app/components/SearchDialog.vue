@@ -19,11 +19,29 @@ watch(searchDialogOpen, (open) => {
   requestAnimationFrame(restoreSearchDialogFocus);
 });
 
+/**
+ * 点结果里的文章 → 先收起弹窗再跳转。
+ *
+ * 不要用具体类名（如 `a.post-card`）判断：PostCard 的根节点类名会随样式重构
+ * 变化，之前就因为从 `post-card` 改成 `card` 导致这里的判断永远不成立、
+ * 点完文章弹窗不关。结果区域里只有「文章链接」这一种可点元素，
+ * 因此任何带 href 的链接都视为命中。
+ */
 function onResultClick(event: MouseEvent): void {
-  if (event.target instanceof Element && event.target.closest('a.post-card')) {
-    closeSearchDialog();
-  }
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+  if (target.closest('a[href]')) closeSearchDialog();
 }
+
+// 兜底：无论以何种方式发生路由跳转（结果链接、键盘回车、程序化导航），
+// 只要弹窗还开着就一并收起，避免它盖在新页面上。
+const route = useRoute();
+watch(
+  () => route.fullPath,
+  () => {
+    if (searchDialogOpen.value) closeSearchDialog();
+  },
+);
 </script>
 
 <template>
@@ -31,7 +49,6 @@ function onResultClick(event: MouseEvent): void {
     v-model:open="searchDialogOpen"
     title="搜索新闻"
     :ui="{
-      overlay: 'fixed inset-0 bg-[rgba(12,16,24,0.58)] backdrop-blur-[4px]',
       content: 'w-[min(960px,calc(100vw-32px))] max-w-none rounded-[20px]',
       header: 'p-6 pb-2',
       body: 'p-6 pt-0',
