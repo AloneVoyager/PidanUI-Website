@@ -1,0 +1,220 @@
+/* ======================================================================
+   PidanUI 增强层 · 交互与观感统一（AGPL-3.0，随仓库同许可）
+   ------------------------------------------------------------------------
+   本文件为「只做加法」的增强层：统一交互过渡缓动、入场/滚动动效、
+   阅读进度条、返回顶部浮钮、细滚动条与选区高亮。
+   - 命名空间：自定义插入元素一律 `mir-` 前缀（#mir-backtop / .mir-readbar），
+     不占用站点类名，不覆盖站点 utility；
+   - 站点自身的 .page-enter-* 页面过渡、.reveal 滚动显现、.page-progress
+     路由加载条（z-index:1001）完全不动，阅读条刻意压在其下一层（z-index:1000）；
+   - 字体栈在 :root 重定义 --font-ui：HarmonyOS Sans SC 置于 MiSans 之前，
+     其余回退链保持 tokens.css 的原顺序。字体文件不进仓库
+     （@font-face 由 nuxt.config.ts 的 app.head 指向 CDN，按 unicode-range 分片按需加载）；
+   - 全部新增动效遵循系统「减少动态效果」偏好（硬性规则）：
+     入场编排包在 prefers-reduced-motion: no-preference 内，
+     尾部统一 reduce 兜底；禁用 JS 时本文件不出场任何隐藏规则。
+   - 整体关闭方式：删掉 nuxt.config.ts app.head 中指向 /custom/ 与
+     harmonyos-sans 的若干 link/script 行即可，无任何构建耦合。
+   ====================================================================== */
+
+:root {
+  --font-ui: "HarmonyOS Sans SC", "MiSans", "MiSans Normal", "PingFang SC",
+    "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+  --mir-ease: cubic-bezier(0.22, 1, 0.36, 1); /* 与站点页面过渡同曲线：柔和减速 */
+  --mir-ease-inout: cubic-bezier(0.4, 0, 0.2, 1); /* 标准缓入缓出 */
+}
+
+::selection {
+  background: color-mix(in srgb, var(--brand, #ffc53d) 35%, transparent);
+}
+
+/* ---------- 1. 交互元素基线过渡（仅合成属性，无重排） ---------- */
+a, button, [role="button"] {
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke, opacity, box-shadow, transform,
+    filter, backdrop-filter;
+  transition-duration: 220ms;
+  transition-timing-function: var(--mir-ease-inout);
+}
+img {
+  transition-property: transform, filter;
+  transition-duration: 450ms;
+  transition-timing-function: var(--mir-ease);
+}
+
+/* 按压反馈（按钮 / 卡片式链接） */
+button:active, [role="button"]:active, a[class*="hover:shadow-card"]:active {
+  transform: translateY(1px) scale(0.995);
+}
+
+/* 卡片悬浮：跟随站点既有的 hover:shadow-card 阴影，只补一点上浮（克制） */
+a[class*="hover:shadow-card"] {
+  transition-property: transform, box-shadow, border-color;
+  transition-duration: 300ms;
+  transition-timing-function: var(--mir-ease);
+}
+a[class*="hover:shadow-card"]:hover {
+  transform: translateY(-3px);
+}
+
+/* 键盘焦点更顺滑（不改 outline 本身，仅过渡） */
+:focus-visible {
+  transition-property: outline-color, box-shadow, color;
+  transition-duration: 180ms;
+  transition-timing-function: var(--mir-ease-inout);
+}
+
+/* 代码块轻微悬浮阴影（ProsePre） */
+pre {
+  transition-property: box-shadow;
+  transition-duration: 260ms;
+  transition-timing-function: var(--mir-ease-inout);
+}
+pre:hover {
+  box-shadow: 0 10px 30px -18px rgb(0 0 0 / 0.25);
+}
+
+/* ---------- 2. 页面入场：.site-main 前 8 个直接子块编排式上浮（纯 CSS） ----------
+   站点滚动容器是 .site-main（见 router.options.ts），window 不滚动，
+   所以这里挂在 .site-main 的子块上，而非 main 先于 ready 的任意假设。 */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes mir-rise-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .site-main > :nth-child(-n + 8) {
+    animation: mir-rise-in 600ms var(--mir-ease) both;
+  }
+  .site-main > :nth-child(1) { animation-delay: 30ms; }
+  .site-main > :nth-child(2) { animation-delay: 95ms; }
+  .site-main > :nth-child(3) { animation-delay: 160ms; }
+  .site-main > :nth-child(4) { animation-delay: 225ms; }
+  .site-main > :nth-child(5) { animation-delay: 290ms; }
+  .site-main > :nth-child(6) { animation-delay: 355ms; }
+  .site-main > :nth-child(7) { animation-delay: 420ms; }
+  .site-main > :nth-child(8) { animation-delay: 485ms; }
+}
+
+/* ---------- 3. 滚动显现：仅当 JS 就绪才隐藏（html.mir-anim 由 custom.js 添加） ----------
+   站点已有 .reveal / .is-revealed 体系处理标记过的元素；这里只接管
+   未被标记的深层块（如长列表页），二者互不重叠、互为冗余保险。 */
+html.mir-anim .site-main > :nth-child(n + 9).mirror-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+}
+html.mir-anim .site-main > :nth-child(n + 9).mirror-reveal.mirror-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition-property: opacity, transform;
+  transition-duration: 620ms;
+  transition-timing-function: var(--mir-ease);
+}
+
+/* ---------- 4. 尊重系统「减少动态效果」（兜底） ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- 5. 统一细滚动条（侧栏 / 代码块 / 弹窗等通用滚动区） ----------
+   站点自带的 .site-main 黄色滚动条（layout.css）特异性更高，保持原样不覆盖。 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.42) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.35);
+  border: 2px solid transparent;
+  border-radius: 9999px;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.55);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ---------- 6. 阅读进度条（仅含长文的页面，由 custom.js 注入并驱动） ----------
+   与站点原生 .page-progress（路由加载条，top:0 h:3px z-index:1001）同位不同层：
+   路由切换瞬间原生进度条在上一层显示，加载完成后阅读条自然接管。
+   渐变色与 .page-progress 保持一致（brand → brand-deep → #ff7a00）。 */
+.mir-readbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  z-index: 1000;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--brand, #ffc53d), var(--brand-deep, #e0b23a) 45%, #ff7a00);
+  border-radius: 0 2px 2px 0;
+  opacity: 0;
+  transition: opacity 0.4s var(--mir-ease-inout);
+}
+html.mir-article .mir-readbar {
+  opacity: 1;
+}
+
+/* ---------- 7. 返回顶部浮钮（custom.js 注入） ----------
+   半透明底 + 背景模糊，用系统 Canvas/CanvasText 色，明暗两态自适应。 */
+#mir-backtop {
+  position: fixed;
+  right: clamp(16px, 3vw, 28px);
+  bottom: clamp(18px, 4.5vh, 32px);
+  z-index: 900;
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, CanvasText 12%, transparent);
+  background: color-mix(in srgb, Canvas 58%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: CanvasText;
+  box-shadow: 0 10px 30px -14px rgb(0 0 0 / 0.3);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(14px) scale(0.9);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  #mir-backtop {
+    transition: opacity 0.28s var(--mir-ease), transform 0.32s var(--mir-ease);
+  }
+}
+#mir-backtop.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+#mir-backtop:hover {
+  transform: translateY(-3px);
+  background: color-mix(in srgb, Canvas 78%, transparent);
+}
+#mir-backtop:active {
+  transform: translateY(1px) scale(0.97);
+}
+#mir-backtop svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+@media (prefers-reduced-motion: reduce) {
+  #mir-backtop {
+    transition: opacity 0.01ms;
+    transform: none;
+  }
+}

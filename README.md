@@ -42,9 +42,21 @@ PidanUI 项目的官方网站，使用 Nuxt 4 + @nuxt/content + TypeScript + Tai
 
 ## 字体与图标
 
-字体为 MiSans 和 Cascadia Code 分包字体，通过 CDN 加载（样式表由 `nuxt.config.ts` 的 `app.head` 注入），仓库不保留字体文件。
+字体为 MiSans 和 Cascadia Code 分包字体，通过 CDN 加载（样式表由 `nuxt.config.ts` 的 `app.head` 注入），仓库不保留字体文件。界面正文叠加 HarmonyOS Sans SC（400 / 500 / 700 三个字重，同样按 unicode-range 分片走 CDN），回退链顺序为 HarmonyOS Sans SC → MiSans → …（定义见 `public/custom/custom.css` 的 `--font-ui`）。
 
 图标使用 Nuxt UI 的 Iconify（Lucide + Simple Icons），图标集合以 `@iconify-json/*` 本地安装，**构建期直接内联为 SVG**，运行时不请求 Iconify API。已不再使用 Font Awesome。
+
+## 界面交互增强层
+
+`public/custom/` 提供一个**零依赖、只做加法**的增强层（`custom.css` + `defer` 的 `custom.js`，由 `nuxt.config.ts` 的 `app.head` 引入），不改变任何既有页面结构与样式分层：
+
+- 统一交互过渡缓动与悬浮反馈（悬浮克制：小位移 + 既有阴影，无旋转；全部动效遵循系统「减少动态效果」偏好，带 `prefers-reduced-motion` 分支）；
+- `.site-main` 前 8 个直接子块的编排式入场动效（纯 CSS；更深层块由 `IntersectionObserver` 滚动显现，且隐藏规则仅在 JS 就绪后生效）；
+- 长文页阅读进度条（z-index 刻意压在原生 `.page-progress` 路由加载条之下一层，互补共存）与返回顶部浮钮；
+- 通用细滚动条与品牌色文本选区高亮；
+- `/` 快捷键聚焦搜索框（焦点已在输入框 / 文本域 / contentEditable 时不劫持）。
+
+整层一键关闭：删除 `nuxt.config.ts` 中指向 `harmonyos-sans` 与 `/custom/` 的几个 `link` / `script` 行即可，此外无任何构建耦合。
 
 ## 关于 PidanUI
 
