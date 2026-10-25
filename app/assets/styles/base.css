@@ -16,8 +16,10 @@
      只提供字形，字体族名与回退顺序在这里定义，改动前先确认 CDN 版本。
      misans-webfont 的常规字重族名为 MiSans（400/700），Normal 族为其补充别名。
      等宽字体末尾补中文字体 fallback，避免代码块内中文回退到系统宋体（SimSun）。 */
-  --font-ui: 'MiSans', 'MiSans Normal', 'PingFang SC', 'Microsoft YaHei', system-ui,
-    -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* HarmonyOS Sans SC 排在最前（400/500/700 三个字重，CDN 按 unicode-range 分片，
+     见 nuxt.config.ts 的 app.head）；未命中字形时依次回退 MiSans → 苹方 → 雅黑 */
+  --font-ui: 'HarmonyOS Sans SC', 'MiSans', 'MiSans Normal', 'PingFang SC', 'Microsoft YaHei',
+    system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-code: 'Cascadia Code', 'Consolas', 'Menlo', 'MiSans', 'Microsoft YaHei UI',
     'PingFang SC', monospace;
 
@@ -72,6 +74,10 @@
   /* ---- 浮层遮罩：抽屉与弹窗共用同一套色调 ----
      tint 是 rgb 三元组（便于用 rgb(… / α) 拼透明通道）；
      alpha / blur 是「完全不透明时的上限」，抽屉再按拖拽进度乘系数。 */
+  /* ---- 缓动曲线：与页面过渡（animation.css）同一条曲线 ---- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
+
   --overlay-tint: 12 16 24;
   --overlay-alpha: 0.5;
   --overlay-blur: 6px;
@@ -141,24 +147,36 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* 细滚动条（原 thin-scrollbar mixin 展开） */
+    /* 通用细滚动条：中性灰，不与品牌色抢注意力。
+       主滚动容器 .site-main 在 layout.css 里另有品牌黄版本（未分层 +
+       更高特异性），因此这里不会覆盖它。 */
     scrollbar-width: thin;
-    scrollbar-color: #ffc53d transparent;
+    scrollbar-color: rgba(128, 128, 128, 0.42) transparent;
     /* 点击态去除高亮 */
     -webkit-tap-highlight-color: transparent;
   }
 
   *::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 10px;
+    height: 10px;
   }
 
   *::-webkit-scrollbar-thumb {
-    background: rgba(255, 197, 61, 0.6);
-    border-radius: 8px;
+    background: rgba(128, 128, 128, 0.35);
+    border: 2px solid transparent;
+    border-radius: 9999px;
+    background-clip: content-box;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 128, 128, 0.55);
   }
 
   *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-corner {
     background: transparent;
   }
 
@@ -187,6 +205,35 @@
   img {
     max-width: 100%;
     display: block;
+  }
+
+  /* ---- 交互基线：统一过渡曲线，只过渡合成 / 绘制属性，不触发布局 ----
+     与 components 里各组件自己的 transition-* 工具类不冲突：
+     本条在 base 层，任何 utilities 都能覆盖它。 */
+  a,
+  button,
+  [role='button'] {
+    transition-property: color, background-color, border-color, text-decoration-color, fill,
+      stroke, opacity, box-shadow;
+    transition-duration: 220ms;
+    transition-timing-function: var(--ease-out-soft);
+  }
+
+  img {
+    transition-property: transform, filter;
+    transition-duration: 450ms;
+    transition-timing-function: var(--ease-out-soft);
+  }
+
+  /* 键盘焦点过渡（不改 outline 本身，只让颜色变化更顺滑） */
+  :focus-visible {
+    transition-property: outline-color, box-shadow, color;
+    transition-duration: 180ms;
+  }
+
+  /* 正文选区：品牌黄半透明 */
+  ::selection {
+    background: color-mix(in srgb, var(--brand) 35%, transparent);
   }
 
   svg {

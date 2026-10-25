@@ -61,7 +61,7 @@ export default defineNuxtConfig({
           href: 'https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.2.3/index.min.css',
         },
         // 界面字体（CDN）：HarmonyOS Sans SC（400 / 500 / 700 三个字重，unicode-range 分片），
-        // 位于 MiSans 之前（回退链见 public/custom/custom.css 的 --font-ui），
+        // 位于 MiSans 之前（回退链见 base.css 的 --font-ui），
         // 与上方约定一致：仓库不保留字体文件
         {
           rel: 'stylesheet',
@@ -82,10 +82,6 @@ export default defineNuxtConfig({
           title: 'PidanUI 新闻订阅',
           href: '/atom.xml',
         },
-        // 界面交互增强层（纯静态，public/custom/）：统一过渡缓动、入场/滚动动效、
-        // 阅读进度条、返回顶部、细滚动条（说明见 public/custom/custom.css 头部注释）。
-        // 一键关闭：删除此行与下方 custom.js 一行即可，无任何构建耦合。
-        { rel: 'stylesheet', href: '/custom/custom.css' },
       ],
       script: [
         // 首帧同步脚本（关键）：在首次绘制前把用户选择的主题写入 <html data-theme>，
@@ -103,10 +99,6 @@ export default defineNuxtConfig({
           innerHTML: 'document.documentElement.classList.add("js");',
           tagPriority: 'critical',
         },
-        // 界面交互增强层：滚动显现 / 阅读进度条 / 返回顶部 / 「/」快捷键。
-        // 全部为渐进增强（禁 JS / IO 缺失 / 减少动态效果时各自独立降级），
-        // 详见 public/custom/custom.js 头部注释。
-        { src: '/custom/custom.js', defer: true },
       ],
     },
     // 保住 .page-enter-from / .page-leave-to 等类名（见 animation.css）
@@ -132,6 +124,7 @@ export default defineNuxtConfig({
         'lucide:activity',
         'lucide:arrow-left',
         'lucide:arrow-right',
+        'lucide:arrow-up',
         'lucide:calendar-days',
         'lucide:chevron-down',
         'lucide:chevron-left',
