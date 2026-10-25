@@ -311,6 +311,15 @@
     border-radius: var(--radius-m);
   }
 
+  /* 代码块悬浮：只加一层柔和阴影，不做位移 */
+  .post-content div[class*='language-'] {
+    transition: box-shadow 0.26s var(--ease-inout);
+  }
+
+  .post-content div[class*='language-']:hover {
+    box-shadow: 0 10px 30px -18px rgb(0 0 0 / 0.25);
+  }
+
   /* 语言标签（左上角） */
   .post-content div[class*='language-'] > .lang {
     position: absolute;

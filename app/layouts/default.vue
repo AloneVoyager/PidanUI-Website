@@ -60,6 +60,8 @@ onBeforeUnmount(() => {
 
 <template>
   <PageProgress :progress="progress" :active="progressActive" :done="progressDone" />
+  <!-- 长文阅读进度条（与上面的路由加载条同位、下一层） -->
+  <ReadingProgress />
 
   <SiteSidebar />
 
@@ -69,5 +71,6 @@ onBeforeUnmount(() => {
   </main>
 
   <SiteRightBar />
+  <BackToTop />
   <SearchDialog />
 </template>

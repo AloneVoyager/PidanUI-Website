@@ -52,6 +52,13 @@ export default defineNuxtConfig({
         // 全站字体（CDN）：MiSans（正文）/ Cascadia Code（代码）
         // 图标已全部改为 Nuxt UI 的 Iconify（构建期内联 SVG），不再引 Font Awesome
         { rel: 'preconnect', href: 'https://cdn.jsdelivr.net', crossorigin: '' },
+        // 实时访客 FeedPulse：右栏组件常驻每一页，hydration 完成即回报
+        // track-pixel，组件脚本与 SSE 轮询同源；预连接可省掉每页首次访问
+        // 该源的 DNS + TCP + TLS 握手。
+        // 不要加 crossorigin：脚本与统计像素都是 no-cors 请求，
+        // 带 crossorigin 会另开一条 CORS 连接池，反而复用不上。
+        { rel: 'preconnect', href: 'https://feed-pulse.com' },
+        { rel: 'dns-prefetch', href: 'https://feed-pulse.com' },
         {
           rel: 'stylesheet',
           href: 'https://cdn.jsdelivr.net/npm/misans-webfont@4.3.1/misans-style.min.css',
@@ -59,6 +66,21 @@ export default defineNuxtConfig({
         {
           rel: 'stylesheet',
           href: 'https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.2.3/index.min.css',
+        },
+        // 界面字体（CDN）：HarmonyOS Sans SC（400 / 500 / 700 三个字重，unicode-range 分片），
+        // 位于 MiSans 之前（回退链见 base.css 的 --font-ui），
+        // 与上方约定一致：仓库不保留字体文件
+        {
+          rel: 'stylesheet',
+          href: 'https://cdn.jsdelivr.net/npm/harmonyos-sans-sc-webfont-splitted@1.1.0/dist/Regular.css',
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://cdn.jsdelivr.net/npm/harmonyos-sans-sc-webfont-splitted@1.1.0/dist/Medium.css',
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://cdn.jsdelivr.net/npm/harmonyos-sans-sc-webfont-splitted@1.1.0/dist/Bold.css',
         },
         // Atom feed 自动发现：浏览器 / RSS 阅读器可通过这个 link 自动订阅
         {
@@ -109,6 +131,7 @@ export default defineNuxtConfig({
         'lucide:activity',
         'lucide:arrow-left',
         'lucide:arrow-right',
+        'lucide:arrow-up',
         'lucide:calendar-days',
         'lucide:chevron-down',
         'lucide:chevron-left',

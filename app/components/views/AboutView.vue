@@ -159,7 +159,7 @@ const COPYRIGHT = [
     </div>
 
     <p class="mt-6 text-center text-xs text-dimmed">
-      本站「关于」文案基于 PidanUI 项目说明整理。© {{ SITE.brand }}
+      本站「关于」文案基于 PidanUI 项目说明整理。本网站使用 FeedPulse 小组件统计访客数据，该组件不会泄露用户隐私，请放心访问本网站。© {{ SITE.brand }}
     </p>
   </div>
 </template>
