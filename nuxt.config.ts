@@ -52,9 +52,13 @@ export default defineNuxtConfig({
         // 全站字体（CDN）：MiSans（正文）/ Cascadia Code（代码）
         // 图标已全部改为 Nuxt UI 的 Iconify（构建期内联 SVG），不再引 Font Awesome
         { rel: 'preconnect', href: 'https://cdn.jsdelivr.net', crossorigin: '' },
-        // 实时访客 FeedPulse：右栏组件常驻出现在每一页，hydration 完成即回报
-        // track-pixel，组件脚本与 SSE 轮询也是同一来源；这里预连接可提前
-        // 完成 DNS + TCP + TLS 握手，让每页第一次访问该源时零握手延迟
+        // 实时访客 FeedPulse：右栏组件常驻每一页，hydration 完成即回报
+        // track-pixel，组件脚本与 SSE 轮询同源；预连接可省掉每页首次访问
+        // 该源的 DNS + TCP + TLS 握手。
+        // 不要加 crossorigin：脚本与统计像素都是 no-cors 请求，
+        // 带 crossorigin 会另开一条 CORS 连接池，反而复用不上。
+        { rel: 'preconnect', href: 'https://feed-pulse.com' },
+        { rel: 'dns-prefetch', href: 'https://feed-pulse.com' },
         {
           rel: 'stylesheet',
           href: 'https://cdn.jsdelivr.net/npm/misans-webfont@4.3.1/misans-style.min.css',
