@@ -75,7 +75,7 @@ EggyUI Finale Mini 的发布，标志着 EggyUI 的故事正式结束。
 
 EggyUI Finale Mini 的安装包可通过以下渠道获取：
 
-- **PidanUI 官网下载页**：见[本站下载页面](../download)。
+- **PidanUI 官网下载页**：见[本站下载页面](../download)（对应版本：EggyUI，对应文件：`EggyUI_Finale_Mini.zip`）。
 
 安装前请确认：
 

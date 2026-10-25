@@ -36,4 +36,4 @@ Pidan System Win11 26H2 v2 是由 Pidan-Eggy 魔改的 Windows 系统。本版�
 
 ## 四、下载方式
 
-- **PidanUI 官网下载页**：见[本站下载页面](../download)。
+- **PidanUI 官网下载页**：见[本站下载页面](../download)（对应版本：Pidan System，对应文件：`Pidan-Win11-26H2-2.0.iso`）。
