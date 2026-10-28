@@ -6,47 +6,60 @@ import { collectTerms, useAllPosts } from '~/composables/usePosts';
 
 const allPosts = useAllPosts();
 const terms = computed(() => collectTerms('categories', allPosts.value));
+
+/** 分类卡：naked 拿回控制权，描边/阴影沿用全站令牌；:title 只服务 aria-label */
+const TERM_UI = {
+  root:
+    'group rounded-(--radius-l) border border-default bg-default ' +
+    'transition-[border-color,box-shadow] duration-200 ' +
+    'hover:border-brand-600/30 hover:shadow-card',
+  container: 'p-0',
+  wrapper: 'w-full',
+  body: 'w-full px-4 py-3.5',
+} as const;
 </script>
 
 <template>
   <div class="mx-auto max-w-[1000px]">
-    <header class="mb-6 border-b border-default pb-5">
-      <PageTitle title="分类" />
-      <p class="mt-1.5 text-[13px] text-dimmed">
-        共 {{ terms.length }} 个分类 · 按收录文章数排序
-      </p>
-    </header>
+    <UPageHeader :as="{ title: 'div' }">
+      <template #title>
+        <PageTitle title="分类" />
+      </template>
+      <template #description>
+        <p>共 {{ terms.length }} 个分类 · 按收录文章数排序</p>
+      </template>
+    </UPageHeader>
 
-    <div class="term-grid grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3.5">
-      <NuxtLink
+    <!-- 密度仍走 app.config 的 auto-fill 网格，这里只把最小列宽收到 220px -->
+    <UPageGrid class="term-grid" style="--grid-min: 220px">
+      <UPageCard
         v-for="term in terms"
         :key="term.name"
-        class="group flex items-center gap-3 rounded-(--radius-l) border border-default bg-default px-4 py-3.5 transition-[border-color,box-shadow] duration-200 hover:border-brand-600/30 hover:shadow-card"
         :to="term.path"
+        :title="term.name"
+        variant="naked"
+        :ui="TERM_UI"
       >
-        <span
-          class="flex size-9 shrink-0 items-center justify-center rounded-(--radius-m) bg-brand-soft text-brand-600"
-        >
-          <UIcon name="i-lucide-folder" class="size-4" aria-hidden="true" />
-        </span>
-        <span class="min-w-0 flex-1 truncate text-[15px] font-semibold text-default">
-          {{ term.name }}
-        </span>
-        <span
-          class="shrink-0 rounded-full bg-brand-soft px-2 py-0.5 text-[12px] font-medium text-brand-700"
-        >
-          {{ term.count }}
-        </span>
-      </NuxtLink>
+        <template #body>
+          <div class="flex w-full items-center gap-3">
+            <span
+              class="flex size-9 shrink-0 items-center justify-center rounded-(--radius-m) bg-brand-soft text-brand-600"
+            >
+              <UIcon name="i-lucide-folder" class="size-4" aria-hidden="true" />
+            </span>
+            <span class="min-w-0 flex-1 truncate text-[15px] font-semibold text-default">
+              {{ term.name }}
+            </span>
+            <span
+              class="shrink-0 rounded-full bg-brand-soft px-2 py-0.5 text-[12px] font-medium text-brand-700"
+            >
+              {{ term.count }}
+            </span>
+          </div>
+        </template>
+      </UPageCard>
       <EmptyState v-if="!terms.length" text="暂无分类" />
-    </div>
+    </UPageGrid>
   </div>
 </template>
 
-<style scoped>
-@media (max-width: 768px) {
-  .term-grid {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
